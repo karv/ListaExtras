@@ -1,7 +1,6 @@
 *.sln
 bin
 obj
-Properties
 TestProject1
 .BackupManager
 *.user
