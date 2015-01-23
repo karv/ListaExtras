@@ -5,7 +5,7 @@ using System.Text;
 
 using System.IO;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;   //ref=System.Serialization....Soap.dll
+
 
 namespace ListasExtra
 {
@@ -14,13 +14,13 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="V">Rango(co-dominio) de la función.</typeparam>
-   [Serializable()]
+   [DataContract (IsReference = true)]    
    public class ListaPeso<T, V>
    {
 		/// <summary>
 		/// Representa una entrada (KeyValuePair) para esta clase.
 		/// </summary>
-      [Serializable()]
+      [DataContract (IsReference = true)]    
       public struct  Entrada
       {
          public T Key;
@@ -271,13 +271,15 @@ namespace ListasExtra
       public void Guardar(string Archivo)
       {
          //Opens a file and serializes the object into it in binary format.
-         Stream stream = File.Open(Archivo, FileMode.Create);
+         
+          //Stream stream = File.Open(Archivo, FileMode.Create);
          //SoapFormatter formatter = new SoapFormatter();
 
-         BinaryFormatter formatter = new BinaryFormatter();
+         //BinaryFormatter formatter = new BinaryFormatter();
+          throw new Exception("No usar ListaPeso.guardar!! D:");
 
-         formatter.Serialize(stream, this);
-         stream.Close();
+         //formatter.Serialize(stream, this);
+         //stream.Close();
       }
    }
 
@@ -330,7 +332,7 @@ namespace ListasExtra
        
    }
 
-   [Serializable()]
+   [DataContract (IsReference = true)]    
    public class ObjetoAcotado<T>
    {
       public T CotaSup;
@@ -394,7 +396,7 @@ namespace ListasExtra
       public event EventHandler LlegóMáximo;
    }
 
-   [Serializable()]
+   [DataContract (IsReference = true)]    
    public static class ComparadoresPred
    {
       public static  Boolean EsMenor(Double x, Double y)
@@ -406,7 +408,7 @@ namespace ListasExtra
          return x < y;
       }
    }
-   [Serializable()]
+   [DataContract (IsReference = true)]    
    public static class OperadoresPred
    {
       public static Double Suma(Double x, Double y)
@@ -427,7 +429,7 @@ namespace ListasExtra
       }
    }
 
-   [Serializable()]
+   [DataContract (IsReference = true)]    
    public static class ExtDouble
    {
       public static ListasExtra.ObjetoAcotado<Double> ToAcotado(this Double x)
