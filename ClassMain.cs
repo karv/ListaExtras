@@ -14,13 +14,12 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="V">Rango(co-dominio) de la función.</typeparam>
-   [DataContract (IsReference = true)]    
+   [DataContract(Name = "ListaPeso", IsReference = true)]
    public class ListaPeso<T, V>
    {
 		/// <summary>
 		/// Representa una entrada (KeyValuePair) para esta clase.
 		/// </summary>
-      [DataContract (IsReference = true)]    
       public struct  Entrada
       {
          public T Key;
@@ -31,7 +30,8 @@ namespace ListasExtra
       {
           return Data.ContainsKey(key);
       }
-      private Dictionary<T, V> _Data = new Dictionary<T, V>();
+      [DataMember (Name = "List")]
+       private Dictionary<T, V> _Data = new Dictionary<T, V>();
 		/// <summary>
 		/// Devuelve el tipo diccionario de la instancia.
 		/// </summary>
@@ -265,24 +265,8 @@ namespace ListasExtra
          return Left + -Right;
       }
 	
-
-
-			//Temporary:
-      public void Guardar(string Archivo)
-      {
-         //Opens a file and serializes the object into it in binary format.
-         
-          //Stream stream = File.Open(Archivo, FileMode.Create);
-         //SoapFormatter formatter = new SoapFormatter();
-
-         //BinaryFormatter formatter = new BinaryFormatter();
-          throw new Exception("No usar ListaPeso.guardar!! D:");
-
-         //formatter.Serialize(stream, this);
-         //stream.Close();
-      }
    }
-
+   [DataContract(Name = "ListaPeso", IsReference = true)]
    public class ListaPeso<T> : ListasExtra.ListaPeso<T, Single>
    {
        public ListaPeso()
