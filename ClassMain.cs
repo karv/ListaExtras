@@ -166,7 +166,7 @@ namespace ListasExtra
             Data.Add(Obj.Key, Obj.Val);
          }
 
-         if (Data[Obj.Key].Equals(Nulo))
+         if (Data[Obj.Key].Equals(Nulo))           // ¿No es Data[Obj.val]?
          {
             Data.Remove(Obj.Key);
          }
