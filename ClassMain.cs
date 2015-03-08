@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using System.IO;
 using System.Runtime.Serialization;
-
 
 namespace ListasExtra
 {
@@ -30,8 +28,10 @@ namespace ListasExtra
 		{
 			return Data.ContainsKey(key);
 		}
+
 		[DataMember(Name = "List")]
 		private Dictionary<T, V> _Data = new Dictionary<T, V>();
+
 		/// <summary>
 		/// Devuelve el tipo diccionario de la instancia.
 		/// </summary>
@@ -42,7 +42,8 @@ namespace ListasExtra
 				return _Data;
 			}
 		}
-		public V this[T Key]
+
+		public V this [T Key]
 		{
 			get
 			{
@@ -53,7 +54,9 @@ namespace ListasExtra
 				Set(Key, value);
 			}
 		}
+
 		private V _NullV;
+
 		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
 		/// </summary>
@@ -68,6 +71,7 @@ namespace ListasExtra
 				_NullV = value;
 			}
 		}
+
 		/// <summary>
 		/// La operación suma.
 		/// </summary>
@@ -76,8 +80,11 @@ namespace ListasExtra
 		/// La operación inverso, si la tiene.
 		/// </summary>
 		public Func<V, V> Inv;
-
 		//Estadísticos
+		/// <summary>
+		/// Devuelve la suma sobre las Keys, de sus respectivos Values.
+		/// </summary>
+		/// <returns>Devuelve el objeto resultante de aplicar la operación a cada valor.</returns>
 		public V SumaTotal()
 		{
 			V tot = Nulo;
@@ -87,7 +94,6 @@ namespace ListasExtra
 			}
 			return tot;
 		}
-
 		//Ordenación y máximización
 		/// <summary>
 		/// Obtiene la entrda cuyo valor es máximo.
@@ -95,25 +101,24 @@ namespace ListasExtra
 		/// <returns></returns>		
 		public T ObtenerMáximo(Func<V, V, bool> Comparador)
 		{
-			if (!Data.Any()) return default(T);
+			if (!Data.Any())
+				return default(T);
 			else
 			{
 				T tmp = Data.Keys.ToArray()[0];
 				foreach (T x in Data.Keys)
 				{
-					if (Comparador(this[x], this[tmp])) tmp = x;
+					if (Comparador(this[x], this[tmp]))
+						tmp = x;
 				}
 				return tmp;
 			}
 		}
-
 		//Eventos
 		/// <summary>
 		/// Se llama cuando se cambia algún valor (creo que no sirve aún Dx).
 		/// </summary>
 		public event EventHandler CambioValor;
-
-
 		//Constructor
 		/// <summary>
 		/// Inicializa una instancia de la clase.
@@ -133,6 +138,7 @@ namespace ListasExtra
 				return Data.Keys;
 			}
 		}
+
 		/// <summary>
 		/// Inicializa una instancia de la clase a partir de un valor inicial dado.
 		/// </summary>
@@ -142,7 +148,8 @@ namespace ListasExtra
 		public ListaPeso(Func<V, V, V> OperSuma, V ObjetoNulo, Dictionary<T, V> InitDat)
 			: this(OperSuma, ObjetoNulo)
 		{
-			foreach (var x in InitDat) Add(x.Key, x.Value);
+			foreach (var x in InitDat)
+				Add(x.Key, x.Value);
 		}
 
 		protected ListaPeso()
@@ -170,8 +177,10 @@ namespace ListasExtra
 			{
 				Data.Remove(Obj.Key);
 			}
-			if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
+			if (CambioValor != null)
+				CambioValor.Invoke(this, new EventArgs());
 		}
+
 		/// <summary>
 		/// Establece el valor de una entrada: this(Key) = Val.
 		/// </summary>
@@ -184,6 +193,7 @@ namespace ListasExtra
 			E.Val = Val;
 			this.Set(E);
 		}
+
 		/// <summary>
 		/// Suma una entrada de la instancia.
 		/// </summary>
@@ -193,6 +203,7 @@ namespace ListasExtra
 		{
 			Set(Key, Suma(this[Key], Val));
 		}
+
 		/// <summary>
 		/// Suma una entrada de la instancia.
 		/// </summary>
@@ -201,14 +212,17 @@ namespace ListasExtra
 		{
 			this.Add(Obj.Key, Obj.Val);
 		}
+
 		/// <summary>
 		/// Hace la función instancia cero.
 		/// </summary>
 		public void Vaciar()
 		{
 			List<T> Keys = new List<T>();
-			foreach (T x in Data.Keys) Keys.Add(x);
-			foreach (var x in Keys) Set(x, Nulo);
+			foreach (T x in Data.Keys)
+				Keys.Add(x);
+			foreach (var x in Keys)
+				Set(x, Nulo);
 		}
 
 		/// <summary>
@@ -217,7 +231,8 @@ namespace ListasExtra
 		/// <returns></returns>
 		public ListaPeso<T, V> Inverso()
 		{
-			if (Inv == null) throw new NullReferenceException("No está definito Inv");
+			if (Inv == null)
+				throw new NullReferenceException("No está definito Inv");
 			ListaPeso<T, V> ret = new ListaPeso<T, V>(Suma, Nulo);
 			ret.Inv = Inv;
 			foreach (var x in Data.Keys)
@@ -252,20 +267,23 @@ namespace ListasExtra
 		{
 			return Left.SumarA(Right);
 		}
+
 		public static ListaPeso<T, V> operator +(ListaPeso<T, V> Left, ListaPeso<T, V> Right)
 		{
 			return Sumar(Left, Right);
 		}
+
 		public static ListaPeso<T, V> operator -(ListaPeso<T, V> x)
 		{
 			return x.Inverso();
 		}
+
 		public static ListaPeso<T, V> operator -(ListaPeso<T, V> Left, ListaPeso<T, V> Right)
 		{
 			return Left + -Right;
 		}
-
 	}
+
 	[DataContract(Name = "ListaPeso", IsReference = true)]
 	public class ListaPeso<T> : ListasExtra.ListaPeso<T, Single>
 	{
@@ -289,9 +307,8 @@ namespace ListasExtra
 		{
 			return right <= left;
 		}
-
-
 	}
+
 	/// <summary>
 	/// Es sólo una listaPeso de enteros largos.
 	/// </summary>
@@ -316,7 +333,6 @@ namespace ListasExtra
 			return ret;
 
 		}
-
 	}
 
 	[DataContract(IsReference = true)]
@@ -327,6 +343,7 @@ namespace ListasExtra
 		private T _Valor;
 		//private Comparer<T> Comparador;
 		private Func<T, T, Boolean> _EsMenor;
+
 		public Func<T, T, Boolean> EsMenor
 		{
 			get
@@ -366,6 +383,7 @@ namespace ListasExtra
 		{
 			EsMenor = Comparador;
 		}
+
 		public ObjetoAcotado(Func<T, T, Boolean> Comparador, T Min, T Max, T Inicial)
 			: this(Comparador)
 		{
@@ -373,11 +391,11 @@ namespace ListasExtra
 			CotaSup = Max;
 			Valor = Inicial;
 		}
+
 		public override string ToString()
 		{
 			return Valor.ToString();
 		}
-
 		//Eventos
 		public event EventHandler LlegóMínimo;
 		public event EventHandler LlegóMáximo;
@@ -390,11 +408,13 @@ namespace ListasExtra
 		{
 			return x < y;
 		}
+
 		public static Boolean EsMenor(Single x, Single y)
 		{
 			return x < y;
 		}
 	}
+
 	[DataContract(IsReference = true)]
 	public static class OperadoresPred
 	{
@@ -402,10 +422,12 @@ namespace ListasExtra
 		{
 			return x + y;
 		}
+
 		public static long Suma(long x, long y)
 		{
 			return x + y;
 		}
+
 		public static ObjetoAcotado<Double> Suma(ObjetoAcotado<Double> x, ObjetoAcotado<Double> y)
 		{
 			ObjetoAcotado<Double> ret = new ObjetoAcotado<double>(x.EsMenor);
