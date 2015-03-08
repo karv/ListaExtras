@@ -131,11 +131,12 @@ namespace ListasExtra
 			Nulo = ObjetoNulo;
 		}
 
-		public System.Collections.Generic.Dictionary<T, V>.KeyCollection Keys
+		public List<T> Keys
 		{
 			get
 			{
-				return Data.Keys;
+				List<T> ret = new List<T>(_Data.Keys);
+				return ret;
 			}
 		}
 
