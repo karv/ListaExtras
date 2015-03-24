@@ -12,47 +12,42 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="V">Rango(co-dominio) de la función.</typeparam>
-	[DataContract(Name = "ListaPeso", IsReference = true)]
-	public class ListaPeso<T, V>
+	[DataContract(Name = "ListaPeso", IsReference = true)]	
+	public class ListaPeso<T, V>:Dictionary<T, V>
 	{
-		/// <summary>
-		/// Representa una entrada (KeyValuePair) para esta clase.
-		/// </summary>
-		public struct Entrada
-		{
-			public T Key;
-			public V Val;
-		}
-
-		public bool ContainsKey(T key)
-		{
-			return Data.ContainsKey(key);
-		}
-
-		[DataMember(Name = "List")]
-		private Dictionary<T, V> _Data = new Dictionary<T, V>();
-
-		/// <summary>
-		/// Devuelve el tipo diccionario de la instancia.
-		/// </summary>
-		public Dictionary<T, V> Data
+		public new V this [T Key]
 		{
 			get
 			{
-				return _Data;
-			}
-		}
-
-		public V this [T Key]
-		{
-			get
-			{
-				return Data.ContainsKey(Key) ? _Data[Key] : Nulo;
+				return ContainsKey(Key) ? base[Key] : Nulo;
 			}
 			set
 			{
-				Set(Key, value);
+				// Encontrar la Key buscada.
+				foreach (var x in Keys)
+				{
+					if (_Comparador(x, Key))
+					{
+						base[Key] = value;
+						return;
+					}
+				}
+
+				// Si es entrada nueva, se agraga.
+				base.Add(Key, value);
 			}
+		}
+
+		private Func<T, T, bool> _Comparador = (x, y) => x.Equals(y);
+
+		/// <summary>
+		/// Devuelve o establece qué función sirve para saber si dos T's son idénticos para esta lista.
+		/// Por default es x.Equals(y).
+		/// </summary>
+		public Func<T, T, bool> Comparador
+		{
+			get { return _Comparador; }
+			set { _Comparador = value; }
 		}
 
 		private V _NullV;
@@ -73,6 +68,30 @@ namespace ListasExtra
 		}
 
 		/// <summary>
+		/// Revisa si existe un objeto con las con las condiciones dadas.
+		/// </summary>
+		/// <param name="Pred">Predicado a exaluar.</param>
+		/// <returns>Devuelve true si existe un objeto que cumple Pred.</returns>
+		public bool Any (Func<T, V, bool> Pred)
+		{
+			foreach (var x in Keys)
+			{				
+				if (Pred (x, this[x]))				
+					return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Revisa si existe un objeto en esta lista.
+		/// </summary>
+		/// <returns>Devuelve true si existe algo.</returns>
+		public bool Any()
+		{
+			return Count > 0;
+		}
+
+		/// <summary>
 		/// La operación suma.
 		/// </summary>
 		public Func<V, V, V> Suma;
@@ -88,7 +107,7 @@ namespace ListasExtra
 		public V SumaTotal()
 		{
 			V tot = Nulo;
-			foreach (T x in Data.Keys)
+			foreach (T x in Keys)
 			{
 				tot = Suma(tot, this[x]);
 			}
@@ -101,12 +120,14 @@ namespace ListasExtra
 		/// <returns></returns>		
 		public T ObtenerMáximo(Func<V, V, bool> Comparador)
 		{
-			if (!Data.Any())
+			if (!Any())
+			{
 				return default(T);
+			}
 			else
 			{
-				T tmp = Data.Keys.ToArray()[0];
-				foreach (T x in Data.Keys)
+				T tmp = Keys.ToArray()[0];
+				foreach (T x in Keys)
 				{
 					if (Comparador(this[x], this[tmp]))
 						tmp = x;
@@ -131,15 +152,6 @@ namespace ListasExtra
 			Nulo = ObjetoNulo;
 		}
 
-		public List<T> Keys
-		{
-			get
-			{
-				List<T> ret = new List<T>(_Data.Keys);
-				return ret;
-			}
-		}
-
 		/// <summary>
 		/// Inicializa una instancia de la clase a partir de un valor inicial dado.
 		/// </summary>
@@ -157,73 +169,9 @@ namespace ListasExtra
 		{
 		}
 
-		/// <summary>
-		/// Establece el valor de Obj.Key como Obj.Valor.
-		/// </summary>
-		/// <param name="Obj"></param>
-		public virtual void Set(Entrada Obj)
+		public new bool ContainsKey(T Key)
 		{
-			//Está en la lista?
-			if (Data.ContainsKey(Obj.Key))
-			{
-				Data[Obj.Key] = Obj.Val;
-
-			}
-			else
-			{
-				Data.Add(Obj.Key, Obj.Val);
-			}
-
-			if (Data[Obj.Key].Equals(Nulo))           // ¿No es Data[Obj.val]?
-			{
-				Data.Remove(Obj.Key);
-			}
-			if (CambioValor != null)
-				CambioValor.Invoke(this, new EventArgs());
-		}
-
-		/// <summary>
-		/// Establece el valor de una entrada: this(Key) = Val.
-		/// </summary>
-		/// <param name="Key"></param>
-		/// <param name="Val"></param>
-		public void Set(T Key, V Val)
-		{
-			Entrada E;
-			E.Key = Key;
-			E.Val = Val;
-			this.Set(E);
-		}
-
-		/// <summary>
-		/// Suma una entrada de la instancia.
-		/// </summary>
-		/// <param name="Key">Entrada que se le sumará.</param>
-		/// <param name="Val">Comparador que se sumará a la entrada.</param>
-		public void Add(T Key, V Val)
-		{
-			Set(Key, Suma(this[Key], Val));
-		}
-
-		/// <summary>
-		/// Suma una entrada de la instancia.
-		/// </summary>
-		/// <param name="Obj">Info a sumar.</param>
-		public void Add(Entrada Obj)
-		{
-			this.Add(Obj.Key, Obj.Val);
-		}
-
-		/// <summary>
-		/// Hace la función instancia cero.
-		/// </summary>
-		public void Vaciar()
-		{
-			List<T> Keys = new List<T>();
-			foreach (T x in Data.Keys)
-				Keys.Add(x);
-			foreach (var x in Keys)
-				Set(x, Nulo);
+			return base.ContainsKey(Key);
 		}
 
 		/// <summary>
@@ -236,7 +184,7 @@ namespace ListasExtra
 				throw new NullReferenceException("No está definito Inv");
 			ListaPeso<T, V> ret = new ListaPeso<T, V>(Suma, Nulo);
 			ret.Inv = Inv;
-			foreach (var x in Data.Keys)
+			foreach (var x in Keys)
 			{
 				ret.Add(x, Inv(this[x]));
 			}
@@ -251,7 +199,7 @@ namespace ListasExtra
 		public ListaPeso<T, V> SumarA(ListaPeso<T, V> S)
 		{
 			ListaPeso<T, V> ret = (ListaPeso<T, V>)this.MemberwiseClone();
-			foreach (T x in S.Data.Keys)
+			foreach (T x in S.Keys)
 			{
 				ret.Add(x, S[x]);
 			}
@@ -324,7 +272,7 @@ namespace ListasExtra
 		public long CountIf(Func<T, bool> Selector)
 		{
 			long ret = 0;
-			foreach (var x in Data.Keys)
+			foreach (var x in Keys)
 			{
 				if (Selector.Invoke(x))
 				{
