@@ -19,7 +19,12 @@ namespace ListasExtra
 		{
 			get
 			{
-				return ContainsKey(Key) ? base[Key] : Nulo;
+				foreach (var x in this)
+				{
+					if (_Comparador(x.Key, Key))
+						return x.Value;
+				}
+				return Nulo;				
 			}
 			set
 			{
@@ -28,7 +33,7 @@ namespace ListasExtra
 				{
 					if (_Comparador(x, Key))
 					{
-						base[Key] = value;
+						base[x] = value;
 						if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
 						return;
 					}
@@ -173,7 +178,11 @@ namespace ListasExtra
 
 		public new bool ContainsKey(T Key)
 		{
-			return base.ContainsKey(Key);
+			foreach (var x in Keys)
+			{
+				if (_Comparador(x, Key)) return true;
+			}
+			return false;			
 		}
 
 		/// <summary>
