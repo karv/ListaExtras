@@ -29,11 +29,13 @@ namespace ListasExtra
 					if (_Comparador(x, Key))
 					{
 						base[Key] = value;
+						if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
 						return;
 					}
 				}
 
 				// Si es entrada nueva, se agraga.
+				if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
 				base.Add(Key, value);
 			}
 		}
