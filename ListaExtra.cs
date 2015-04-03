@@ -12,10 +12,10 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="V">Rango(co-dominio) de la función.</typeparam>
-	[DataContract(Name = "ListaPeso", IsReference = true)]	
-	public class ListaPeso<T, V>:Dictionary<T, V>
+	[DataContract(Name = "ListaPeso", IsReference = true)]
+	public class ListaPeso<T, V> : Dictionary<T, V>
 	{
-		public new V this [T Key]
+		public new V this[T Key]
 		{
 			get
 			{
@@ -24,7 +24,7 @@ namespace ListasExtra
 					if (_Comparador(x.Key, Key))
 						return x.Value;
 				}
-				return Nulo;				
+				return Nulo;
 			}
 			set
 			{
@@ -79,11 +79,11 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="Pred">Predicado a exaluar.</param>
 		/// <returns>Devuelve true si existe un objeto que cumple Pred.</returns>
-		public bool Any (Func<T, V, bool> Pred)
+		public bool Any(Func<T, V, bool> Pred)
 		{
 			foreach (var x in Keys)
-			{				
-				if (Pred (x, this[x]))				
+			{
+				if (Pred(x, this[x]))
 					return true;
 			}
 			return false;
@@ -182,7 +182,7 @@ namespace ListasExtra
 			{
 				if (_Comparador(x, Key)) return true;
 			}
-			return false;			
+			return false;
 		}
 
 		/// <summary>
