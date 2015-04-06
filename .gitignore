@@ -5,3 +5,4 @@ TestProject1
 .BackupManager
 *.user
 !*.sln
+*.suo
