@@ -15,7 +15,7 @@ namespace ListasExtra
 	[DataContract(Name = "ListaPeso", IsReference = true)]
 	public class ListaPeso<T, V> : Dictionary<T, V>
 	{
-		public new V this[T Key]
+		public new V this [T Key]
 		{
 			get
 			{
@@ -34,13 +34,15 @@ namespace ListasExtra
 					if (_Comparador(x, Key))
 					{
 						base[x] = value;
-						if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
+						if (CambioValor != null)
+							CambioValor.Invoke(this, new EventArgs());
 						return;
 					}
 				}
 
 				// Si es entrada nueva, se agraga.
-				if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
+				if (CambioValor != null)
+					CambioValor.Invoke(this, new EventArgs());
 				base.Add(Key, value);
 			}
 		}
@@ -180,7 +182,8 @@ namespace ListasExtra
 		{
 			foreach (var x in Keys)
 			{
-				if (_Comparador(x, Key)) return true;
+				if (_Comparador(x, Key))
+					return true;
 			}
 			return false;
 		}
@@ -406,6 +409,202 @@ namespace ListasExtra
 			ObjetoAcotado<Double> ret = new ObjetoAcotado<Double>(ComparadoresPred.EsMenor, Double.MinValue, Double.MaxValue, 0);
 			ret.Valor = x;
 			return ret;
+		}
+	}
+}
+namespace Treelike
+{
+	/// <summary>
+	/// Una colección de objetos T[] que se van acomodando según su posición en un árbol de suceciones de T. 
+	/// </summary>
+	public class Tree<T>
+	{
+		/// <summary>
+		/// devuelve o establece si el nodo actual del árbol se considera como parte del árbol.
+		/// </summary>
+		bool EnumeraActual = false;
+
+		/// <summary>
+		/// Revisa si este nodo es raíz
+		/// </summary>
+		/// <value><c>true</c> if this instance is root; otherwise, <c>false</c>.</value>
+		public bool IsRoot
+		{
+			get
+			{
+				return Pred == null;
+			}
+		}
+
+		readonly T nodo;
+		readonly List<Tree<T>> Succ = new List<Tree<T>>();
+		readonly Tree<T> Pred;
+
+		public T[] Stem
+		{
+			get
+			{
+				T[] ret;
+				if (!IsRoot)
+				{
+					T[] iter = Pred.Stem;
+					ret = new T[iter.Length + 1];
+					iter.CopyTo(ret, 0);
+					ret[ret.Length - 1] = nodo;
+				}
+				else
+				{
+					ret = new T[0];
+				}
+				return ret;
+			}
+		}
+
+		public Tree(T nNodo, Tree<T> nPred)
+		{
+			Pred = nPred;
+			nodo = nNodo;
+		}
+
+		public Tree()
+		{
+			Pred = null;
+		}
+
+		/// <summary>
+		/// Serializa el árbol en una lista
+		/// </summary>
+		/// <returns>The list.</returns>
+		public List<T[]> ToList()
+		{
+			List<T[]> ret = new List<T[]>();
+			AddToList(ret);
+			return ret;
+		}
+
+		/// <summary>
+		/// Agrega una copia serializada de este árbol a una lista
+		/// </summary>
+		/// <param name="lst">La lista</param>
+		public void AddToList(List<T[]> lst)
+		{
+			if (EnumeraActual)
+				lst.Add(Stem);
+			foreach (var x in Succ)
+			{
+				x.AddToList(lst);
+			}
+		}
+
+		/// <summary>
+		/// Devuelve un arreglo enlistando una serialización de este árbol.
+		/// </summary>
+		/// <returns>The array.</returns>
+		public T[][] ToArray()
+		{
+			return ToList().ToArray();
+		}
+
+		public Tree<T> EncuentraSucc(T nodoSucc, bool Forzar = false)
+		{
+			Tree<T> ret;
+			ret = Succ.Find(x => x.nodo.Equals(nodoSucc));
+			if (ret == null && Forzar)
+			{
+				ret = new Tree<T>(nodoSucc, this);
+				Succ.Add(ret);
+			}
+			return ret;
+		}
+
+		/// <summary>
+		/// Agrega n objeto al árbol
+		/// </summary>
+		/// <param name="x">Objeto a agregar</param>
+		public void Add(T[] x) //Esto quedaría genial en haskell
+		{
+			if (x.Length == 0)
+			{
+				EnumeraActual = true;
+			}
+			else
+			{
+				T[] y = new T[x.Length - 1];
+				Tree<T> AgregaEn = EncuentraSucc(x[0], true);
+				for (int i = 0; i < y.Length; i++)
+				{
+					y[i] = x[i + 1];
+				}
+				AgregaEn.Add(y);
+			}
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Treelike.Tree`1"/> class.
+		/// </summary>
+		/// <param name="coll">Colección inicial</param>
+		public Tree(IEnumerable<T[]> coll):this()
+		{
+			foreach (var x in coll)
+			{
+				Add(x);
+			}
+		}
+
+		public override string ToString()
+		{
+			return ToList().ToString();
+		}
+	}
+
+	/// <summary>
+	/// Representa un árbol de strings que se puede enumerar.
+	/// </summary>
+	public class StringTree:Treelike.Tree<char>
+	{
+		/// <summary>
+		/// Agrega un objeto al árbol
+		/// </summary>
+		/// <param name="x">Objeto a agregar</param>
+		public void Add(string x)
+		{
+			base.Add(x.ToCharArray());
+		}
+
+		/// <summary>
+		/// Serializa el árbol en una lista
+		/// </summary>
+		/// <returns>The list.</returns>
+		public new List<string> ToList()
+		{
+			char[][] ret2 = base.ToArray();
+			List<string> ret = new List<string>();
+			foreach (var x in ret2)
+			{
+				ret.Add(x.ToString());
+			}
+			return ret;
+		}
+
+		/// <summary>
+		/// Devuelve un arreglo enlistando una serialización de este árbol.
+		/// </summary>
+		/// <returns>The array.</returns>
+		public new string[] ToArray()
+		{
+			return ToList().ToArray();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Treelike.StringTree"/> class.
+		/// </summary>
+		/// <param name="coll">La colección inicial.</param>
+		public StringTree(IEnumerable<string> coll)
+		{
+			foreach (var x in coll)
+			{
+				Add(x);
+			}
 		}
 	}
 }
