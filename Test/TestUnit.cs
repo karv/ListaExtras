@@ -15,6 +15,9 @@ namespace Test
 		[Test]
 		public void ProbarSet()
 		{
+			ListasExtra.Set.Set<int> x = new ListasExtra.Set.Set<int>();
+			x.Add(12);
+			int t = x.Next;
 		}
 	}
 }

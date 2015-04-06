@@ -15,46 +15,39 @@ namespace ListasExtra
 	[DataContract(Name = "ListaPeso", IsReference = true)]
 	public class ListaPeso<T, V> : Dictionary<T, V>
 	{
-		public new V this [T Key]
-		{
-			get
-			{
-				foreach (var x in this)
-				{
-					if (_Comparador(x.Key, Key))
+		public new V this [T Key] {
+			get {
+				foreach (var x in this) {
+					if (_Comparador (x.Key, Key))
 						return x.Value;
 				}
 				return Nulo;
 			}
-			set
-			{
+			set {
 				// Encontrar la Key buscada.
-				foreach (var x in Keys)
-				{
-					if (_Comparador(x, Key))
-					{
-						base[x] = value;
+				foreach (var x in Keys) {
+					if (_Comparador (x, Key)) {
+						base [x] = value;
 						if (CambioValor != null)
-							CambioValor.Invoke(this, new EventArgs());
+							CambioValor.Invoke (this, new EventArgs ());
 						return;
 					}
 				}
 
 				// Si es entrada nueva, se agraga.
 				if (CambioValor != null)
-					CambioValor.Invoke(this, new EventArgs());
-				base.Add(Key, value);
+					CambioValor.Invoke (this, new EventArgs ());
+				base.Add (Key, value);
 			}
 		}
 
-		private Func<T, T, bool> _Comparador = (x, y) => x.Equals(y);
+		private Func<T, T, bool> _Comparador = (x, y) => x.Equals (y);
 
 		/// <summary>
 		/// Devuelve o establece qué función sirve para saber si dos T's son idénticos para esta lista.
 		/// Por default es x.Equals(y).
 		/// </summary>
-		public Func<T, T, bool> Comparador
-		{
+		public Func<T, T, bool> Comparador {
 			get { return _Comparador; }
 			set { _Comparador = value; }
 		}
@@ -64,14 +57,11 @@ namespace ListasExtra
 		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
 		/// </summary>
-		public V Nulo
-		{
-			get
-			{
+		public V Nulo {
+			get {
 				return _NullV;
 			}
-			set
-			{
+			set {
 				_NullV = value;
 			}
 		}
@@ -81,11 +71,10 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="Pred">Predicado a exaluar.</param>
 		/// <returns>Devuelve true si existe un objeto que cumple Pred.</returns>
-		public bool Any(Func<T, V, bool> Pred)
+		public bool Any (Func<T, V, bool> Pred)
 		{
-			foreach (var x in Keys)
-			{
-				if (Pred(x, this[x]))
+			foreach (var x in Keys) {
+				if (Pred (x, this [x]))
 					return true;
 			}
 			return false;
@@ -95,7 +84,7 @@ namespace ListasExtra
 		/// Revisa si existe un objeto en esta lista.
 		/// </summary>
 		/// <returns>Devuelve true si existe algo.</returns>
-		public bool Any()
+		public bool Any ()
 		{
 			return Count > 0;
 		}
@@ -113,12 +102,11 @@ namespace ListasExtra
 		/// Devuelve la suma sobre las Keys, de sus respectivos Values.
 		/// </summary>
 		/// <returns>Devuelve el objeto resultante de aplicar la operación a cada valor.</returns>
-		public V SumaTotal()
+		public V SumaTotal ()
 		{
 			V tot = Nulo;
-			foreach (T x in Keys)
-			{
-				tot = Suma(tot, this[x]);
+			foreach (T x in Keys) {
+				tot = Suma (tot, this [x]);
 			}
 			return tot;
 		}
@@ -127,18 +115,14 @@ namespace ListasExtra
 		/// Obtiene la entrda cuyo valor es máximo.
 		/// </summary>
 		/// <returns></returns>		
-		public T ObtenerMáximo(Func<V, V, bool> Comparador)
+		public T ObtenerMáximo (Func<V, V, bool> Comparador)
 		{
-			if (!Any())
-			{
+			if (!Any ()) {
 				return default(T);
-			}
-			else
-			{
-				T tmp = Keys.ToArray()[0];
-				foreach (T x in Keys)
-				{
-					if (Comparador(this[x], this[tmp]))
+			} else {
+				T tmp = Keys.ToArray () [0];
+				foreach (T x in Keys) {
+					if (Comparador (this [x], this [tmp]))
 						tmp = x;
 				}
 				return tmp;
@@ -155,7 +139,7 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="OperSuma">Operador suma inicial.</param>
 		/// <param name="ObjetoNulo">Objeto cero inicial.</param>
-		public ListaPeso(Func<V, V, V> OperSuma, V ObjetoNulo)
+		public ListaPeso (Func<V, V, V> OperSuma, V ObjetoNulo)
 		{
 			Suma = OperSuma;
 			Nulo = ObjetoNulo;
@@ -167,22 +151,21 @@ namespace ListasExtra
 		/// <param name="OperSuma">Operador suma inicial.</param>
 		/// <param name="ObjetoNulo">Objeto cero inicial.</param>
 		/// <param name="InitDat">Data inicial.</param>
-		public ListaPeso(Func<V, V, V> OperSuma, V ObjetoNulo, Dictionary<T, V> InitDat)
+		public ListaPeso (Func<V, V, V> OperSuma, V ObjetoNulo, Dictionary<T, V> InitDat)
 			: this(OperSuma, ObjetoNulo)
 		{
 			foreach (var x in InitDat)
-				Add(x.Key, x.Value);
+				Add (x.Key, x.Value);
 		}
 
-		protected ListaPeso()
+		protected ListaPeso ()
 		{
 		}
 
-		public new bool ContainsKey(T Key)
+		public new bool ContainsKey (T Key)
 		{
-			foreach (var x in Keys)
-			{
-				if (_Comparador(x, Key))
+			foreach (var x in Keys) {
+				if (_Comparador (x, Key))
 					return true;
 			}
 			return false;
@@ -192,15 +175,14 @@ namespace ListasExtra
 		/// Devuelve la lista inversa a esta instancia.
 		/// </summary>
 		/// <returns></returns>
-		public ListaPeso<T, V> Inverso()
+		public ListaPeso<T, V> Inverso ()
 		{
 			if (Inv == null)
-				throw new NullReferenceException("No está definito Inv");
-			ListaPeso<T, V> ret = new ListaPeso<T, V>(Suma, Nulo);
+				throw new NullReferenceException ("No está definito Inv");
+			ListaPeso<T, V> ret = new ListaPeso<T, V> (Suma, Nulo);
 			ret.Inv = Inv;
-			foreach (var x in Keys)
-			{
-				ret.Add(x, Inv(this[x]));
+			foreach (var x in Keys) {
+				ret.Add (x, Inv (this [x]));
 			}
 			return ret;
 		}
@@ -210,12 +192,11 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="S">Lista sumando.</param>
 		/// <returns></returns>
-		public ListaPeso<T, V> SumarA(ListaPeso<T, V> S)
+		public ListaPeso<T, V> SumarA (ListaPeso<T, V> S)
 		{
-			ListaPeso<T, V> ret = (ListaPeso<T, V>)this.MemberwiseClone();
-			foreach (T x in S.Keys)
-			{
-				ret.Add(x, S[x]);
+			ListaPeso<T, V> ret = (ListaPeso<T, V>)this.MemberwiseClone ();
+			foreach (T x in S.Keys) {
+				ret.Add (x, S [x]);
 			}
 			return ret;
 		}
@@ -226,22 +207,22 @@ namespace ListasExtra
 		/// <param name="Left">Primer sumando.</param>
 		/// <param name="Right">Segundo sumando.</param>
 		/// <returns></returns>
-		public static ListaPeso<T, V> Sumar(ListaPeso<T, V> Left, ListaPeso<T, V> Right)
+		public static ListaPeso<T, V> Sumar (ListaPeso<T, V> Left, ListaPeso<T, V> Right)
 		{
-			return Left.SumarA(Right);
+			return Left.SumarA (Right);
 		}
 
-		public static ListaPeso<T, V> operator +(ListaPeso<T, V> Left, ListaPeso<T, V> Right)
+		public static ListaPeso<T, V> operator + (ListaPeso<T, V> Left, ListaPeso<T, V> Right)
 		{
-			return Sumar(Left, Right);
+			return Sumar (Left, Right);
 		}
 
-		public static ListaPeso<T, V> operator -(ListaPeso<T, V> x)
+		public static ListaPeso<T, V> operator - (ListaPeso<T, V> x)
 		{
-			return x.Inverso();
+			return x.Inverso ();
 		}
 
-		public static ListaPeso<T, V> operator -(ListaPeso<T, V> Left, ListaPeso<T, V> Right)
+		public static ListaPeso<T, V> operator - (ListaPeso<T, V> Left, ListaPeso<T, V> Right)
 		{
 			return Left + -Right;
 		}
@@ -250,23 +231,22 @@ namespace ListasExtra
 	[DataContract(Name = "ListaPeso", IsReference = true)]
 	public class ListaPeso<T> : ListasExtra.ListaPeso<T, Single>
 	{
-		public ListaPeso()
+		public ListaPeso ()
 			: base((x, y) => x + y, 0)
 		{
 		}
 
-		public static bool operator <=(ListasExtra.ListaPeso<T> left, ListasExtra.ListaPeso<T> right)
+		public static bool operator <= (ListasExtra.ListaPeso<T> left, ListasExtra.ListaPeso<T> right)
 		{
 
-			foreach (var x in left.Keys)
-			{
-				if (left[x] > right[x])
+			foreach (var x in left.Keys) {
+				if (left [x] > right [x])
 					return false;
 			}
 			return true;
 		}
 
-		public static bool operator >=(ListasExtra.ListaPeso<T> left, ListasExtra.ListaPeso<T> right)
+		public static bool operator >= (ListasExtra.ListaPeso<T> left, ListasExtra.ListaPeso<T> right)
 		{
 			return right <= left;
 		}
@@ -278,19 +258,17 @@ namespace ListasExtra
 	/// <typeparam name="T"></typeparam>
 	public class ListaContador<T> : ListasExtra.ListaPeso<T, long>
 	{
-		public ListaContador()
+		public ListaContador ()
 			: base((x, y) => x + y, 0)
 		{
 		}
 
-		public long CountIf(Func<T, bool> Selector)
+		public long CountIf (Func<T, bool> Selector)
 		{
 			long ret = 0;
-			foreach (var x in Keys)
-			{
-				if (Selector.Invoke(x))
-				{
-					ret += this[x];
+			foreach (var x in Keys) {
+				if (Selector.Invoke (x)) {
+					ret += this [x];
 				}
 			}
 			return ret;
@@ -307,47 +285,39 @@ namespace ListasExtra
 		//private Comparer<T> Comparador;
 		private Func<T, T, Boolean> _EsMenor;
 
-		public Func<T, T, Boolean> EsMenor
-		{
-			get
-			{
+		public Func<T, T, Boolean> EsMenor {
+			get {
 				return _EsMenor;
 			}
-			private set
-			{
+			private set {
 				_EsMenor = value;
 			}
 		}
 
-		public T Valor
-		{
-			get
-			{
+		public T Valor {
+			get {
 				return _Valor;
 			}
-			set
-			{
+			set {
 
-				_Valor = EsMenor(value, CotaSup) ? (EsMenor(value, CotaInf) ? CotaInf : value) : CotaSup;
-				if (_Valor.Equals(CotaInf))
-				{
+				_Valor = EsMenor (value, CotaSup) ? (EsMenor (value, CotaInf) ? CotaInf : value) : CotaSup;
+				if (_Valor.Equals (CotaInf)) {
 					EventHandler Handler = LlegóMínimo;
-					Handler(this, null);
+					Handler (this, null);
 				}
-				if (_Valor.Equals(CotaSup))
-				{
+				if (_Valor.Equals (CotaSup)) {
 					EventHandler Handler = LlegóMáximo;
-					Handler(this, null);
+					Handler (this, null);
 				}
 			}
 		}
 
-		public ObjetoAcotado(Func<T, T, Boolean> Comparador)
+		public ObjetoAcotado (Func<T, T, Boolean> Comparador)
 		{
 			EsMenor = Comparador;
 		}
 
-		public ObjetoAcotado(Func<T, T, Boolean> Comparador, T Min, T Max, T Inicial)
+		public ObjetoAcotado (Func<T, T, Boolean> Comparador, T Min, T Max, T Inicial)
 			: this(Comparador)
 		{
 			CotaInf = Min;
@@ -355,9 +325,9 @@ namespace ListasExtra
 			Valor = Inicial;
 		}
 
-		public override string ToString()
+		public override string ToString ()
 		{
-			return Valor.ToString();
+			return Valor.ToString ();
 		}
 		//Eventos
 		public event EventHandler LlegóMínimo;
@@ -367,12 +337,12 @@ namespace ListasExtra
 	[DataContract(IsReference = true)]
 	public static class ComparadoresPred
 	{
-		public static Boolean EsMenor(Double x, Double y)
+		public static Boolean EsMenor (Double x, Double y)
 		{
 			return x < y;
 		}
 
-		public static Boolean EsMenor(Single x, Single y)
+		public static Boolean EsMenor (Single x, Single y)
 		{
 			return x < y;
 		}
@@ -381,21 +351,21 @@ namespace ListasExtra
 	[DataContract(IsReference = true)]
 	public static class OperadoresPred
 	{
-		public static Double Suma(Double x, Double y)
+		public static Double Suma (Double x, Double y)
 		{
 			return x + y;
 		}
 
-		public static long Suma(long x, long y)
+		public static long Suma (long x, long y)
 		{
 			return x + y;
 		}
 
-		public static ObjetoAcotado<Double> Suma(ObjetoAcotado<Double> x, ObjetoAcotado<Double> y)
+		public static ObjetoAcotado<Double> Suma (ObjetoAcotado<Double> x, ObjetoAcotado<Double> y)
 		{
-			ObjetoAcotado<Double> ret = new ObjetoAcotado<double>(x.EsMenor);
-			ret.CotaSup = Math.Max(x.CotaSup, y.CotaSup);
-			ret.CotaInf = Math.Min(x.CotaInf, y.CotaInf);
+			ObjetoAcotado<Double> ret = new ObjetoAcotado<double> (x.EsMenor);
+			ret.CotaSup = Math.Max (x.CotaSup, y.CotaSup);
+			ret.CotaInf = Math.Min (x.CotaInf, y.CotaInf);
 			ret.Valor = x.Valor + y.Valor;
 			return ret;
 		}
@@ -404,9 +374,9 @@ namespace ListasExtra
 	[DataContract(IsReference = true)]
 	public static class ExtDouble
 	{
-		public static ListasExtra.ObjetoAcotado<Double> ToAcotado(this Double x)
+		public static ListasExtra.ObjetoAcotado<Double> ToAcotado (this Double x)
 		{
-			ObjetoAcotado<Double> ret = new ObjetoAcotado<Double>(ComparadoresPred.EsMenor, Double.MinValue, Double.MaxValue, 0);
+			ObjetoAcotado<Double> ret = new ObjetoAcotado<Double> (ComparadoresPred.EsMenor, Double.MinValue, Double.MaxValue, 0);
 			ret.Valor = x;
 			return ret;
 		}
@@ -420,34 +390,32 @@ namespace ListasExtra.Set
 	/// <typeparam name="T">Tipo de objetos</typeparam>
 	public class Set<T> : List<T>
 	{
-		Random r = new Random();
+		Random r = new Random ();
 
 		/// <summary>
 		/// Agrega un objeto al conjunto.
 		/// </summary>
 		/// <param name="x"></param>
-		public new void Add(T x)
+		public new void Add (T x)
 		{
-			base.Insert(r.Next(Count + 1), x);
+			base.Insert (r.Next (Count + 1), x);
 		}
 
 		/// <summary>
 		/// Regresa un arreglo con los objetos en el conjunto, sin repetición.
 		/// </summary>
 		/// <returns></returns>
-		public T[] ToArray()
+		public T[] ToArray ()
 		{
-			return base.ToArray();
+			return base.ToArray ();
 		}
 
 		/// <summary>
 		/// Devuelve un elemento de este conjunto.
 		/// </summary>
-		public T Next
-		{
-			get
-			{
-				return base[r.Next(Count + 1)];
+		public T Next {
+			get {
+				return base [r.Next (Count)];
 			}
 		}
 	}
