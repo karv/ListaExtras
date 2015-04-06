@@ -15,7 +15,7 @@ namespace ListasExtra
 	[DataContract(Name = "ListaPeso", IsReference = true)]
 	public class ListaPeso<T, V> : Dictionary<T, V>
 	{
-		public new V this[T Key]
+		public new V this [T Key]
 		{
 			get
 			{
@@ -34,13 +34,15 @@ namespace ListasExtra
 					if (_Comparador(x, Key))
 					{
 						base[x] = value;
-						if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
+						if (CambioValor != null)
+							CambioValor.Invoke(this, new EventArgs());
 						return;
 					}
 				}
 
 				// Si es entrada nueva, se agraga.
-				if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
+				if (CambioValor != null)
+					CambioValor.Invoke(this, new EventArgs());
 				base.Add(Key, value);
 			}
 		}
@@ -180,7 +182,8 @@ namespace ListasExtra
 		{
 			foreach (var x in Keys)
 			{
-				if (_Comparador(x, Key)) return true;
+				if (_Comparador(x, Key))
+					return true;
 			}
 			return false;
 		}
@@ -409,8 +412,7 @@ namespace ListasExtra
 		}
 	}
 }
-
-namespace ListaExtra.Set
+namespace ListasExtra.Set
 {
 	/// <summary>
 	/// Representa un conjunto de elementos sin un control sobre el orden.
@@ -419,6 +421,7 @@ namespace ListaExtra.Set
 	public class Set<T> : List<T>
 	{
 		Random r = new Random();
+
 		/// <summary>
 		/// Agrega un objeto al conjunto.
 		/// </summary>
