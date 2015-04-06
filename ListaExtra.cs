@@ -408,4 +408,79 @@ namespace ListasExtra
 			return ret;
 		}
 	}
+
+	/// <summary>
+	/// Una estructura que almacena en orden los objetos, en forma de árbol.
+	/// </summary>
+	/// <typeparam name="T">Tipo de objetos.</typeparam>
+	public class LexicoOrden<T> : IEnumerator<T[]>
+	{
+		/// <summary>
+		/// devuelve o establece si el nodo actual del árbol se considera como parte de la lista.
+		/// </summary>
+		bool EnumeraActual = false;
+		bool Inicializado = false;	// 
+		public readonly T[] Raíz;
+
+		public IEnumerator<T> GetEnumerator()
+		{
+			throw new NotImplementedException();
+			//yield return default(T);
+		}
+
+		public T[] Current
+		{
+			get
+			{
+				return Raíz;
+			}
+		}
+
+		object System.Collections.IEnumerator.Current
+		{
+			get { return Current; }
+		}
+
+		public void Reset()
+		{
+			Inicializado = false;
+		}
+
+		public bool MoveNext()
+		{
+			if (EnumeraActual) yield return true;
+			foreach (var x in Iterando)
+			{
+				if (x.MoveNext())
+				{
+					yield return true;
+				}
+			}
+			yield return false;
+		}
+
+		public void Dispose()
+		{
+		}
+
+		List<LexicoOrden<T>> Iterando = new List<LexicoOrden<T>>();
+
+		public LexicoOrden()
+		{
+			if (!typeof(T).IsAssignableFrom(typeof(IComparable)))
+			{
+				throw new Exception("No se puede crear una instancia de un LexicoOrden que no sea IComparable.");
+			}
+
+		}
+
+		/// <summary>
+		/// Contructor privado iterativo.
+		/// </summary>
+		/// <param name="nRaíz">Estado de la iteración.</param>
+		LexicoOrden(T[] nRaíz)
+		{
+			Raíz = nRaíz;
+		}
+	}
 }
