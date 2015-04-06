@@ -13,8 +13,12 @@ namespace Test
 		}
 
 		[Test]
-		public void ProbarSet()
+		public void ProbarTree()
 		{
+			Treelike.Tree<char> x = new Treelike.Tree<char>();
+			x.Add("nhue".ToCharArray());
+			char[][] y = x.ToArray();
+			Console.WriteLine(y[0]);
 		}
 	}
 }
