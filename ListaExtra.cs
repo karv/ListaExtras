@@ -15,7 +15,7 @@ namespace ListasExtra
 	[DataContract(Name = "ListaPeso", IsReference = true)]
 	public class ListaPeso<T, V> : Dictionary<T, V>
 	{
-		public new V this[T Key]
+		public new V this [T Key]
 		{
 			get
 			{
@@ -34,13 +34,15 @@ namespace ListasExtra
 					if (_Comparador(x, Key))
 					{
 						base[x] = value;
-						if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
+						if (CambioValor != null)
+							CambioValor.Invoke(this, new EventArgs());
 						return;
 					}
 				}
 
 				// Si es entrada nueva, se agraga.
-				if (CambioValor != null) CambioValor.Invoke(this, new EventArgs());
+				if (CambioValor != null)
+					CambioValor.Invoke(this, new EventArgs());
 				base.Add(Key, value);
 			}
 		}
@@ -180,7 +182,8 @@ namespace ListasExtra
 		{
 			foreach (var x in Keys)
 			{
-				if (_Comparador(x, Key)) return true;
+				if (_Comparador(x, Key))
+					return true;
 			}
 			return false;
 		}
@@ -419,7 +422,23 @@ namespace ListasExtra
 		/// devuelve o establece si el nodo actual del árbol se considera como parte de la lista.
 		/// </summary>
 		bool EnumeraActual = false;
-		bool Inicializado = false;	// 
+
+		bool Inicializado
+		{
+			get
+			{
+				return ContadorLista >= 0;
+			}
+		}
+
+		/// <summary>
+		/// El apuntador a la lista.
+		/// </summary>
+		int ContadorLista = -1;
+		/// <summary>
+		/// El iterador.
+		/// </summary>
+		LexicoOrden<T> Seeker = new LexicoOrden<T>();
 		public readonly T[] Raíz;
 
 		public IEnumerator<T> GetEnumerator()
@@ -432,7 +451,8 @@ namespace ListasExtra
 		{
 			get
 			{
-				return Raíz;
+				// List<T> ret = new List<T>();
+				return Seeker.Raíz;
 			}
 		}
 
@@ -443,20 +463,38 @@ namespace ListasExtra
 
 		public void Reset()
 		{
-			Inicializado = false;
+			ContadorLista = -1;
+			foreach (var x in Iterando)
+			{
+				x.Reset();
+			}
 		}
 
 		public bool MoveNext()
 		{
-			if (EnumeraActual) yield return true;
-			foreach (var x in Iterando)
+			// LexicoOrden<T> Seeker; // Es quien se va a iterar, buscando el siguiente.
+
+			do
 			{
-				if (x.MoveNext())
-				{
-					yield return true;
-				}
+				Seeker = Seeker.WeakMoveNext();
+			} while (Seeker != null && !Seeker.EnumeraActual);
+			return Seeker != null;
+		}
+
+		LexicoOrden<T> WeakMoveNext()
+		{
+			if (ContadorLista == -1)//Aún no es tiempo de revisar sucesores.
+			{
+				ContadorLista = 0;
+				return this;
 			}
-			yield return false;
+			else
+			{
+				if (ContadorLista == Iterando.Count)
+					return null;// null significa que ya me acabé.
+				LexicoOrden <T> ret = Iterando[ContadorLista++];
+				return ret.WeakMoveNext();
+			}
 		}
 
 		public void Dispose()
