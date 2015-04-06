@@ -1,7 +1,5 @@
-*.sln
 bin
 obj
 TestProject1
 .BackupManager
-*.user
-!*.sln
+*.user*
