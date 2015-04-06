@@ -507,6 +507,18 @@ namespace ListasExtra.Treelike
 			}
 		}
 
+		public bool Contains (T[] x)
+		{
+			if (x.Length == 0) {
+				return this.EnumeraActual;
+			} else {
+				T a = x [0];
+				x = x.Skip (1).ToArray ();
+				Tree<T> iter = EncuentraSucc (a);
+				return iter != null && iter.Contains (x);
+			}
+		}
+
 		public override string ToString ()
 		{
 			return ToList ().ToString ();
