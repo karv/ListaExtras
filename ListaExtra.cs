@@ -414,7 +414,9 @@ namespace ListasExtra
 }
 namespace Treelike
 {
-	// Un árbol
+	/// <summary>
+	/// Una colección de objetos T[] que se van acomodando según su posición en un árbol de suceciones de T. 
+	/// </summary>
 	public class Tree<T>
 	{
 		/// <summary>
@@ -534,6 +536,74 @@ namespace Treelike
 					y[i] = x[i + 1];
 				}
 				AgregaEn.Add(y);
+			}
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Treelike.Tree`1"/> class.
+		/// </summary>
+		/// <param name="coll">Colección inicial</param>
+		public Tree(IEnumerable<T[]> coll):this()
+		{
+			foreach (var x in coll)
+			{
+				Add(x);
+			}
+		}
+
+		public override string ToString()
+		{
+			return ToList().ToString();
+		}
+	}
+
+	/// <summary>
+	/// Representa un árbol de strings que se puede enumerar.
+	/// </summary>
+	public class StringTree:Treelike.Tree<char>
+	{
+		/// <summary>
+		/// Agrega un objeto al árbol
+		/// </summary>
+		/// <param name="x">Objeto a agregar</param>
+		public void Add(string x)
+		{
+			base.Add(x.ToCharArray());
+		}
+
+		/// <summary>
+		/// Serializa el árbol en una lista
+		/// </summary>
+		/// <returns>The list.</returns>
+		public new List<string> ToList()
+		{
+			char[][] ret2 = base.ToArray();
+			List<string> ret = new List<string>();
+			foreach (var x in ret2)
+			{
+				ret.Add(x.ToString());
+			}
+			return ret;
+		}
+
+		/// <summary>
+		/// Devuelve un arreglo enlistando una serialización de este árbol.
+		/// </summary>
+		/// <returns>The array.</returns>
+		public new string[] ToArray()
+		{
+			return ToList().ToArray();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Treelike.StringTree"/> class.
+		/// </summary>
+		/// <param name="coll">La colección inicial.</param>
+		public StringTree(IEnumerable<string> coll)
+		{
+			foreach (var x in coll)
+			{
+				Add(x);
 			}
 		}
 	}
