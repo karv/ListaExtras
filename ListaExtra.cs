@@ -467,7 +467,7 @@ namespace ListasExtra.Treelike
 			return ToList ().ToArray ();
 		}
 
-		public Tree<T> EncuentraSucc (T nodoSucc, bool Forzar = false)
+		Tree<T> EncuentraSucc (T nodoSucc, bool Forzar = false)
 		{
 			Tree<T> ret;
 			ret = Succ.Find (x => x.nodo.Equals (nodoSucc));
@@ -536,7 +536,7 @@ namespace ListasExtra.Treelike
 			char[][] ret2 = base.ToArray ();
 			List<string> ret = new List<string> ();
 			foreach (var x in ret2) {
-				ret.Add (x.ToString ());
+				ret.Add (new string (x));
 			}
 			return ret;
 		}
