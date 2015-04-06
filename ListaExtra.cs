@@ -405,7 +405,7 @@ namespace ListasExtra.Set
 		/// Regresa un arreglo con los objetos en el conjunto, sin repetición.
 		/// </summary>
 		/// <returns></returns>
-		public T[] ToArray ()
+		public new T[] ToArray ()
 		{
 			return base.ToArray ();
 		}
