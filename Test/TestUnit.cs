@@ -9,9 +9,6 @@ namespace Test
 	[TestFixture]
 	public class TestUnit
 	{
-		public TestUnit()
-		{
-		}
 
 		[Test]
 		public void ProbarTree()
@@ -23,7 +20,7 @@ namespace Test
 			System.Diagnostics.Debug.WriteLine(x.ToArray());
 		}
 
-		[Test]
+		[TestCase]
 		public void ProbarStrTree()
 		{
 			string[] a = {"fdfe", "fsgf"};
@@ -31,9 +28,10 @@ namespace Test
 			foreach (string x in t.ToArray()) {
 				Console.WriteLine (x);
 			}
+
 		}
 
-		[Test]
+		[TestCase]
 		public void ProbarSet()
 		{
 			Set<int> x = new Set<int>();

@@ -41,7 +41,7 @@ Global
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = ListaExtras.csproj
+		StartupItem = Test\Test.csproj
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ListaExtras.vsmdi
