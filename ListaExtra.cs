@@ -411,114 +411,131 @@ namespace ListasExtra
 			return ret;
 		}
 	}
-
-	/// <summary>
-	/// Una estructura que almacena en orden los objetos, en forma de árbol.
-	/// </summary>
-	/// <typeparam name="T">Tipo de objetos.</typeparam>
-	public class LexicoOrden<T> : IEnumerator<T[]>
+}
+namespace Treelike
+{
+	// Un árbol
+	public class Tree<T>
 	{
 		/// <summary>
-		/// devuelve o establece si el nodo actual del árbol se considera como parte de la lista.
+		/// devuelve o establece si el nodo actual del árbol se considera como parte del árbol.
 		/// </summary>
 		bool EnumeraActual = false;
 
-		bool Inicializado
+		/// <summary>
+		/// Revisa si este nodo es raíz
+		/// </summary>
+		/// <value><c>true</c> if this instance is root; otherwise, <c>false</c>.</value>
+		public bool IsRoot
 		{
 			get
 			{
-				return ContadorLista >= 0;
+				return Pred == null;
+			}
+		}
+
+		readonly T nodo;
+		readonly List<Tree<T>> Succ = new List<Tree<T>>();
+		readonly Tree<T> Pred;
+
+		public T[] Stem
+		{
+			get
+			{
+				T[] ret;
+				if (!IsRoot)
+				{
+					T[] iter = Pred.Stem;
+					ret = new T[iter.Length + 1];
+					iter.CopyTo(ret, 0);
+					ret[ret.Length - 1] = nodo;
+				}
+				else
+				{
+					ret = new T[1];
+					ret[0] = nodo;
+				}
+				return ret;
+			}
+		}
+
+		public Tree(T nNodo, Tree<T> nPred)
+		{
+			Pred = nPred;
+			nodo = nNodo;
+		}
+
+		public Tree()
+		{
+			Pred = null;
+		}
+
+		/// <summary>
+		/// Serializa el árbol en una lista
+		/// </summary>
+		/// <returns>The list.</returns>
+		public List<T[]> ToList()
+		{
+			List<T[]> ret = new List<T[]>();
+			AddToList(ret);
+			return ret;
+		}
+
+		/// <summary>
+		/// Agrega una copia serializada de este árbol a una lista
+		/// </summary>
+		/// <param name="lst">La lista</param>
+		public void AddToList(List<T[]> lst)
+		{
+			if (EnumeraActual)
+				lst.Add(Stem);
+			foreach (var x in Succ)
+			{
+				x.AddToList(lst);
 			}
 		}
 
 		/// <summary>
-		/// El apuntador a la lista.
+		/// Devuelve un arreglo enlistando una serialización de este árbol.
 		/// </summary>
-		int ContadorLista = -1;
+		/// <returns>The array.</returns>
+		public T[][] ToArray()
+		{
+			return ToList().ToArray();
+		}
+
+		public Tree<T> EncuentraSucc(T nodoSucc, bool Forzar = false)
+		{
+			Tree<T> ret;
+			ret = Succ.Find(x => x.nodo.Equals(nodoSucc));
+			if (ret == null && Forzar)
+			{
+				ret = new Tree<T>(nodoSucc, this);
+				Succ.Add(ret);
+			}
+			return ret;
+		}
+
 		/// <summary>
-		/// El iterador.
+		/// Agrega n objeto al árbol
 		/// </summary>
-		LexicoOrden<T> Seeker = new LexicoOrden<T>();
-		public readonly T[] Raíz;
-
-		public IEnumerator<T> GetEnumerator()
+		/// <param name="x">Objeto a agregar</param>
+		public void Add(T[] x) //Esto quedaría genial en haskell
 		{
-			throw new NotImplementedException();
-			//yield return default(T);
-		}
-
-		public T[] Current
-		{
-			get
+			if (x.Length == 0)
 			{
-				// List<T> ret = new List<T>();
-				return Seeker.Raíz;
-			}
-		}
-
-		object System.Collections.IEnumerator.Current
-		{
-			get { return Current; }
-		}
-
-		public void Reset()
-		{
-			ContadorLista = -1;
-			foreach (var x in Iterando)
-			{
-				x.Reset();
-			}
-		}
-
-		public bool MoveNext()
-		{
-			// LexicoOrden<T> Seeker; // Es quien se va a iterar, buscando el siguiente.
-
-			do
-			{
-				Seeker = Seeker.WeakMoveNext();
-			} while (Seeker != null && !Seeker.EnumeraActual);
-			return Seeker != null;
-		}
-
-		LexicoOrden<T> WeakMoveNext()
-		{
-			if (ContadorLista == -1)//Aún no es tiempo de revisar sucesores.
-			{
-				ContadorLista = 0;
-				return this;
+				EnumeraActual = true;
 			}
 			else
 			{
-				if (ContadorLista == Iterando.Count)
-					return null;// null significa que ya me acabé.
-				LexicoOrden <T> ret = Iterando[ContadorLista++];
-				return ret.WeakMoveNext();
+				T[] y = new T[x.Length - 1];
+				Tree<T> AgregaEn = EncuentraSucc(x[0], true);
+				for (int i = 0; i < y.Length; i++)
+				{
+					y[i] = x[i + 1];
+				}
+				AgregaEn.Add(y);
 			}
-		}
-
-		public void Dispose()
-		{
-		}
-
-		List<LexicoOrden<T>> Iterando = new List<LexicoOrden<T>>();
-
-		public LexicoOrden()
-		{
-			if (!typeof(T).IsAssignableFrom(typeof(IComparable)))
-			{
-				throw new Exception("No se puede crear una instancia de un LexicoOrden que no sea IComparable.");
-			}
-
-		}
-
-		/// <summary>
-		/// Contructor privado iterativo.
-		/// </summary>
-		/// <param name="nRaíz">Estado de la iteración.</param>
-		LexicoOrden(T[] nRaíz)
-		{
-			Raíz = nRaíz;
 		}
 	}
 }
