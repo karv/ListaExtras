@@ -4,3 +4,5 @@ TestProject1
 .BackupManager
 *.user*
 *.suo
+test-results/
+Test/test-results/
