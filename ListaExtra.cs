@@ -452,8 +452,7 @@ namespace Treelike
 				}
 				else
 				{
-					ret = new T[1];
-					ret[0] = nodo;
+					ret = new T[0];
 				}
 				return ret;
 			}
