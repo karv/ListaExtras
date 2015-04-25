@@ -250,6 +250,11 @@ namespace ListasExtra
 		{
 			return right <= left;
 		}
+
+		public static ListaPeso<T> operator + (ListasExtra.ListaPeso<T> left, ListasExtra.ListaPeso<T> right)
+		{
+			return (ListaPeso<T>)ListaPeso<T, float>.Sumar (left, right);
+		}
 	}
 
 	/// <summary>
