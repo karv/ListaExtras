@@ -12,7 +12,7 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="V">Rango(co-dominio) de la función.</typeparam>
-	[DataContract(Name = "ListaPeso", IsReference = true)]
+	[DataContract (Name = "ListaPeso", IsReference = true)]
 	public class ListaPeso<T, V> : Dictionary<T, V>
 	{
 		public new V this [T Key] {
@@ -40,6 +40,8 @@ namespace ListasExtra
 				base.Add (Key, value);
 			}
 		}
+
+
 
 		private Func<T, T, bool> _Comparador = (x, y) => x.Equals (y);
 
@@ -128,7 +130,8 @@ namespace ListasExtra
 				return tmp;
 			}
 		}
-		//Eventos
+		// Eventos
+		// TODO
 		/// <summary>
 		/// Se llama cuando se cambia algún valor (creo que no sirve aún Dx).
 		/// </summary>
@@ -152,7 +155,7 @@ namespace ListasExtra
 		/// <param name="ObjetoNulo">Objeto cero inicial.</param>
 		/// <param name="InitDat">Data inicial.</param>
 		public ListaPeso (Func<V, V, V> OperSuma, V ObjetoNulo, Dictionary<T, V> InitDat)
-			: this(OperSuma, ObjetoNulo)
+			: this (OperSuma, ObjetoNulo)
 		{
 			foreach (var x in InitDat)
 				Add (x.Key, x.Value);
@@ -228,11 +231,11 @@ namespace ListasExtra
 		}
 	}
 
-	[DataContract(Name = "ListaPeso", IsReference = true)]
+	[DataContract (Name = "ListaPeso", IsReference = true)]
 	public class ListaPeso<T> : ListasExtra.ListaPeso<T, Single>
 	{
 		public ListaPeso ()
-			: base((x, y) => x + y, 0)
+			: base ((x, y) => x + y, 0)
 		{
 		}
 
@@ -264,7 +267,7 @@ namespace ListasExtra
 	public class ListaContador<T> : ListasExtra.ListaPeso<T, long>
 	{
 		public ListaContador ()
-			: base((x, y) => x + y, 0)
+			: base ((x, y) => x + y, 0)
 		{
 		}
 
@@ -281,7 +284,7 @@ namespace ListasExtra
 		}
 	}
 
-	[DataContract(IsReference = true)]
+	[DataContract (IsReference = true)]
 	public class ObjetoAcotado<T>
 	{
 		public T CotaSup;
@@ -323,7 +326,7 @@ namespace ListasExtra
 		}
 
 		public ObjetoAcotado (Func<T, T, Boolean> Comparador, T Min, T Max, T Inicial)
-			: this(Comparador)
+			: this (Comparador)
 		{
 			CotaInf = Min;
 			CotaSup = Max;
@@ -339,7 +342,7 @@ namespace ListasExtra
 		public event EventHandler LlegóMáximo;
 	}
 
-	[DataContract(IsReference = true)]
+	[DataContract (IsReference = true)]
 	public static class ComparadoresPred
 	{
 		public static Boolean EsMenor (Double x, Double y)
@@ -353,7 +356,7 @@ namespace ListasExtra
 		}
 	}
 
-	[DataContract(IsReference = true)]
+	[DataContract (IsReference = true)]
 	public static class OperadoresPred
 	{
 		public static Double Suma (Double x, Double y)
@@ -376,7 +379,7 @@ namespace ListasExtra
 		}
 	}
 
-	[DataContract(IsReference = true)]
+	[DataContract (IsReference = true)]
 	public static class ExtDouble
 	{
 		public static ListasExtra.ObjetoAcotado<Double> ToAcotado (this Double x)
@@ -505,7 +508,7 @@ namespace ListasExtra.Treelike
 		/// Initializes a new instance of the <see cref="Treelike.Tree`1"/> class.
 		/// </summary>
 		/// <param name="coll">Colección inicial</param>
-		public Tree (IEnumerable<T[]> coll):this()
+		public Tree (IEnumerable<T[]> coll) : this ()
 		{
 			foreach (var x in coll) {
 				Add (x);
