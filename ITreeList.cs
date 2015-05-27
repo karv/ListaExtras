@@ -36,4 +36,3 @@ namespace ListasExtra.Treelike
 		IEnumerable<ITreeList<T>> succ { get; }
 	}
 }
-

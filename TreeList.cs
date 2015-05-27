@@ -7,7 +7,7 @@ namespace ListasExtra.Treelike
 	/// <summary>
 	/// Una colección de objetos T[] que se van acomodando según su posición en un árbol de suceciones de T. 
 	/// </summary>
-	public class TreeList<T>: ITreeList<T>
+	public class TreeList<T>: ITreeListBackward<T>
 	{
 		#region Objetos
 
@@ -28,7 +28,7 @@ namespace ListasExtra.Treelike
 
 		readonly T _nodo;
 		readonly List<TreeList<T>> _succ = new List<TreeList<T>> ();
-		readonly TreeList<T> _pred;
+		readonly ITreeList<T> _pred;
 
 		#endregion
 
@@ -153,6 +153,12 @@ namespace ListasExtra.Treelike
 		#endregion
 
 		#region ITreeList
+
+		public ITreeList<T> pred {
+			get {
+				return _pred;
+			}
+		}
 
 		public bool enumeraActual {
 			get {
