@@ -10,6 +10,16 @@ namespace ListasExtra.Set
 	/// <typeparam name="T">Tipo de objetos</typeparam>
 	public class Set<T> : ISet<T>
 	{
+		public Set ()
+		{
+			_dat = new List<T> ();
+		}
+
+		public Set (IEnumerable<T> inicial)
+		{
+			_dat = new List<T> (inicial);
+		}
+
 		#region obj
 
 		List<T> _dat;
