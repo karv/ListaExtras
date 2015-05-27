@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListaExtras", "ListaExtras.csproj", "{B9F315AE-47F8-4629-83FC-3B4D70087083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{A3FBF13B-285A-48D4-BED6-0987A5253E3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{0B82277A-93F3-460A-9CFA-276BF36B40AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +15,18 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Debug|x86.Build.0 = Debug|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Release|x86.ActiveCfg = Release|Any CPU
-		{A3FBF13B-285A-48D4-BED6-0987A5253E3F}.Release|x86.Build.0 = Release|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Debug|x86.Build.0 = Debug|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Release|x86.ActiveCfg = Release|Any CPU
+		{0B82277A-93F3-460A-9CFA-276BF36B40AB}.Release|x86.Build.0 = Release|Any CPU
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -39,9 +39,6 @@ Global
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Release|x86.ActiveCfg = Release|Any CPU
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Release|x86.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Test\Test.csproj
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ListaExtras.vsmdi
