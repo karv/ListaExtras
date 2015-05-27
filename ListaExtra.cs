@@ -12,7 +12,7 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="V">Rango(co-dominio) de la función.</typeparam>
-	[DataContract(Name = "ListaPeso", IsReference = true)]
+	[DataContract (Name = "ListaPeso")]
 	public class ListaPeso<T, V> : Dictionary<T, V>
 	{
 		public new V this [T Key] {
@@ -152,7 +152,7 @@ namespace ListasExtra
 		/// <param name="ObjetoNulo">Objeto cero inicial.</param>
 		/// <param name="InitDat">Data inicial.</param>
 		public ListaPeso (Func<V, V, V> OperSuma, V ObjetoNulo, Dictionary<T, V> InitDat)
-			: this(OperSuma, ObjetoNulo)
+			: this (OperSuma, ObjetoNulo)
 		{
 			foreach (var x in InitDat)
 				Add (x.Key, x.Value);
@@ -228,11 +228,11 @@ namespace ListasExtra
 		}
 	}
 
-	[DataContract(Name = "ListaPeso", IsReference = true)]
+	[DataContract (Name = "ListaPeso")]
 	public class ListaPeso<T> : ListasExtra.ListaPeso<T, Single>
 	{
 		public ListaPeso ()
-			: base((x, y) => x + y, 0)
+			: base ((x, y) => x + y, 0)
 		{
 		}
 
@@ -264,7 +264,7 @@ namespace ListasExtra
 	public class ListaContador<T> : ListasExtra.ListaPeso<T, long>
 	{
 		public ListaContador ()
-			: base((x, y) => x + y, 0)
+			: base ((x, y) => x + y, 0)
 		{
 		}
 
@@ -281,7 +281,7 @@ namespace ListasExtra
 		}
 	}
 
-	[DataContract(IsReference = true)]
+	[DataContract]
 	public class ObjetoAcotado<T>
 	{
 		public T CotaSup;
@@ -323,7 +323,7 @@ namespace ListasExtra
 		}
 
 		public ObjetoAcotado (Func<T, T, Boolean> Comparador, T Min, T Max, T Inicial)
-			: this(Comparador)
+			: this (Comparador)
 		{
 			CotaInf = Min;
 			CotaSup = Max;
@@ -339,7 +339,6 @@ namespace ListasExtra
 		public event EventHandler LlegóMáximo;
 	}
 
-	[DataContract(IsReference = true)]
 	public static class ComparadoresPred
 	{
 		public static Boolean EsMenor (Double x, Double y)
@@ -353,7 +352,6 @@ namespace ListasExtra
 		}
 	}
 
-	[DataContract(IsReference = true)]
 	public static class OperadoresPred
 	{
 		public static Double Suma (Double x, Double y)
@@ -376,7 +374,6 @@ namespace ListasExtra
 		}
 	}
 
-	[DataContract(IsReference = true)]
 	public static class ExtDouble
 	{
 		public static ListasExtra.ObjetoAcotado<Double> ToAcotado (this Double x)
@@ -384,236 +381,6 @@ namespace ListasExtra
 			ObjetoAcotado<Double> ret = new ObjetoAcotado<Double> (ComparadoresPred.EsMenor, Double.MinValue, Double.MaxValue, 0);
 			ret.Valor = x;
 			return ret;
-		}
-	}
-}
-namespace ListasExtra.Treelike
-{
-	/// <summary>
-	/// Una colección de objetos T[] que se van acomodando según su posición en un árbol de suceciones de T. 
-	/// </summary>
-	public class Tree<T>
-	{
-		/// <summary>
-		/// devuelve o establece si el nodo actual del árbol se considera como parte del árbol.
-		/// </summary>
-		bool EnumeraActual = false;
-
-		/// <summary>
-		/// Revisa si este nodo es raíz
-		/// </summary>
-		/// <value><c>true</c> if this instance is root; otherwise, <c>false</c>.</value>
-		public bool IsRoot {
-			get {
-				return Pred == null;
-			}
-		}
-
-		readonly T nodo;
-		readonly List<Tree<T>> Succ = new List<Tree<T>> ();
-		readonly Tree<T> Pred;
-
-		public T[] Stem {
-			get {
-				T[] ret;
-				if (!IsRoot) {
-					T[] iter = Pred.Stem;
-					ret = new T[iter.Length + 1];
-					iter.CopyTo (ret, 0);
-					ret [ret.Length - 1] = nodo;
-				} else {
-					ret = new T[0];
-				}
-				return ret;
-			}
-		}
-
-		public Tree (T nNodo, Tree<T> nPred)
-		{
-			Pred = nPred;
-			nodo = nNodo;
-		}
-
-		public Tree ()
-		{
-			Pred = null;
-		}
-
-		/// <summary>
-		/// Serializa el árbol en una lista
-		/// </summary>
-		/// <returns>The list.</returns>
-		public List<T[]> ToList ()
-		{
-			List<T[]> ret = new List<T[]> ();
-			AddToList (ret);
-			return ret;
-		}
-
-		/// <summary>
-		/// Agrega una copia serializada de este árbol a una lista
-		/// </summary>
-		/// <param name="lst">La lista</param>
-		public void AddToList (List<T[]> lst)
-		{
-			if (EnumeraActual)
-				lst.Add (Stem);
-			foreach (var x in Succ) {
-				x.AddToList (lst);
-			}
-		}
-
-		/// <summary>
-		/// Devuelve un arreglo enlistando una serialización de este árbol.
-		/// </summary>
-		/// <returns>The array.</returns>
-		public T[][] ToArray ()
-		{
-			return ToList ().ToArray ();
-		}
-
-		Tree<T> EncuentraSucc (T nodoSucc, bool Forzar = false)
-		{
-			Tree<T> ret;
-			ret = Succ.Find (x => x.nodo.Equals (nodoSucc));
-			if (ret == null && Forzar) {
-				ret = new Tree<T> (nodoSucc, this);
-				Succ.Add (ret);
-			}
-			return ret;
-		}
-
-		/// <summary>
-		/// Agrega n objeto al árbol
-		/// </summary>
-		/// <param name="x">Objeto a agregar</param>
-		public void Add (T[] x) //Esto quedaría genial en haskell
-		{
-			if (x.Length == 0) {
-				EnumeraActual = true;
-			} else {
-				T[] y = new T[x.Length - 1];
-				Tree<T> AgregaEn = EncuentraSucc (x [0], true);
-				for (int i = 0; i < y.Length; i++) {
-					y [i] = x [i + 1];
-				}
-				AgregaEn.Add (y);
-			}
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Treelike.Tree`1"/> class.
-		/// </summary>
-		/// <param name="coll">Colección inicial</param>
-		public Tree (IEnumerable<T[]> coll):this()
-		{
-			foreach (var x in coll) {
-				Add (x);
-			}
-		}
-
-		public bool Contains (T[] x)
-		{
-			if (x.Length == 0) {
-				return this.EnumeraActual;
-			} else {
-				T a = x [0];
-				x = x.Skip (1).ToArray ();
-				Tree<T> iter = EncuentraSucc (a);
-				return iter != null && iter.Contains (x);
-			}
-		}
-
-		public override string ToString ()
-		{
-			return ToList ().ToString ();
-		}
-	}
-
-	/// <summary>
-	/// Representa un árbol de strings que se puede enumerar.
-	/// </summary>
-	public class StringTree:Treelike.Tree<char>
-	{
-		/// <summary>
-		/// Agrega un objeto al árbol
-		/// </summary>
-		/// <param name="x">Objeto a agregar</param>
-		public void Add (string x)
-		{
-			base.Add (x.ToCharArray ());
-		}
-
-		/// <summary>
-		/// Serializa el árbol en una lista
-		/// </summary>
-		/// <returns>The list.</returns>
-		public new List<string> ToList ()
-		{
-			char[][] ret2 = base.ToArray ();
-			List<string> ret = new List<string> ();
-			foreach (var x in ret2) {
-				ret.Add (new string (x));
-			}
-			return ret;
-		}
-
-		/// <summary>
-		/// Devuelve un arreglo enlistando una serialización de este árbol.
-		/// </summary>
-		/// <returns>The array.</returns>
-		public new string[] ToArray ()
-		{
-			return ToList ().ToArray ();
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Treelike.StringTree"/> class.
-		/// </summary>
-		/// <param name="coll">La colección inicial.</param>
-		public StringTree (IEnumerable<string> coll)
-		{
-			foreach (var x in coll) {
-				Add (x);
-			}
-		}
-	}
-}
-namespace ListasExtra.Set
-{
-	/// <summary>
-	/// Representa un conjunto de elementos sin un control sobre el orden.
-	/// </summary>
-	/// <typeparam name="T">Tipo de objetos</typeparam>
-	public class Set<T> : List<T>
-	{
-		Random r = new Random ();
-
-		/// <summary>
-		/// Agrega un objeto al conjunto.
-		/// </summary>
-		/// <param name="x"></param>
-		public new void Add (T x)
-		{
-			base.Insert (r.Next (Count + 1), x);
-		}
-
-		/// <summary>
-		/// Regresa un arreglo con los objetos en el conjunto, sin repetición.
-		/// </summary>
-		/// <returns></returns>
-		public new T[] ToArray ()
-		{
-			return base.ToArray ();
-		}
-
-		/// <summary>
-		/// Devuelve un elemento de este conjunto.
-		/// </summary>
-		public T Next {
-			get {
-				return base [r.Next (Count)];
-			}
 		}
 	}
 }
