@@ -10,7 +10,7 @@ namespace ListasExtra.Set
 
 	public static class ISetExt
 	{
-		public static T PickRemove<T> (this ISet<T> col, T item)
+		public static T PickRemove<T> (this ISet<T> col)
 		{
 			T ret = col.Pick ();
 			col.Remove (ret);
