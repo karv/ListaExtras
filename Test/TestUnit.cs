@@ -14,7 +14,7 @@ namespace Test
 		[Test]
 		public void ProbarTree()
 		{
-			Tree<char> x = new Tree<char>();
+			TreeList<char> x = new TreeList<char>();
 
 			x.Add("nhue".ToCharArray());
 			x.Add("bhua".ToCharArray());
