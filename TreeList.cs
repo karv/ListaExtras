@@ -7,7 +7,7 @@ namespace ListasExtra.Treelike
 	/// <summary>
 	/// Una colección de objetos T[] que se van acomodando según su posición en un árbol de suceciones de T. 
 	/// </summary>
-	public class TreeList<T>: ITreeListBackward<T>
+	public class TreeList<T>: ITreeList<T>
 	{
 		#region Objetos
 
@@ -27,10 +27,13 @@ namespace ListasExtra.Treelike
 		}
 
 		readonly T _nodo;
-		readonly List<TreeList<T>> _succ = new List<TreeList<T>> ();
+		readonly List<ITreeList<T>> _succ = new List<ITreeList<T>> ();
 		readonly ITreeList<T> _pred;
 
 		#endregion
+
+		// TODO: deshacerme del pred. Hacer que éste no sea ICollection, pero
+		// implementar otra clase que fucnione como ancla para árboles que sí sea ICollection.
 
 		#region Propio
 
@@ -49,7 +52,7 @@ namespace ListasExtra.Treelike
 			}
 		}
 
-		public TreeList (T nNodo, TreeList<T> nPred)
+		public TreeList (T nNodo, ITreeList<T> nPred)
 		{
 			_pred = nPred;
 			_nodo = nNodo;
@@ -58,6 +61,20 @@ namespace ListasExtra.Treelike
 		public TreeList ()
 		{
 			_pred = null;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ListasExtra.Treelike.TreeList`1"/> class.*/
+		/// </summary>
+		/// <param name="pos">Posición de otro árbol donde se cuelta este objeto com su sucesor.</param>
+		/// <param name="data">Copia del objeto a colgar.</param>
+		TreeList (ITreeList<T> pos, ITreeList<T> data)
+		{
+			_pred = pos;
+			_nodo = data.nodo;
+			ICollection<ITreeList<T>> mydataList = data.succ;
+			_succ = new List<ITreeList<T>> (mydataList);
+			_enumeraActual = data.enumeraActual;
 		}
 
 		/// <summary>
@@ -75,7 +92,7 @@ namespace ListasExtra.Treelike
 		/// Agrega una copia serializada de este árbol a una lista
 		/// </summary>
 		/// <param name="lst">La lista</param>
-		public void AddToList (List<T[]> lst)
+		public void AddToList (ICollection<T[]> lst)
 		{
 			if (_enumeraActual)
 				lst.Add (Stem);
@@ -93,10 +110,10 @@ namespace ListasExtra.Treelike
 			return ToList ().ToArray ();
 		}
 
-		TreeList<T> EncuentraSucc (T nodoSucc, bool Forzar = false)
+		ITreeList<T> EncuentraSucc (T nodoSucc, bool Forzar = false)
 		{
-			TreeList<T> ret;
-			ret = _succ.Find (x => x._nodo.Equals (nodoSucc));
+			ITreeList<T> ret;
+			ret = _succ.Find (x => x.nodo.Equals (nodoSucc));
 			if (ret == null && Forzar) {
 				ret = new TreeList<T> (nodoSucc, this);
 				_succ.Add (ret);
@@ -114,12 +131,18 @@ namespace ListasExtra.Treelike
 				_enumeraActual = true;
 			} else {
 				T[] y = new T[x.Length - 1];
-				TreeList<T> AgregaEn = EncuentraSucc (x [0], true);
+				ITreeList<T> AgregaEn = EncuentraSucc (x [0], true);
 				for (int i = 0; i < y.Length; i++) {
 					y [i] = x [i + 1];
 				}
 				AgregaEn.Add (y);
 			}
+		}
+
+		public void Add (ITreeList<T> x)
+		{
+			TreeList <T> nSucc = new TreeList<T> (this, x);
+			_succ.Add (nSucc);
 		}
 
 		/// <summary>
@@ -140,7 +163,7 @@ namespace ListasExtra.Treelike
 			} else {
 				T a = x [0];
 				x = x.Skip (1).ToArray ();
-				TreeList<T> iter = EncuentraSucc (a);
+				ITreeList<T> iter = EncuentraSucc (a);
 				return iter != null && iter.Contains (x);
 			}
 		}
@@ -152,7 +175,32 @@ namespace ListasExtra.Treelike
 
 		#endregion
 
+		static ITreeList<T> Find (IEnumerable<ITreeList<T>> coll, T obj)
+		{
+			foreach (var x in coll) {
+				if (x.nodo.Equals (obj))
+					return x;
+			}
+			return null;
+		}
+
 		#region ITreeList
+
+		/// <summary>
+		/// Encuentra el árbol al que le corresponde un nodo.
+		/// </summary>
+		/// <returns>The tree.</returns>
+		/// <param name="nodo">Nodo.</param>
+		public ITreeList<T> FindTree (T[] nodo)
+		{
+			ITreeList<T> ret = this;
+			foreach (var i in nodo) {
+				ret = Find (ret.succ, i);
+				if (ret == null)
+					return null;
+			}
+			return ret;
+		}
 
 		public ITreeList<T> pred {
 			get {
@@ -180,11 +228,17 @@ namespace ListasExtra.Treelike
 
 		public T[] getBase {
 			get {
-				throw new NotImplementedException ();
+				return Stem;
 			}
 		}
 
 		public IEnumerable<ITreeList<T>> succ {
+			get {
+				return _succ;
+			}
+		}
+
+		ICollection<ITreeList<T>> ITreeList<T>.succ {
 			get {
 				return _succ;
 			}
@@ -214,7 +268,7 @@ namespace ListasExtra.Treelike
 			} else {
 				T a = item [0];
 				item = item.Skip (1).ToArray ();
-				TreeList<T> iter = EncuentraSucc (a);
+				ITreeList<T> iter = EncuentraSucc (a);
 				return iter.Remove (item);
 			}
 		}

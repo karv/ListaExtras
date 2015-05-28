@@ -33,6 +33,10 @@ namespace ListasExtra.Treelike
 		/// Devuelve la lista de sucesores de este nodo.
 		/// </summary>
 		/// <value>The succ.</value>
-		IEnumerable<ITreeList<T>> succ { get; }
+		ICollection<ITreeList<T>> succ { get; }
+
+		void AddToList (ICollection<T[]> lst);
+
+		ITreeList<T> FindTree (T[] nodo);
 	}
 }
