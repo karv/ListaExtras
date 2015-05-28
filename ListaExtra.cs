@@ -41,6 +41,8 @@ namespace ListasExtra
 			}
 		}
 
+
+
 		private Func<T, T, bool> _Comparador = (x, y) => x.Equals (y);
 
 		/// <summary>
@@ -128,7 +130,8 @@ namespace ListasExtra
 				return tmp;
 			}
 		}
-		//Eventos
+		// Eventos
+		// TODO
 		/// <summary>
 		/// Se llama cuando se cambia algún valor (creo que no sirve aún Dx).
 		/// </summary>
