@@ -64,7 +64,7 @@ namespace ListasExtra.Set
 
 		public void CopyTo (T[] array, int arrayIndex)
 		{
-			throw new NotImplementedException ();
+			_dat.CopyTo (array, arrayIndex);
 		}
 
 		public int Count {
