@@ -139,6 +139,11 @@ namespace ListasExtra.Treelike
 			}
 		}
 
+		public void Add (T x)
+		{
+			_succ.Add (new TreeList<T> (x, this));
+		}
+
 		public void Add (ITreeList<T> x)
 		{
 			TreeList <T> nSucc = new TreeList<T> (this, x);
