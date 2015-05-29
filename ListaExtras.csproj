@@ -45,14 +45,15 @@
   <ItemGroup>
     <Compile Include="ListaExtra.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TreeList.cs" />
     <Compile Include="Set.cs" />
-    <Compile Include="ITreeList.cs" />
     <Compile Include="ISet.cs" />
-    <Compile Include="ITreeListBackward.cs" />
-    <Compile Include="TreeEndingList.cs" />
     <Compile Include="IListBloqueable.cs" />
     <Compile Include="ListaPesoBloqueable.cs" />
+    <Compile Include="ITreeNode.cs" />
+    <Compile Include="TreeNode.cs" />
+    <Compile Include="TreeLista.cs" />
+    <Compile Include="TreeEnumerator.cs" />
+    <Compile Include="SerialEnumerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
