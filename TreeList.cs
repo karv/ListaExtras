@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace ListasExtra.Treelike
 {
+
 	/// <summary>
 	/// Una colección de objetos T[] que se van acomodando según su posición en un árbol de suceciones de T. 
 	/// </summary>
@@ -14,21 +15,13 @@ namespace ListasExtra.Treelike
 		/// <summary>
 		/// devuelve o establece si el nodo actual del árbol se considera como parte del árbol.
 		/// </summary>
-		bool _enumeraActual = false;
+		//bool _enumeraActual = //alse;
 
-		/// <summary>
-		/// Revisa si este nodo es raíz
-		/// </summary>
-		/// <value><c>true</c> if this instance is root; otherwise, <c>false</c>.</value>
-		public bool _isRoot {
-			get {
-				return _pred == null;
-			}
-		}
+
 
 		readonly T _nodo;
 		readonly List<ITreeList<T>> _succ = new List<ITreeList<T>> ();
-		readonly ITreeList<T> _pred;
+		//readonly ITreeList<T> _pred;
 
 		#endregion
 
@@ -37,6 +30,7 @@ namespace ListasExtra.Treelike
 
 		#region Propio
 
+		/*
 		public T[] Stem {
 			get {
 				T[] ret;
@@ -51,16 +45,16 @@ namespace ListasExtra.Treelike
 				return ret;
 			}
 		}
-
+*/
 		public TreeList (T nNodo, ITreeList<T> nPred)
 		{
-			_pred = nPred;
+			//_pred = nPred;
 			_nodo = nNodo;
 		}
 
 		public TreeList ()
 		{
-			_pred = null;
+			//_pred = null;
 		}
 
 		/// <summary>
@@ -70,11 +64,11 @@ namespace ListasExtra.Treelike
 		/// <param name="data">Copia del objeto a colgar.</param>
 		TreeList (ITreeList<T> pos, ITreeList<T> data)
 		{
-			_pred = pos;
+			//_pred = pos;
 			_nodo = data.nodo;
 			ICollection<ITreeList<T>> mydataList = data.succ;
 			_succ = new List<ITreeList<T>> (mydataList);
-			_enumeraActual = data.enumeraActual;
+			//_enumeraActual = data.enumeraActual;
 		}
 
 		/// <summary>
@@ -94,8 +88,8 @@ namespace ListasExtra.Treelike
 		/// <param name="lst">La lista</param>
 		public void AddToList (ICollection<T[]> lst)
 		{
-			if (_enumeraActual)
-				lst.Add (Stem);
+			//if (_enumeraActual)
+			//lst.Add (Stem);
 			foreach (var x in _succ) {
 				x.AddToList (lst);
 			}
@@ -128,7 +122,6 @@ namespace ListasExtra.Treelike
 		public void Add (T[] x)
 		{
 			if (x.Length == 0) {
-				_enumeraActual = true;
 			} else {
 				T[] y = new T[x.Length - 1];
 				ITreeList<T> AgregaEn = EncuentraSucc (x [0], true);
@@ -164,7 +157,8 @@ namespace ListasExtra.Treelike
 		public bool Contains (T[] x)
 		{
 			if (x.Length == 0) {
-				return this._enumeraActual;
+				return false;
+				//return this._enumeraActual;
 			} else {
 				T a = x [0];
 				x = x.Skip (1).ToArray ();
@@ -209,19 +203,19 @@ namespace ListasExtra.Treelike
 
 		public ITreeList<T> pred {
 			get {
-				return _pred;
+				return null;
 			}
 		}
 
 		public bool enumeraActual {
 			get {
-				return _enumeraActual;
+				return false;
 			}
 		}
 
 		public bool isRoot {
 			get {
-				return _isRoot;
+				return false;
 			}
 		}
 
@@ -233,7 +227,7 @@ namespace ListasExtra.Treelike
 
 		public T[] getBase {
 			get {
-				return Stem;
+				return null;
 			}
 		}
 
@@ -254,7 +248,6 @@ namespace ListasExtra.Treelike
 		/// </summary>
 		public void Clear ()
 		{
-			_enumeraActual = false;
 			_succ.Clear ();
 		}
 
@@ -265,11 +258,8 @@ namespace ListasExtra.Treelike
 
 		public bool Remove (T[] item)
 		{
-			bool ret;
 			if (item.Length == 0) {
-				ret = _enumeraActual;
-				_enumeraActual = false;
-				return ret;
+				return false;
 			} else {
 				T a = item [0];
 				item = item.Skip (1).ToArray ();
@@ -280,9 +270,8 @@ namespace ListasExtra.Treelike
 
 		public int Count {
 			get {
-				int ret = 0;
-				if (_enumeraActual)
-					ret++;
+				int ret = 1;
+
 				foreach (var x in _succ) {
 					ret += x.Count;
 				}
@@ -357,4 +346,6 @@ namespace ListasExtra.Treelike
 			}
 		}
 	}
+
+
 }
