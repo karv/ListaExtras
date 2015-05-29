@@ -15,6 +15,8 @@ namespace ListasExtra
 	[DataContract (Name = "ListaPeso")]
 	public class ListaPeso<T, V> : Dictionary<T, V>
 	{
+		#region Accesor
+
 		public new V this [T Key] {
 			get {
 				foreach (var x in this) {
@@ -34,14 +36,25 @@ namespace ListasExtra
 					}
 				}
 
-				// Si es entrada nueva, se agraga.
+				// Si es entrada nueva, se agrega.
 				if (CambioValor != null)
 					CambioValor.Invoke (this, new EventArgs ());
 				base.Add (Key, value);
 			}
 		}
 
+		#endregion
 
+		#region Internos
+
+		/// <summary>
+		/// La operación suma.
+		/// </summary>
+		public Func<V, V, V> Suma;
+		/// <summary>
+		/// La operación inverso, si la tiene.
+		/// </summary>
+		public Func<V, V> Inv;
 
 		private Func<T, T, bool> _Comparador = (x, y) => x.Equals (y);
 
@@ -68,38 +81,10 @@ namespace ListasExtra
 			}
 		}
 
-		/// <summary>
-		/// Revisa si existe un objeto con las con las condiciones dadas.
-		/// </summary>
-		/// <param name="Pred">Predicado a exaluar.</param>
-		/// <returns>Devuelve true si existe un objeto que cumple Pred.</returns>
-		public bool Any (Func<T, V, bool> Pred)
-		{
-			foreach (var x in Keys) {
-				if (Pred (x, this [x]))
-					return true;
-			}
-			return false;
-		}
+		#endregion
 
-		/// <summary>
-		/// Revisa si existe un objeto en esta lista.
-		/// </summary>
-		/// <returns>Devuelve true si existe algo.</returns>
-		public bool Any ()
-		{
-			return Count > 0;
-		}
+		#region Estadísticos
 
-		/// <summary>
-		/// La operación suma.
-		/// </summary>
-		public Func<V, V, V> Suma;
-		/// <summary>
-		/// La operación inverso, si la tiene.
-		/// </summary>
-		public Func<V, V> Inv;
-		//Estadísticos
 		/// <summary>
 		/// Devuelve la suma sobre las Keys, de sus respectivos Values.
 		/// </summary>
@@ -112,7 +97,11 @@ namespace ListasExtra
 			}
 			return tot;
 		}
-		//Ordenación y máximización
+
+		#endregion
+
+		#region Orden y máximos
+
 		/// <summary>
 		/// Obtiene la entrda cuyo valor es máximo.
 		/// </summary>
@@ -130,13 +119,22 @@ namespace ListasExtra
 				return tmp;
 			}
 		}
-		// Eventos
-		// TODO
+
+		#endregion
+
+		#region Eventos
+
 		/// <summary>
 		/// Se llama cuando se cambia algún valor (creo que no sirve aún Dx).
 		/// </summary>
 		public event EventHandler CambioValor;
-		//Constructor
+
+/// 
+
+		#endregion
+
+		#region ctor
+
 		/// <summary>
 		/// Inicializa una instancia de la clase.
 		/// </summary>
@@ -165,6 +163,10 @@ namespace ListasExtra
 		{
 		}
 
+		#endregion
+
+		#region Lista
+
 		public new bool ContainsKey (T Key)
 		{
 			foreach (var x in Keys) {
@@ -173,6 +175,33 @@ namespace ListasExtra
 			}
 			return false;
 		}
+
+		/// <summary>
+		/// Revisa si existe un objeto con las con las condiciones dadas.
+		/// </summary>
+		/// <param name="Pred">Predicado a exaluar.</param>
+		/// <returns>Devuelve true si existe un objeto que cumple Pred.</returns>
+		public bool Any (Func<T, V, bool> Pred)
+		{
+			foreach (var x in Keys) {
+				if (Pred (x, this [x]))
+					return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Revisa si existe un objeto en esta lista.
+		/// </summary>
+		/// <returns>Devuelve true si existe algo.</returns>
+		public bool Any ()
+		{
+			return Count > 0;
+		}
+
+		#endregion
+
+		#region Operacional
 
 		/// <summary>
 		/// Devuelve la lista inversa a esta instancia.
@@ -229,6 +258,8 @@ namespace ListasExtra
 		{
 			return Left + -Right;
 		}
+
+		#endregion
 	}
 
 	[DataContract (Name = "ListaPeso")]
