@@ -8,7 +8,7 @@ namespace ListasExtra.Treelike
 	/// </summary>
 	public class TreeNode<T> : ITreeNode<T>
 	{
-		public TreeLista<T>.enumOpcionOrden ordenEnumeración = TreeLista<T>.enumOpcionOrden.PadrePrimero;
+		public TreeList<T>.enumOpcionOrden ordenEnumeración = TreeList<T>.enumOpcionOrden.PadrePrimero;
 		T[] _obj;
 		List<ITreeNode<T>> _succ;
 

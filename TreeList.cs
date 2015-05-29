@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ListasExtra.Treelike
 {
-	public class TreeLista<T> : TreeNode<T>, IEnumerable<T[]>
+	public class TreeList<T> : TreeNode<T>, IEnumerable<T[]>
 	{
 		public enum enumOpcionOrden
 		{
@@ -11,7 +11,7 @@ namespace ListasExtra.Treelike
 			HijosPrimero
 		}
 
-		public TreeLista () : base (null)
+		public TreeList () : base (null)
 		{
 		}
 
