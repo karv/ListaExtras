@@ -10,14 +10,21 @@ namespace ListasExtra.Treelike
 	{
 		T[] _dat;
 
+		#region ctor
+
 		public TreePath (T[] dat)
 		{
 			_dat = dat;
 		}
 
-		public TreePath ()
+		public TreePath (int cap)
 		{
+			_dat = new T[cap];
 		}
+
+		#endregion
+
+		#region Común
 
 		public T this [int i] {
 			get {
@@ -34,6 +41,10 @@ namespace ListasExtra.Treelike
 			}
 		}
 
+		#endregion
+
+		#region Convertidor
+
 		public static implicit operator TreePath<T> (T[] array)
 		{
 			return new TreePath<T> (array);
@@ -43,6 +54,8 @@ namespace ListasExtra.Treelike
 		{
 			return path._dat;
 		}
+
+		#endregion
 
 		#region IEquatable implementation
 
