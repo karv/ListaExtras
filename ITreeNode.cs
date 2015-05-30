@@ -9,7 +9,7 @@ namespace ListasExtra.Treelike
 
 		ITreeNode<T> getTreeFrom (T[] stem);
 
-		T[] objeto { get; }
+		TreePath<T> objeto { get; }
 
 
 	}

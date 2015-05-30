@@ -1,14 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace ListasExtra.Treelike
 {
 	/// <summary>
 	/// Representa un camino en un árbol.
 	/// </summary>
-	public class TreePath<T> : IEnumerable<T>, IEquatable<TreePath<T>>
+	public class TreePath<T> : IEnumerable, IEquatable<TreePath<T>>
 	{
 		T[] _dat;
+
+		public void CopyTo (T[] Array, int index)
+		{
+			throw new NotImplementedException ();
+		}
+
+		/// <summary>
+		/// Devuelve una sección inicial de este TreePath
+		/// </summary>
+		/// <returns>The sección inicial.</returns>
+		/// <param name="ht">Altura de la sección inicial</param>
+		public TreePath<T> getSecciónInicial (int ht)
+		{
+			if (Length < ht)
+				throw new Exception ("No se puede calcular una sección inicial de longitud mayor que el objeto original.");
+
+
+			TreePath<T> ret = new TreePath<T> (ht);
+			for (int i = 0; i < ht; i++) {
+				ret [i] = this [i];
+			}
+
+			return ret;
+		}
 
 		#region ctor
 
@@ -72,21 +97,14 @@ namespace ListasExtra.Treelike
 
 		public static bool operator == (TreePath<T> left, TreePath<T> right)
 		{
+			if (left == null || right == null)
+				return false;
 			return ((IEquatable<TreePath<T>>)left).Equals (right);
 		}
 
 		public static bool operator != (TreePath<T> left, TreePath<T> right)
 		{
 			return !(left == right);
-		}
-
-		#endregion
-
-		#region IEnumerable implementation
-
-		IEnumerator<T> IEnumerable<T>.GetEnumerator ()
-		{
-			return (IEnumerator<T>)_dat.GetEnumerator ();
 		}
 
 		#endregion

@@ -6,7 +6,7 @@ namespace ListasExtra.Treelike
 	/// <summary>
 	/// Lista en árbol.
 	/// Note que siempre {} \in this
-	public class TreeList<T> : TreeNode<T>, IEnumerable<TreePath<T>>
+	public class TreeList<T> : TreeNode<T>, ICollection<TreePath<T>>
 	/// </summary>
 	{
 		public enum enumOpcionOrden
@@ -19,14 +19,28 @@ namespace ListasExtra.Treelike
 		{
 		}
 
-		public void Add (T[] item)
+
+
+		public void Add (TreePath<T> item) //TODO probar.
 		{
-			getSucc.Add (new TreeNode<T> (item));
+			ITreeNode<T> iter = this;
+			T[] objz;
+			for (int i = 1; i < item.Length; i++) {
+				objz = item.getSecciónInicial (i);
+				if (Contains (objz))
+					iter = getTreeFrom (objz);
+				else {
+					ITreeNode<T> Agrega = new TreeNode<T> (objz);
+					iter.getSucc.Add (Agrega);
+					iter = Agrega;
+				}
+			}
 		}
 
 		public void Add (T item)
 		{			
 			T[] Adding = new T[objeto.Length + 1];
+
 			objeto.CopyTo (Adding, 0);
 			Adding [objeto.Length] = item;
 			Add (Adding); 
@@ -42,9 +56,7 @@ namespace ListasExtra.Treelike
 			getSucc.Clear ();
 		}
 
-
-
-		public bool Contains (T[] item)
+		public bool Contains (TreePath<T> item)
 		{
 			ITreeNode<T> iter = this;
 			foreach (var x in item) {
@@ -56,14 +68,33 @@ namespace ListasExtra.Treelike
 			return true;
 		}
 
-		public void CopyTo (T[][] array, int arrayIndex)
+		public void CopyTo (TreePath<T>[] array, int arrayIndex)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public bool Remove (T[] item)
+		public bool Remove (TreePath<T> item)
 		{
-			throw new NotImplementedException ();
+			ITreeNode<T> iter = this;
+			int ctr = item.Length;
+
+			if (ctr == 0)
+				getSucc.Clear ();
+			
+			foreach (var x in item) {
+				if (ctr == 1) { // Si x = last(item)
+					return (iter.getSucc.RemoveAll (y => y.objeto.Equals (item)) > 0);
+				}
+
+				if (!iter.getSucc.Exists (y => y.objeto.Equals (item)))
+					return false;
+				else {
+					ctr--;
+					iter = iter.getSucc.Find (y => y.objeto.Equals (item));
+				}
+					
+			}
+			return true;
 		}
 
 		public int Count {

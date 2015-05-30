@@ -9,14 +9,14 @@ namespace ListasExtra.Treelike
 	public class TreeNode<T> : ITreeNode<T>
 	{
 		public TreeList<T>.enumOpcionOrden ordenEnumeración = TreeList<T>.enumOpcionOrden.PadrePrimero;
-		T[] _obj;
+		TreePath<T> _obj;
 		List<ITreeNode<T>> _succ;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ListasExtra.Treelike.TreeNode"/> class.
 		/// </summary>
 		/// <param name="obj">Objeto de este nodo</param>
-		public TreeNode (T[] obj)
+		public TreeNode (TreePath<T> obj)
 		{
 			_succ = new List<ITreeNode<T>> ();
 			_obj = obj;
@@ -76,9 +76,9 @@ namespace ListasExtra.Treelike
 			}
 		}
 
-		public T[] objeto {
+		public TreePath<T> objeto {
 			get {
-				return _obj == null ? new T[0] : _obj;
+				return _obj == null ? new TreePath<T> (0) : _obj;
 			}
 		}
 
