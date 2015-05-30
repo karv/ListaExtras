@@ -70,6 +70,16 @@ namespace ListasExtra.Treelike
 			return true;
 		}
 
+		public static bool operator == (TreePath<T> left, TreePath<T> right)
+		{
+			return ((IEquatable<TreePath<T>>)left).Equals (right);
+		}
+
+		public static bool operator != (TreePath<T> left, TreePath<T> right)
+		{
+			return !(left == right);
+		}
+
 		#endregion
 
 		#region IEnumerable implementation
