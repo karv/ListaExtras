@@ -3,7 +3,11 @@ using System.Collections.Generic;
 
 namespace ListasExtra.Treelike
 {
-	public class TreeList<T> : TreeNode<T>, IEnumerable<T[]>
+	/// <summary>
+	/// Lista en árbol.
+	/// Note que siempre {} \in this
+	public class TreeList<T> : TreeNode<T>, IEnumerable<TreePath<T>>
+	/// </summary>
 	{
 		public enum enumOpcionOrden
 		{
@@ -35,12 +39,21 @@ namespace ListasExtra.Treelike
 
 		public void Clear ()
 		{
-			throw new NotImplementedException ();
+			getSucc.Clear ();
 		}
+
+
 
 		public bool Contains (T[] item)
 		{
-			throw new NotImplementedException ();
+			ITreeNode<T> iter = this;
+			foreach (var x in item) {
+				if (!iter.getSucc.Exists (y => y.objeto.Equals (item)))
+					return false;
+				else
+					iter = iter.getSucc.Find (y => y.objeto.Equals (item));
+			}
+			return true;
 		}
 
 		public void CopyTo (T[][] array, int arrayIndex)
@@ -72,12 +85,12 @@ namespace ListasExtra.Treelike
 */
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (getSucc, objeto);
+			return new Treelike.TreeEnumerator<T> (getSucc, new TreePath<T> (objeto));
 		}
 
-		System.Collections.Generic.IEnumerator<T[]> System.Collections.Generic.IEnumerable<T[]>.GetEnumerator ()
+		System.Collections.Generic.IEnumerator<TreePath<T>> System.Collections.Generic.IEnumerable<TreePath<T>>.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (getSucc, objeto);
+			return new Treelike.TreeEnumerator<T> (getSucc, new TreePath<T> (objeto));
 		}
 
 	}

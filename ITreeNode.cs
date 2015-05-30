@@ -3,13 +3,15 @@ using System.Collections.Generic;
 
 namespace ListasExtra.Treelike
 {
-	public interface ITreeNode<T> : IEnumerable<T[]>
+	public interface ITreeNode<T> : IEnumerable<TreePath<T>>
 	{
 		System.Collections.Generic.List<ITreeNode<T>> getSucc { get; }
 
 		ITreeNode<T> getTreeFrom (T[] stem);
 
 		T[] objeto { get; }
+
+
 	}
 
 	public static class ExtITreeNode
@@ -33,5 +35,18 @@ namespace ListasExtra.Treelike
 		{
 			return (tree.getSucc == null || tree.getSucc.Count == 0);
 		}
+
+		/// <summary>
+		/// Devuelve el último objeto en el nodo árbol
+		/// </summary>
+		/// <returns>The objeto.</returns>
+		/// <param name="tree">Tree.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static T TObjeto<T> (this ITreeNode<T> tree)
+		{
+			return tree.objeto [tree.objeto.Length - 1];
+
+		}
+
 	}
 }

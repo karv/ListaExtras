@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ListasExtra.Treelike
 {
-	class TreeEnumerator<T> : ListasExtra.Enumerator.SerialEnumerator<T[]>, IEnumerator<T[]>
+	class TreeEnumerator<T> : ListasExtra.Enumerator.SerialEnumerator<TreePath<T>>, IEnumerator<TreePath<T>>
 	{
 		public enum enumOpcionOrden
 		{
@@ -16,10 +16,10 @@ namespace ListasExtra.Treelike
 		/// Devuelve o establece si este nodo ya se enumeró.
 		/// </summary>
 		bool Myself = false;
-		T[] _root;
+		TreePath<T> _root;
 		bool EnPadre = false;
 
-		public TreeEnumerator (IEnumerable<IEnumerable<T[]>> enums, T[] root) : base (enums)
+		public TreeEnumerator (IEnumerable<IEnumerable<TreePath<T>>> enums, TreePath<T> root) : base (enums)
 		{
 			_root = root;
 		}
@@ -46,9 +46,9 @@ namespace ListasExtra.Treelike
 			base.Reset ();
 		}
 
-		T[] IEnumerator<T[]>.Current {
+		TreePath<T> IEnumerator<TreePath<T>>.Current {
 			get {
-				return EnPadre ? _root : (T[])(base.Current);
+				return EnPadre ? _root : (TreePath<T>)(base.Current);
 			}
 		}
 

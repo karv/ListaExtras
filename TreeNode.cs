@@ -54,14 +54,14 @@ namespace ListasExtra.Treelike
 
 		#region IEnumerator
 
-		IEnumerator<T[]> IEnumerable<T[]>.GetEnumerator ()
+		IEnumerator<TreePath<T>> IEnumerable<TreePath<T>>.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (_succ, objeto);
+			return new Treelike.TreeEnumerator<T> (_succ, new TreePath<T> (objeto));
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (_succ, objeto);
+			return new Treelike.TreeEnumerator<T> (_succ, new TreePath<T> (objeto));
 		}
 
 		#endregion

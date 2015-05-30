@@ -54,6 +54,7 @@
     <Compile Include="TreeEnumerator.cs" />
     <Compile Include="SerialEnumerator.cs" />
     <Compile Include="TreeList.cs" />
+    <Compile Include="TreePath.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
