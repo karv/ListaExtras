@@ -19,18 +19,21 @@ namespace ListasExtra.Treelike
 		{
 		}
 
-
+		public void Add (T[] item)
+		{
+			Add ((TreePath<T>)item); 
+		}
 
 		public void Add (TreePath<T> item) //TODO probar.
 		{
 			ITreeNode<T> iter = this;
-			T[] objz;
-			for (int i = 1; i < item.Length; i++) {
+			TreePath<T> objz;
+			for (int i = 1; i <= item.Length; i++) {
 				objz = item.getSecciónInicial (i);
 				if (Contains (objz))
 					iter = getTreeFrom (objz);
 				else {
-					ITreeNode<T> Agrega = new TreeNode<T> (objz);
+					ITreeNode<T> Agrega = new TreeNode<T> ((T[])objz);
 					iter.getSucc.Add (Agrega);
 					iter = Agrega;
 				}
@@ -43,7 +46,7 @@ namespace ListasExtra.Treelike
 
 			objeto.CopyTo (Adding, 0);
 			Adding [objeto.Length] = item;
-			Add (Adding); 
+			Add ((TreePath<T>)Adding); 
 		}
 
 		public void Add (ITreeNode<T> item)
@@ -56,14 +59,20 @@ namespace ListasExtra.Treelike
 			getSucc.Clear ();
 		}
 
+		public bool Contains (T[] item)
+		{
+			return Contains ((TreePath<T>)item); 
+		}
+
 		public bool Contains (TreePath<T> item)
 		{
 			ITreeNode<T> iter = this;
+			int i = 0;
 			foreach (var x in item) {
-				if (!iter.getSucc.Exists (y => y.objeto.Equals (item)))
+				if (!iter.getSucc.Exists (y => y.objeto.Equals (item.getSecciónInicial (++i))))
 					return false;
 				else
-					iter = iter.getSucc.Find (y => y.objeto.Equals (item));
+					iter = iter.getSucc.Find (y => y.objeto.Equals (item.getSecciónInicial (i)));
 			}
 			return true;
 		}
@@ -71,6 +80,11 @@ namespace ListasExtra.Treelike
 		public void CopyTo (TreePath<T>[] array, int arrayIndex)
 		{
 			throw new NotImplementedException ();
+		}
+
+		public bool Remove (T[] item)
+		{
+			return Remove ((TreePath<T>)item); 
 		}
 
 		public bool Remove (TreePath<T> item)
@@ -86,11 +100,11 @@ namespace ListasExtra.Treelike
 					return (iter.getSucc.RemoveAll (y => y.objeto.Equals (item)) > 0);
 				}
 
-				if (!iter.getSucc.Exists (y => y.objeto.Equals (item)))
+				if (!iter.getSucc.Exists (y => y.objeto.Equals (item.getSecciónInicial (item.Length - ctr + 1))))
 					return false;
 				else {
+					iter = iter.getSucc.Find (y => y.objeto.Equals (item.getSecciónInicial (item.Length - ctr + 1)));
 					ctr--;
-					iter = iter.getSucc.Find (y => y.objeto.Equals (item));
 				}
 					
 			}
@@ -116,12 +130,12 @@ namespace ListasExtra.Treelike
 */
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (getSucc, new TreePath<T> (objeto));
+			return new Treelike.TreeEnumerator<T> (getSucc, objeto);
 		}
 
 		System.Collections.Generic.IEnumerator<TreePath<T>> System.Collections.Generic.IEnumerable<TreePath<T>>.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (getSucc, new TreePath<T> (objeto));
+			return new Treelike.TreeEnumerator<T> (getSucc, objeto);
 		}
 
 	}

@@ -7,7 +7,7 @@ namespace ListasExtra.Treelike
 	{
 		System.Collections.Generic.List<ITreeNode<T>> getSucc { get; }
 
-		ITreeNode<T> getTreeFrom (T[] stem);
+		ITreeNode<T> getTreeFrom (TreePath<T> stem);
 
 		TreePath<T> objeto { get; }
 

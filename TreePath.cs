@@ -35,6 +35,17 @@ namespace ListasExtra.Treelike
 			return ret;
 		}
 
+		public T getLast {
+			get {
+				return _dat [_dat.Length - 1];
+			}
+		}
+
+		public override string ToString ()
+		{
+			return string.Concat (_dat);
+		}
+
 		#region ctor
 
 		public TreePath (T[] dat)
@@ -70,12 +81,12 @@ namespace ListasExtra.Treelike
 
 		#region Convertidor
 
-		public static implicit operator TreePath<T> (T[] array)
+		public static explicit operator TreePath<T> (T[] array)
 		{
 			return new TreePath<T> (array);
 		}
 
-		public static implicit operator T[] (TreePath<T> path)
+		public static explicit operator T[] (TreePath<T> path)
 		{
 			return path._dat;
 		}
@@ -84,7 +95,7 @@ namespace ListasExtra.Treelike
 
 		#region IEquatable implementation
 
-		bool IEquatable<TreePath<T>>.Equals (TreePath<T> other)
+		public bool Equals (TreePath<T> other)
 		{
 			if (Length != other.Length)
 				return false;
@@ -93,18 +104,6 @@ namespace ListasExtra.Treelike
 					return false;
 			}
 			return true;
-		}
-
-		public static bool operator == (TreePath<T> left, TreePath<T> right)
-		{
-			if (left == null || right == null)
-				return false;
-			return ((IEquatable<TreePath<T>>)left).Equals (right);
-		}
-
-		public static bool operator != (TreePath<T> left, TreePath<T> right)
-		{
-			return !(left == right);
 		}
 
 		#endregion
@@ -117,6 +116,7 @@ namespace ListasExtra.Treelike
 		}
 
 		#endregion
+	
 	}
 }
 

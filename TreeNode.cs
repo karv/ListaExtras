@@ -16,10 +16,10 @@ namespace ListasExtra.Treelike
 		/// Initializes a new instance of the <see cref="ListasExtra.Treelike.TreeNode"/> class.
 		/// </summary>
 		/// <param name="obj">Objeto de este nodo</param>
-		public TreeNode (TreePath<T> obj)
+		public TreeNode (T[] obj)
 		{
 			_succ = new List<ITreeNode<T>> ();
-			_obj = obj;
+			_obj = (TreePath<T>)obj;
 		}
 
 		/// <summary>
@@ -46,7 +46,7 @@ namespace ListasExtra.Treelike
 		/// <param name="succ">Lista de sucesores</param>
 		public TreeNode (T[] obj, IEnumerable<ITreeNode<T>> succ)
 		{
-			_obj = obj;
+			_obj = (TreePath<T>)obj;
 			_succ = (List<ITreeNode<T>>)succ;
 		}
 
@@ -56,12 +56,13 @@ namespace ListasExtra.Treelike
 
 		IEnumerator<TreePath<T>> IEnumerable<TreePath<T>>.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (_succ, new TreePath<T> (objeto));
+			return new Treelike.TreeEnumerator<T> (_succ, objeto);
+
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (_succ, new TreePath<T> (objeto));
+			return new Treelike.TreeEnumerator<T> (_succ, objeto);
 		}
 
 		#endregion
@@ -87,7 +88,7 @@ namespace ListasExtra.Treelike
 		/// </summary>
 		/// <returns>The tree from.</returns>
 		/// <param name="stem">Stem.</param>
-		public ITreeNode<T> getTreeFrom (T[] stem)
+		public ITreeNode<T> getTreeFrom (TreePath<T> stem)
 		{
 			if (stem.Length == 0) {
 				return this;
@@ -96,7 +97,7 @@ namespace ListasExtra.Treelike
 				T[] substem = new T[stem.Length - 1];
 				;
 				stem.CopyTo (substem, 1);
-				return suc.getTreeFrom (substem);
+				return suc.getTreeFrom ((TreePath<T>)substem);
 			}
 		}
 
