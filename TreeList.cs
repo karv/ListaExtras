@@ -56,27 +56,35 @@ namespace ListasExtra.Treelike
 			return true;
 		}
 
-		public void CopyTo (T[][] array, int arrayIndex)
+		public void CopyTo (TreePath<T>[] array, int arrayIndex)
+		{			
+			// TODO por probar
+			for (int i = 0; i < arrayIndex; i++) {
+				array [i] = getSucc [arrayIndex + i].objeto;
+			}
+		}
+
+		public bool Remove (TreePath<T> item)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public bool Remove (T[] item)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public int Count {
+		public int Count { //TEST
 			get {
-				throw new NotImplementedException ();
+				int ret = 1;
+				foreach (var x in getSucc) {
+					ret += getSucc.Count;
+				}
+				return ret;
 			}
 		}
 
-		public bool IsReadOnly {
+		bool IsReadOnly {
 			get {
-				throw new NotImplementedException ();
+				return false;
 			}
 		}
+
 		/*
 		IEnumerator<T> IEnumerable<T[]>.GetEnumerator ()
 		{
