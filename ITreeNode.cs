@@ -11,6 +11,8 @@ namespace ListasExtra.Treelike
 
 		TreePath<T> objeto { get; }
 
+		int Count { get; }
+
 
 	}
 

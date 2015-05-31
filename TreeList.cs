@@ -114,15 +114,6 @@ namespace ListasExtra.Treelike
 			return true;
 		}
 
-		public int Count { //TEST
-			get {
-				int ret = 1;
-				foreach (var x in getSucc) {
-					ret += getSucc.Count;
-				}
-				return ret;
-			}
-		}
 
 		public bool IsReadOnly {
 			get {
@@ -130,12 +121,6 @@ namespace ListasExtra.Treelike
 			}
 		}
 
-		/*
-		IEnumerator<T> IEnumerable<T[]>.GetEnumerator ()
-		{
-			return new Treelike.TreeEnumerator<T> (getSucc, objeto);
-		}
-*/
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
 			return new Treelike.TreeEnumerator<T> (getSucc, objeto);

@@ -101,6 +101,16 @@ namespace ListasExtra.Treelike
 			}
 		}
 
+		public int Count {
+			get {
+				int ret = 1;
+				foreach (var x in getSucc) {
+					ret += x.Count;
+				}
+				return ret;
+			}
+		}
+
 		#endregion
 	}
 }
