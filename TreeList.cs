@@ -24,7 +24,7 @@ namespace ListasExtra.Treelike
 			Add ((TreePath<T>)item); 
 		}
 
-		public void Add (TreePath<T> item) //TODO probar.
+		public void Add (TreePath<T> item)
 		{
 			ITreeNode<T> iter = this;
 			TreePath<T> objz;
