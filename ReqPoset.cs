@@ -47,5 +47,19 @@ namespace ListasExtra.Poset
 			}
 			return true;
 		}
+
+		/// <summary>
+		/// Es 'loSatisface' en su forma cualitativa.
+		/// </summary>
+		/// <returns><c>true</c>, si , <c>false</c> otherwise.</returns>
+		/// <param name="comparador">Comparador.</param>
+		public bool isAbierto (ICollection<T> comparador)
+		{
+			foreach (var x in _reqs) {
+				if (!comparador.Contains (x.Key.objeto))
+					return false;
+			}
+			return true;
+		}
 	}
 }
