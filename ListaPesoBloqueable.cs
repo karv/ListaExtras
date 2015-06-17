@@ -24,6 +24,7 @@ using ListasExtra;
 
 namespace ListasExtra.Lock
 {
+	// TEST Probar esto :v
 	public class ListaPesoBloqueable<T, V> : ListaPeso<T, V>, IListBloqueable<KeyValuePair<T, V>>, IEnumerable <KeyValuePair<T, V>>
 	{
 		public ListaPesoBloqueable (Func<V, V, V> OperSuma, V ObjetoNulo) : base (OperSuma, ObjetoNulo)
