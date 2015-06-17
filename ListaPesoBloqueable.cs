@@ -24,6 +24,9 @@ using ListasExtra;
 
 namespace ListasExtra.Lock
 {
+	/// <summary>
+	/// ES una listapeso en el que se puede editar mientras se realiza una iteración 'foreach'.
+	/// </summary>
 	public class ListaPesoBloqueable<T, V> : ListaPeso<T, V>, IListBloqueable<KeyValuePair<T, V>>, IEnumerable <KeyValuePair<T, V>>
 	{
 		public ListaPesoBloqueable (Func<V, V, V> OperSuma, V ObjetoNulo) : base (OperSuma, ObjetoNulo)
@@ -62,7 +65,6 @@ namespace ListasExtra.Lock
 				return _locked;
 			}
 			set {
-				Console.WriteLine ("Use ListaPesoBloqueable.Add (key, delta) en lugar de este si es posible.");
 				bool released = _locked && !value;
 				_locked = value;
 
@@ -80,6 +82,8 @@ namespace ListasExtra.Lock
 		public new V this [T key] {
 			set {
 				if (bloqueado) {
+					System.Diagnostics.Debug.Write ("Use ListaPesoBloqueable.Add (key, delta) en lugar de este si es posible.");
+
 					Promesas.Add (new KeyValuePair<T, V> (key, value));
 				} else {
 					base [key] = value; 
@@ -147,5 +151,15 @@ namespace ListasExtra.Lock
 		}
 
 		#endregion
+	}
+
+	/// <summary>
+	/// Lista peso bloqueable.
+	/// </summary>
+	public class ListaPesoBloqueable<T> : ListaPesoBloqueable<T, float>
+	{
+		public ListaPesoBloqueable () : base ((x, y) => x + y, 0)
+		{
+		}
 	}
 }
