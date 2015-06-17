@@ -7,10 +7,25 @@ namespace Test
 	{
 		static void TestSet ()
 		{
-			ListasExtra.Set.Set<int> mySet = new ListasExtra.Set.Set<int> ();
+			//ListasExtra.Set.Set<int> mySet = new ListasExtra.Set.Set<int> ();
 		}
 
-		public static void Main (string[] args)
+		static void TestLock ()
+		{
+			ListasExtra.Lock.ListaPesoBloqueable<int, int> bv = new ListasExtra.Lock.ListaPesoBloqueable<int, int> (((x, y) => x + y), 0);
+		
+			bv [3] = 1;
+			bv [4] = 1;			
+			foreach (var x in bv) {
+				bv.Add (5, 1);
+			}
+
+			System.Console.WriteLine ("");
+
+			//ListasExtra.Lock.LockEnumerator
+		}
+
+		public static void TestTree ()
 		{
 			ListasExtra.Treelike.TreeList<int> tl = new ListasExtra.Treelike.TreeList<int> ();
 			int[] o = { 1, 2, 3 };
@@ -21,8 +36,11 @@ namespace Test
 			tl.Remove (o);
 			Console.WriteLine (tl.Contains (o));
 			Console.WriteLine (tl.Count);
-			TestSet ();
-			Console.WriteLine ("Hello World!");
+		}
+
+		public static void Main (string[] args)
+		{
+			TestLock ();
 		}
 	}
 }
