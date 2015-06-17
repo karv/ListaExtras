@@ -80,9 +80,13 @@ namespace ListasExtra.Lock
 		IList<KeyValuePair<T, V>> Promesas = new List<KeyValuePair<T, V>> ();
 
 		public new V this [T key] {
+			get {
+				return base [key];
+			}
+
 			set {
 				if (bloqueado) {
-					System.Diagnostics.Debug.Write ("Use ListaPesoBloqueable.Add (key, delta) en lugar de este si es posible.");
+					System.Diagnostics.Debug.Write ("Use ListaPesoBloqueable.Add (key, delta) en lugar de éste si es posible.");
 
 					Promesas.Add (new KeyValuePair<T, V> (key, value));
 				} else {
@@ -98,9 +102,9 @@ namespace ListasExtra.Lock
 
 		public new System.Collections.IEnumerator GetEnumerator ()
 		{
+			bloqueado = true;
 			LockEnumerator<KeyValuePair<T, V>> x = new  LockEnumerator<KeyValuePair<T, V>> (base.GetEnumerator ());
 			x.OnTerminate = unblock;
-			bloqueado = true;
 			return x;
 		}
 
@@ -145,9 +149,13 @@ namespace ListasExtra.Lock
 			return x;
 		}
 
-		void unblock ()
+		List< object> _enumInstances = new List<object> ();
+
+		void unblock (object en)
 		{
-			bloqueado = false;
+			_enumInstances.Remove (en);
+			if (_enumInstances.Count == 0)
+				bloqueado = false;
 		}
 
 		#endregion
@@ -161,5 +169,22 @@ namespace ListasExtra.Lock
 		public ListaPesoBloqueable () : base ((x, y) => x + y, 0)
 		{
 		}
+
+		/// <Docs>The object to locate in the current collection.</Docs>
+		/// <para>Determines whether the current collection contains a specific value.</para>
+		/// <summary>
+		/// Revisa si esta lista contiene como sublista a otra
+		/// </summary>
+		/// <param name="comparador">Una lista para comparar</param>
+		public bool Contains (ListaPeso<T> comparador)
+		{
+			foreach (var x in comparador) {
+				if (this [x.Key] < x.Value)
+					return false;
+			}
+			return true;
+		}
+
+
 	}
 }
