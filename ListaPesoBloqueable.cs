@@ -25,7 +25,7 @@ using ListasExtra;
 namespace ListasExtra.Lock
 {
 	/// <summary>
-	/// ES una listapeso en el que se puede editar mientras se realiza una iteración 'foreach'.
+	/// Es una listapeso en el que se puede editar mientras se realiza una iteración 'foreach'.
 	/// </summary>
 	public class ListaPesoBloqueable<T, V> : ListaPeso<T, V>, IListBloqueable<KeyValuePair<T, V>>, IEnumerable <KeyValuePair<T, V>>
 	{
