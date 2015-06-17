@@ -125,11 +125,10 @@ namespace ListasExtra
 		#region Eventos
 
 		/// <summary>
-		/// Se llama cuando se cambia algún valor (creo que no sirve aún Dx).
+		/// Se llama cuando se cambia algún valor.
 		/// </summary>
 		public event EventHandler CambioValor;
-
-/// 
+		//TEST
 
 		#endregion
 
