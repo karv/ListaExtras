@@ -16,7 +16,7 @@ namespace ListasExtra.Lock
 			baseEnumerator = baseEnum;
 		}
 
-		public Action OnTerminate;
+		public Action<object> OnTerminate;
 
 		#region IEnumerator implementation
 
@@ -24,7 +24,7 @@ namespace ListasExtra.Lock
 		{
 			bool ret = baseEnumerator.MoveNext ();
 			if (!ret && OnTerminate != null)
-				OnTerminate.Invoke ();
+				OnTerminate.Invoke (this);
 			return ret;
 		}
 
