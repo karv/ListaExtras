@@ -58,6 +58,7 @@
     <Compile Include="ReqPoset.cs" />
     <Compile Include="IReqPoset.cs" />
     <Compile Include="LockEnumerator.cs" />
+    <Compile Include="ReadonlyPair.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
