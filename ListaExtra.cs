@@ -19,15 +19,15 @@ namespace ListasExtra
 
 		public new V this [T Key] {
 			get {
-				foreach (var x in this) {
-					if (_Comparador (x.Key, Key))
-						return x.Value;
+				V ret;
+				if (TryGetValue (Key, out ret)) {
+					return ret;
 				}
 				return Nulo;
 			}
 			set {
 				// Encontrar la Key buscada.
-				foreach (var x in Keys) {
+				foreach (var x in Keys.ToList()) {
 					if (_Comparador (x, Key)) {
 						base [x] = value;
 						if (CambioValor != null)
@@ -79,6 +79,22 @@ namespace ListasExtra
 			set {
 				_NullV = value;
 			}
+		}
+
+		// TODO
+		/// <summary>
+		/// Determina si las entradas se eliminan al llegar su valor a su valor nulo.
+		/// </summary>
+		public bool borrarEnNull = false;
+
+		public ReadonlyPair<T, V> getEntrada (T entrada)
+		{
+			foreach (var x in this) {
+				if (x.Key.Equals (entrada)) {
+					return new ReadonlyPair<T, V> (x);
+				}
+			}
+			return null;
 		}
 
 		#endregion
@@ -288,6 +304,12 @@ namespace ListasExtra
 		{
 			return (ListaPeso<T>)ListaPeso<T, float>.Sumar (left, right);
 		}
+
+		public new void Add (T key, float value)
+		{
+			this [key] += value;
+		}
+
 	}
 
 	/// <summary>
