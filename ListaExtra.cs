@@ -362,8 +362,8 @@ namespace ListasExtra
 	[DataContract (Name = "ListaPeso")]
 	public class ListaPeso<T> : ListasExtra.ListaPeso<T, Single>
 	{
-		public ListaPeso ()
-			: base ((x, y) => x + y, 0)
+		public ListaPeso (IDictionary<T, float> modelo = null)
+			: base ((x, y) => x + y, 0, modelo)
 		{
 		}
 
