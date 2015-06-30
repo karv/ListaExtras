@@ -13,11 +13,11 @@ namespace ListasExtra
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="V">Rango(co-dominio) de la función.</typeparam>
 	[DataContract (Name = "ListaPeso")]
-	public class ListaPeso<T, V> : Dictionary<T, V>
+	public class ListaPeso<T, V> : IDictionary<T, V>
 	{
 		#region Accesor
 
-		public new V this [T Key] {
+		public V this [T Key] {
 			get {
 				V ret;
 				if (TryGetValue (Key, out ret)) {
@@ -29,7 +29,7 @@ namespace ListasExtra
 				// Encontrar la Key buscada.
 				foreach (var x in Keys.ToList()) {
 					if (_Comparador (x, Key)) {
-						base [x] = value;
+						_model [x] = value;
 						if (CambioValor != null)
 							CambioValor.Invoke (this, new EventArgs ());
 						return;
@@ -39,13 +39,15 @@ namespace ListasExtra
 				// Si es entrada nueva, se agrega.
 				if (CambioValor != null)
 					CambioValor.Invoke (this, new EventArgs ());
-				base.Add (Key, value);
+				_model.Add (Key, value);
 			}
 		}
 
 		#endregion
 
 		#region Internos
+
+		IDictionary<T, V> _model;
 
 		/// <summary>
 		/// La operación suma.
@@ -95,6 +97,84 @@ namespace ListasExtra
 				}
 			}
 			return null;
+		}
+
+		#endregion
+
+		#region IDictionary
+
+		public void Add (T key, V value)
+		{
+			_model.Add (key, value);
+		}
+
+		public bool Remove (T key)
+		{
+			return _model.Remove (key);
+		}
+
+		public bool TryGetValue (T key, out V value)
+		{
+			return _model.TryGetValue (key, out value);
+		}
+
+		public ICollection<T> Keys {
+			get {
+				return _model.Keys;
+			}
+		}
+
+		public ICollection<V> Values {
+			get {
+				return _model.Values;
+			}
+		}
+
+		public void Add (KeyValuePair<T, V> item)
+		{
+			_model.Add (item);
+		}
+
+		public void Clear ()
+		{
+			_model.Clear ();
+		}
+
+		public bool Contains (KeyValuePair<T, V> item)
+		{
+			return _model.Contains (item);
+		}
+
+		public void CopyTo (KeyValuePair<T, V>[] array, int arrayIndex)
+		{
+			_model.CopyTo (array, arrayIndex);
+		}
+
+		public bool Remove (KeyValuePair<T, V> item)
+		{
+			return Remove (item);
+		}
+
+		public int Count {
+			get {
+				return _model.Count;
+			}
+		}
+
+		public bool IsReadOnly {
+			get {
+				return _model.IsReadOnly;
+			}
+		}
+
+		public IEnumerator<KeyValuePair<T, V>> GetEnumerator ()
+		{
+			return _model.GetEnumerator ();
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		{
+			return _model.GetEnumerator ();
 		}
 
 		#endregion
@@ -155,23 +235,25 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="OperSuma">Operador suma inicial.</param>
 		/// <param name="ObjetoNulo">Objeto cero inicial.</param>
-		public ListaPeso (Func<V, V, V> OperSuma, V ObjetoNulo)
+		ListaPeso (Func<V, V, V> OperSuma, V ObjetoNulo)
 		{
 			Suma = OperSuma;
 			Nulo = ObjetoNulo;
 		}
 
 		/// <summary>
-		/// Inicializa una instancia de la clase a partir de un valor inicial dado.
+		/// Inicializa una instancia de la clase a partir de un modelo de IDIccionary.
 		/// </summary>
-		/// <param name="OperSuma">Operador suma inicial.</param>
-		/// <param name="ObjetoNulo">Objeto cero inicial.</param>
-		/// <param name="InitDat">Data inicial.</param>
-		public ListaPeso (Func<V, V, V> OperSuma, V ObjetoNulo, Dictionary<T, V> InitDat)
-			: this (OperSuma, ObjetoNulo)
+		/// <param name="operSuma">Operador suma inicial.</param>
+		/// <param name="objetoNulo">Objeto cero inicial.</param>
+		/// <param name="modelo">Modelo</param>
+		public ListaPeso (Func<V, V, V> operSuma, V objetoNulo, IDictionary<T, V> modelo = null)
+			: this (operSuma, objetoNulo)
 		{
-			foreach (var x in InitDat)
-				Add (x.Key, x.Value);
+			if (modelo == null)
+				_model = new Dictionary<T, V> ();
+			else
+				_model = modelo;
 		}
 
 		protected ListaPeso ()
@@ -182,7 +264,7 @@ namespace ListasExtra
 
 		#region Lista
 
-		public new bool ContainsKey (T Key)
+		public bool ContainsKey (T Key)
 		{
 			foreach (var x in Keys) {
 				if (_Comparador (x, Key))
