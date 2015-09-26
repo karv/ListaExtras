@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>ListaExtras</id>
-    <version>0.2</version>
-    <title>Listaextras</title>
+    <version>0.2.1</version>
+    <title>Lista extras</title>
     <authors>Edgar Carballo</authors>
-    <owners>Karvayosoft</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Cosas</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <description>Un poco de ayuda para trabajar con listas. En particular diccionarios</description>
     <copyright>Copyright 2015</copyright>
-    <tags>Tag1 Tag2</tags>
   </metadata>
+  <files>
+    <file src="bin/Release/ListaExtras.dll" target="lib" />
+  </files>
 </package>

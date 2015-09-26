@@ -6,3 +6,4 @@ TestProject1
 *.suo
 test-results/
 Test/test-results/
+*.nupkg
