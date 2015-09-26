@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ListasExtra.Treelike
 {
@@ -13,7 +12,7 @@ namespace ListasExtra.Treelike
 		List<ITreeNode<T>> _succ;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ListasExtra.Treelike.TreeNode"/> class.
+		/// Initializes a new instance of the TreeNode class.
 		/// </summary>
 		/// <param name="obj">Objeto de este nodo</param>
 		public TreeNode (T[] obj)
@@ -23,7 +22,7 @@ namespace ListasExtra.Treelike
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ListasExtra.Treelike.TreeLista`1"/> class.
+		/// Initializes a new instance of the TreeLista class.
 		/// </summary>
 		/// <param name="obj">Objeto de este nodo</param>
 		/// <param name="succ">Lista de sucesores</param>
@@ -40,7 +39,7 @@ namespace ListasExtra.Treelike
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ListasExtra.Treelike.TreeLista`1"/> class.
+		/// Initializes a new instance of the TreeLista class.
 		/// </summary>
 		/// <param name="obj">Objeto de este nodo</param>
 		/// <param name="succ">Lista de sucesores</param>
@@ -56,13 +55,13 @@ namespace ListasExtra.Treelike
 
 		IEnumerator<TreePath<T>> IEnumerable<TreePath<T>>.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (_succ, objeto);
+			return new TreeEnumerator<T> (_succ, objeto);
 
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (_succ, objeto);
+			return new TreeEnumerator<T> (_succ, objeto);
 		}
 
 		#endregion
@@ -79,7 +78,7 @@ namespace ListasExtra.Treelike
 
 		public TreePath<T> objeto {
 			get {
-				return _obj == null ? new TreePath<T> (0) : _obj;
+				return _obj ?? new TreePath<T> (0);
 			}
 		}
 
@@ -94,8 +93,7 @@ namespace ListasExtra.Treelike
 				return this;
 			} else {
 				ITreeNode<T> suc = this.FindSucc (stem [0]);
-				T[] substem = new T[stem.Length - 1];
-				;
+				var substem = new T[stem.Length - 1];
 				stem.CopyTo (substem, 1);
 				return suc.getTreeFrom ((TreePath<T>)substem);
 			}

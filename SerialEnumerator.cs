@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ListasExtra.Enumerator
 {
 	public class SerialEnumerator<T> : IEnumerator<T>
 	{
 		protected List<IEnumerator<T>> _enum;
-		protected int currEnumIndex = 0;
+		protected int currEnumIndex;
 
 		protected IEnumerator<T> currEnum {
 			get {
@@ -30,9 +29,7 @@ namespace ListasExtra.Enumerator
 			while (currEnumIndex < _enum.Count && !currEnum.MoveNext ()) {
 				currEnumIndex++;
 			}
-			if (currEnumIndex == _enum.Count)
-				return false;
-			return true;
+			return currEnumIndex != _enum.Count;
 		}
 
 		public void Reset ()

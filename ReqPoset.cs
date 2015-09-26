@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ListasExtra.Poset
 {
@@ -13,7 +12,7 @@ namespace ListasExtra.Poset
 			}
 		}
 
-		IDictionary <IReqPoset<T>, float> _reqs;
+		readonly IDictionary <IReqPoset<T>, float> _reqs;
 
 		public IDictionary<IReqPoset<T>, float> reqs {
 			get {

@@ -14,16 +14,18 @@ namespace Test
 
 		static void TestLock()
 		{
-			ListasExtra.Lock.ListaPesoBloqueable<int, int> bv = new ListasExtra.Lock.ListaPesoBloqueable<int, int>(((x, y) => x + y), 0);
+			var bv = new ListasExtra.Lock.ListaPesoBloqueable<int, int>(((x, y) => x + y), 0);
 		
 			bv[3] = 1;
 			bv[4] = 1;
+			// Analysis disable UnusedVariable.Compiler
 			foreach (var x in bv)
 			{
 				bv.Add(5, 1);
 			}
+			// Analysis restore UnusedVariable.Compiler
 
-			System.Console.WriteLine("");
+			Console.WriteLine("");
 
 			//ListasExtra.Lock.LockEnumerator
 		}
@@ -36,11 +38,14 @@ namespace Test
 				lp[i] = 99 - i;
 			}
 			Debug.WriteLine(lp);
+			lp.AlCambiarValor += (sender, e) => 
+				Debug.WriteLine(string.Format("lp[{0}] cambió de {1} a {2}", e.Key, e.Previo, e.Actual));
+			lp[1] = 98;
 		}
 
 		public static void TestTree()
 		{
-			ListasExtra.Treelike.TreeList<int> tl = new ListasExtra.Treelike.TreeList<int>();
+			var tl = new ListasExtra.Treelike.TreeList<int>();
 			int[] o = { 1, 2, 3 };
 			Console.WriteLine(tl.Count);
 			tl.Add(o);
@@ -51,7 +56,7 @@ namespace Test
 			Console.WriteLine(tl.Count);
 		}
 
-		public static void Main(string[] args)
+		public static void Main()
 		{
 			TestListaPeso();
 		}

@@ -24,7 +24,6 @@ using ListasExtra;
 
 namespace ListasExtra.Lock
 {
-	// TEST Probar esto.
 	/// <summary>
 	/// Es una listapeso en el que se puede editar mientras se realiza una iteración 'foreach'.
 	/// </summary>
@@ -59,7 +58,7 @@ namespace ListasExtra.Lock
 
 		public event EventHandler OnRelease;
 
-		bool _locked = false;
+		bool _locked;
 
 		public bool bloqueado {
 			get {
@@ -104,7 +103,7 @@ namespace ListasExtra.Lock
 		public new System.Collections.IEnumerator GetEnumerator ()
 		{
 			bloqueado = true;
-			LockEnumerator<KeyValuePair<T, V>> x = new  LockEnumerator<KeyValuePair<T, V>> (base.GetEnumerator ());
+			var x = new  LockEnumerator<KeyValuePair<T, V>> (base.GetEnumerator ());
 			x.OnTerminate = unblock;
 			return x;
 		}
@@ -133,7 +132,7 @@ namespace ListasExtra.Lock
 			}
 		}
 
-		bool ListasExtra.Lock.IListBloqueable<KeyValuePair<T, V>>.bloqueado {
+		bool IListBloqueable<KeyValuePair<T, V>>.bloqueado {
 			get {
 				return bloqueado;
 			}
@@ -144,19 +143,18 @@ namespace ListasExtra.Lock
 
 		IEnumerator<KeyValuePair<T, V>> IEnumerable<KeyValuePair<T, V>>.GetEnumerator ()
 		{
-			LockEnumerator<KeyValuePair<T, V>> x = new  LockEnumerator<KeyValuePair<T, V>> (base.GetEnumerator ());
+			var x = new  LockEnumerator<KeyValuePair<T, V>> (base.GetEnumerator ());
 			x.OnTerminate = unblock;
 			bloqueado = true;
 			return x;
 		}
 
-		List< object> _enumInstances = new List<object> ();
+		readonly List< object> _enumInstances = new List<object> ();
 
 		void unblock (object en)
 		{
 			_enumInstances.Remove (en);
-			if (_enumInstances.Count == 0)
-				bloqueado = false;
+			bloqueado &= _enumInstances.Count != 0;
 		}
 
 		#endregion

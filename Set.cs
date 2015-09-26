@@ -22,7 +22,7 @@ namespace ListasExtra.Set
 
 		#region obj
 
-		List<T> _dat;
+		readonly List<T> _dat;
 		Random r = new Random ();
 
 		#endregion

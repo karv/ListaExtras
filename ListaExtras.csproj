@@ -8,10 +8,10 @@
     <ProjectGuid>{B9F315AE-47F8-4629-83FC-3B4D70087083}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClassLibrary1</RootNamespace>
+    <RootNamespace>ListasExtra</RootNamespace>
     <AssemblyName>ListaExtras</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <ReleaseVersion>0.2</ReleaseVersion>
+    <ReleaseVersion>0.2.1</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -60,6 +60,7 @@
     <Compile Include="IReqPoset.cs" />
     <Compile Include="LockEnumerator.cs" />
     <Compile Include="ReadonlyPair.cs" />
+    <Compile Include="CambioElementoEventArgs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

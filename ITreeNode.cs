@@ -5,7 +5,7 @@ namespace ListasExtra.Treelike
 {
 	public interface ITreeNode<T> : IEnumerable<TreePath<T>>
 	{
-		System.Collections.Generic.List<ITreeNode<T>> getSucc { get; }
+		List<ITreeNode<T>> getSucc { get; }
 
 		ITreeNode<T> getTreeFrom (TreePath<T> stem);
 

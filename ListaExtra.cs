@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.IO;
 using System.Runtime.Serialization;
 
 namespace ListasExtra
@@ -20,26 +18,22 @@ namespace ListasExtra
 		public V this [T Key] {
 			get {
 				V ret;
-				if (TryGetValue (Key, out ret)) {
-					return ret;
-				}
-				return Nulo;
+				return TryGetValue (Key, out ret) ? ret : Nulo;
 			}
 			set {
 				// Encontrar la Key buscada.
 				foreach (var x in Keys.ToList()) {
 					if (_Comparador (x, Key)) {
+						V prev = _model [x];
 						_model [x] = value;
-						if (CambioValor != null)
-							CambioValor.Invoke (this, new EventArgs ());
+						AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, V> (Key, prev, _model [x]));
 						return;
 					}
 				}
 
 				// Si es entrada nueva, se agrega.
-				if (CambioValor != null)
-					CambioValor.Invoke (this, new EventArgs ());
 				_model.Add (Key, value);
+				AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, V> (Key, Nulo, _model [Key]));
 			}
 		}
 
@@ -58,7 +52,7 @@ namespace ListasExtra
 		/// </summary>
 		public Func<V, V> Inv;
 
-		private Func<T, T, bool> _Comparador = (x, y) => x.Equals (y);
+		Func<T, T, bool> _Comparador = (x, y) => x.Equals (y);
 
 		/// <summary>
 		/// Devuelve o establece qué función sirve para saber si dos T's son idénticos para esta lista.
@@ -69,25 +63,14 @@ namespace ListasExtra
 			set { _Comparador = value; }
 		}
 
-		private V _NullV;
 
 		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
 		/// </summary>
 		public V Nulo {
-			get {
-				return _NullV;
-			}
-			set {
-				_NullV = value;
-			}
+			get;
+			set;
 		}
-
-		// TODO
-		/// <summary>
-		/// Determina si las entradas se eliminan al llegar su valor a su valor nulo.
-		/// </summary>
-		public bool borrarEnNull = false;
 
 		public ReadonlyPair<T, V> getEntrada (T entrada)
 		{
@@ -223,8 +206,7 @@ namespace ListasExtra
 		/// <summary>
 		/// Se llama cuando se cambia algún valor.
 		/// </summary>
-		public event EventHandler CambioValor;
-		//TEST
+		public event EventHandler<CambioElementoEventArgs<T,V>> AlCambiarValor;
 
 		#endregion
 
@@ -250,10 +232,7 @@ namespace ListasExtra
 		public ListaPeso (Func<V, V, V> operSuma, V objetoNulo, IDictionary<T, V> modelo = null)
 			: this (operSuma, objetoNulo)
 		{
-			if (modelo == null)
-				_model = new Dictionary<T, V> ();
-			else
-				_model = modelo;
+			_model = modelo ?? new Dictionary<T, V> ();
 		}
 
 		protected ListaPeso ()
@@ -317,7 +296,7 @@ namespace ListasExtra
 		{
 			if (Inv == null)
 				throw new NullReferenceException ("No está definito Inv");
-			ListaPeso<T, V> ret = new ListaPeso<T, V> (Suma, Nulo);
+			var ret = new ListaPeso<T, V> (Suma, Nulo);
 			ret.Inv = Inv;
 			foreach (var x in Keys) {
 				ret.Add (x, Inv (this [x]));
@@ -332,7 +311,7 @@ namespace ListasExtra
 		/// <returns></returns>
 		public ListaPeso<T, V> SumarA (ListaPeso<T, V> S)
 		{
-			ListaPeso<T, V> ret = (ListaPeso<T, V>)this.MemberwiseClone ();
+			var ret = (ListaPeso<T, V>)MemberwiseClone ();
 			foreach (T x in S.Keys) {
 				ret.Add (x, S [x]);
 			}
@@ -369,14 +348,14 @@ namespace ListasExtra
 	}
 
 	[DataContract (Name = "ListaPeso")]
-	public class ListaPeso<T> : ListasExtra.ListaPeso<T, Single>
+	public class ListaPeso<T> : ListaPeso<T, Single>
 	{
 		public ListaPeso (IDictionary<T, float> modelo = null)
 			: base ((x, y) => x + y, 0, modelo)
 		{
 		}
 
-		public static bool operator <= (ListasExtra.ListaPeso<T> left, ListasExtra.ListaPeso<T> right)
+		public static bool operator <= (ListaPeso<T> left, ListaPeso<T> right)
 		{
 
 			foreach (var x in left.Keys) {
@@ -386,12 +365,12 @@ namespace ListasExtra
 			return true;
 		}
 
-		public static bool operator >= (ListasExtra.ListaPeso<T> left, ListasExtra.ListaPeso<T> right)
+		public static bool operator >= (ListaPeso<T> left, ListaPeso<T> right)
 		{
 			return right <= left;
 		}
 
-		public static ListaPeso<T> operator + (ListasExtra.ListaPeso<T> left, ListasExtra.ListaPeso<T> right)
+		public static ListaPeso<T> operator + (ListaPeso<T> left, ListaPeso<T> right)
 		{
 			return (ListaPeso<T>)ListaPeso<T, float>.Sumar (left, right);
 		}
@@ -407,7 +386,7 @@ namespace ListasExtra
 	/// Es sólo una listaPeso de enteros largos.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class ListaContador<T> : ListasExtra.ListaPeso<T, long>
+	public class ListaContador<T> : ListaPeso<T, long>
 	{
 		public ListaContador ()
 			: base ((x, y) => x + y, 0)
@@ -432,18 +411,9 @@ namespace ListasExtra
 	{
 		public T CotaSup;
 		public T CotaInf;
-		private T _Valor;
-		//private Comparer<T> Comparador;
-		private Func<T, T, Boolean> _EsMenor;
+		T _Valor;
 
-		public Func<T, T, Boolean> EsMenor {
-			get {
-				return _EsMenor;
-			}
-			private set {
-				_EsMenor = value;
-			}
-		}
+		public Func<T, T, Boolean> EsMenor { get; set; }
 
 		public T Valor {
 			get {
@@ -522,9 +492,9 @@ namespace ListasExtra
 
 	public static class ExtDouble
 	{
-		public static ListasExtra.ObjetoAcotado<Double> ToAcotado (this Double x)
+		public static ObjetoAcotado<Double> ToAcotado (this Double x)
 		{
-			ObjetoAcotado<Double> ret = new ObjetoAcotado<Double> (ComparadoresPred.EsMenor, Double.MinValue, Double.MaxValue, 0);
+			var ret = new ObjetoAcotado<Double> (ComparadoresPred.EsMenor, Double.MinValue, Double.MaxValue, 0);
 			ret.Valor = x;
 			return ret;
 		}

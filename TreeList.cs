@@ -6,8 +6,8 @@ namespace ListasExtra.Treelike
 	/// <summary>
 	/// Lista en árbol.
 	/// Note que siempre {} \in this
-	public class TreeList<T> : TreeNode<T>, ICollection<TreePath<T>>
 	/// </summary>
+	public class TreeList<T> : TreeNode<T>, ICollection<TreePath<T>>
 	{
 		public enum enumOpcionOrden
 		{
@@ -123,12 +123,12 @@ namespace ListasExtra.Treelike
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (getSucc, objeto);
+			return new TreeEnumerator<T> (getSucc, objeto);
 		}
 
-		System.Collections.Generic.IEnumerator<TreePath<T>> System.Collections.Generic.IEnumerable<TreePath<T>>.GetEnumerator ()
+		IEnumerator<TreePath<T>> IEnumerable<TreePath<T>>.GetEnumerator ()
 		{
-			return new Treelike.TreeEnumerator<T> (getSucc, objeto);
+			return new TreeEnumerator<T> (getSucc, objeto);
 		}
 
 	}

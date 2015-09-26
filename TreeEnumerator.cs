@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ListasExtra.Treelike
 {
@@ -15,9 +14,9 @@ namespace ListasExtra.Treelike
 		/// <summary>
 		/// Devuelve o establece si este nodo ya se enumeró.
 		/// </summary>
-		bool Myself = false;
-		TreePath<T> _root;
-		bool EnPadre = false;
+		bool Myself;
+		readonly TreePath<T> _root;
+		bool EnPadre;
 
 		public TreeEnumerator (IEnumerable<IEnumerable<TreePath<T>>> enums, TreePath<T> root) : base (enums)
 		{

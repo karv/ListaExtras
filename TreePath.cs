@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
 
 namespace ListasExtra.Treelike
@@ -9,11 +8,11 @@ namespace ListasExtra.Treelike
 	/// </summary>
 	public class TreePath<T> : IEnumerable, IEquatable<TreePath<T>>
 	{
-		T[] _dat;
+		readonly T[] _dat;
 
 		public void CopyTo (T[] Array, int index)
 		{
-			throw new NotImplementedException ();
+			_dat.CopyTo (Array, index);
 		}
 
 		/// <summary>
@@ -27,7 +26,7 @@ namespace ListasExtra.Treelike
 				throw new Exception ("No se puede calcular una sección inicial de longitud mayor que el objeto original.");
 
 
-			TreePath<T> ret = new TreePath<T> (ht);
+			var ret = new TreePath<T> (ht);
 			for (int i = 0; i < ht; i++) {
 				ret [i] = this [i];
 			}
@@ -110,7 +109,7 @@ namespace ListasExtra.Treelike
 
 		#region IEnumerable implementation
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return _dat.GetEnumerator ();
 		}
