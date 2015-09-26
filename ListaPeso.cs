@@ -277,6 +277,15 @@ namespace ListasExtra
 
 		#endregion
 
+		/// <summary>
+		/// Devuelve una copia del soporte.
+		/// </summary>
+		/// <returns>Un ISet que contiene a cada elemento del soporte.</returns>
+		public ISet<T> Soporte ()
+		{
+			return new HashSet<T> (_model.Keys);
+		}
+
 		public override string ToString ()
 		{
 			string ret = "";
@@ -392,15 +401,24 @@ namespace ListasExtra
 			return right * left;
 		}
 
+		public static float operator * (ListaPeso<T> left, ListaPeso<T> right)
+		{
+			ISet<T> soporte = left.Soporte ();
+			soporte.UnionWith (right.Soporte ());
+
+			var ret = 0f;
+			foreach (var x in soporte) {
+				ret += left [x] * right [x];
+			}
+
+			return ret;
+		}
 
 		public new void Add (T key, float value)
 		{
 			this [key] += value;
 		}
 
-		#region Otros IDictionary
-
-		#endregion
 
 	}
 
