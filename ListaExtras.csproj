@@ -61,6 +61,8 @@
     <Compile Include="ReadonlyPair.cs" />
     <Compile Include="CambioElementoEventArgs.cs" />
     <Compile Include="ListaPeso.cs" />
+    <Compile Include="ListaContador.cs" />
+    <Compile Include="ObjetoAcotado.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
