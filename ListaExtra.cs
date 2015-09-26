@@ -298,6 +298,15 @@ namespace ListasExtra
 
 		#endregion
 
+		public override string ToString ()
+		{
+			string ret = "";
+			foreach (var item in _model) {
+				ret += string.Format ("{0} -> {1}\n", item.Key, item.Value);
+			}
+			return ret;
+		}
+
 		#region Operacional
 
 		/// <summary>
