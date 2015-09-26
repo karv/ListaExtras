@@ -12,24 +12,33 @@ namespace ListasExtra.Set
 	{
 		public Set ()
 		{
-			_dat = new List<T> ();
+			_dat = new HashSet<T> ();
 		}
 
 		public Set (IEnumerable<T> inicial)
 		{
-			_dat = new List<T> (inicial);
+			_dat = new HashSet<T> (inicial);
 		}
 
 		#region obj
 
-		readonly List<T> _dat;
-		Random r = new Random ();
+		readonly HashSet<T> _dat;
 
 		#endregion
 
 		public T Pick ()
 		{
-			return _dat [r.Next (_dat.Count)];
+			T ret;
+			using (var en = _dat.GetEnumerator ())
+				ret = en.Current;
+			return ret;
+		}
+
+		public T PickRemove ()
+		{
+			var ret = Pick ();
+			_dat.Remove (ret);
+			return ret;
 		}
 
 
