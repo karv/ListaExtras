@@ -355,9 +355,8 @@ namespace ListasExtra
 		{
 		}
 
-		public static bool operator <= (ListaPeso<T> left, ListaPeso<T> right)
+		public static bool operator <= (ListaPeso<T> left, IDictionary<T, float> right)
 		{
-
 			foreach (var x in left.Keys) {
 				if (left [x] > right [x])
 					return false;
@@ -365,9 +364,13 @@ namespace ListasExtra
 			return true;
 		}
 
-		public static bool operator >= (ListaPeso<T> left, ListaPeso<T> right)
+		public static bool operator >= (ListaPeso<T> left, IDictionary<T, float> right)
 		{
-			return right <= left;
+			foreach (var x in left.Keys) {
+				if (left [x] > right [x])
+					return false;
+			}
+			return true;
 		}
 
 		public static ListaPeso<T> operator + (ListaPeso<T> left, ListaPeso<T> right)
@@ -375,85 +378,33 @@ namespace ListasExtra
 			return (ListaPeso<T>)ListaPeso<T, float>.Sumar (left, right);
 		}
 
+		public static ListaPeso<T> operator * (ListaPeso<T> left, float right)
+		{
+			var ret = new ListaPeso<T> ();
+			foreach (var x in left) {
+				ret [x.Key] = x.Value * right;
+			}
+			return ret;
+		}
+
+		public static ListaPeso<T> operator * (float left, ListaPeso<T> right)
+		{
+			return right * left;
+		}
+
+
 		public new void Add (T key, float value)
 		{
 			this [key] += value;
 		}
 
+		#region Otros IDictionary
+
+		#endregion
+
 	}
 
-	/// <summary>
-	/// Es sólo una listaPeso de enteros largos.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public class ListaContador<T> : ListaPeso<T, long>
-	{
-		public ListaContador ()
-			: base ((x, y) => x + y, 0)
-		{
-		}
 
-		public long CountIf (Func<T, bool> Selector)
-		{
-			long ret = 0;
-			foreach (var x in Keys) {
-				if (Selector.Invoke (x)) {
-					ret += this [x];
-				}
-			}
-			return ret;
-
-		}
-	}
-
-	[DataContract]
-	public class ObjetoAcotado<T>
-	{
-		public T CotaSup;
-		public T CotaInf;
-		T _Valor;
-
-		public Func<T, T, Boolean> EsMenor { get; set; }
-
-		public T Valor {
-			get {
-				return _Valor;
-			}
-			set {
-
-				_Valor = EsMenor (value, CotaSup) ? (EsMenor (value, CotaInf) ? CotaInf : value) : CotaSup;
-				if (_Valor.Equals (CotaInf)) {
-					EventHandler Handler = LlegóMínimo;
-					Handler (this, null);
-				}
-				if (_Valor.Equals (CotaSup)) {
-					EventHandler Handler = LlegóMáximo;
-					Handler (this, null);
-				}
-			}
-		}
-
-		public ObjetoAcotado (Func<T, T, Boolean> Comparador)
-		{
-			EsMenor = Comparador;
-		}
-
-		public ObjetoAcotado (Func<T, T, Boolean> Comparador, T Min, T Max, T Inicial)
-			: this (Comparador)
-		{
-			CotaInf = Min;
-			CotaSup = Max;
-			Valor = Inicial;
-		}
-
-		public override string ToString ()
-		{
-			return Valor.ToString ();
-		}
-		//Eventos
-		public event EventHandler LlegóMínimo;
-		public event EventHandler LlegóMáximo;
-	}
 
 	public static class ComparadoresPred
 	{
