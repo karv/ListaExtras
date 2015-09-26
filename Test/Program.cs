@@ -1,6 +1,7 @@
 ﻿using System;
 using ListasExtra;
 using System.Diagnostics;
+using ListasExtra.Treelike;
 
 
 namespace Test
@@ -9,7 +10,7 @@ namespace Test
 	{
 		static void TestSet()
 		{
-			//ListasExtra.Set.Set<int> mySet = new ListasExtra.Set.Set<int> ();
+			// TODO
 		}
 
 		static void TestLock()
@@ -45,7 +46,7 @@ namespace Test
 
 		public static void TestTree()
 		{
-			var tl = new ListasExtra.Treelike.TreeList<int>();
+			var tl = new TreeList<int>();
 			int[] o = { 1, 2, 3 };
 			Console.WriteLine(tl.Count);
 			tl.Add(o);
