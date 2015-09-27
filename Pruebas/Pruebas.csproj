@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="TestListaPeso.cs" />
     <Compile Include="TreeList.cs" />
+    <Compile Include="Cola.Test.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
