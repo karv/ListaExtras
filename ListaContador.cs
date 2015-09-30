@@ -13,11 +13,11 @@ namespace ListasExtra
 		{
 		}
 
-		public long CountIf (Func<T, bool> Selector)
+		public long ContarSi (Func<T, bool> selector)
 		{
 			long ret = 0;
 			foreach (var x in Keys) {
-				if (Selector.Invoke (x)) {
+				if (selector.Invoke (x)) {
 					ret += this [x];
 				}
 			}

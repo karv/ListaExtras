@@ -30,17 +30,17 @@ namespace ListasExtra
 			}
 		}
 
-		public ObjetoAcotado (Func<T, T, Boolean> Comparador)
+		public ObjetoAcotado (Func<T, T, Boolean> comparador)
 		{
-			EsMenor = Comparador;
+			EsMenor = comparador;
 		}
 
-		public ObjetoAcotado (Func<T, T, Boolean> Comparador, T Min, T Max, T Inicial)
-			: this (Comparador)
+		public ObjetoAcotado (Func<T, T, Boolean> comparador, T min, T max, T inicial)
+			: this (comparador)
 		{
-			CotaInf = Min;
-			CotaSup = Max;
-			Valor = Inicial;
+			CotaInf = min;
+			CotaSup = max;
+			Valor = inicial;
 		}
 
 		public override string ToString ()

@@ -21,22 +21,22 @@
 
 namespace ListasExtra
 {
-	public class ReadonlyPair<T, V>
+	public class ReadonlyPair<T1, T2>
 	{
-		System.Collections.Generic.KeyValuePair<T, V> _data;
+		System.Collections.Generic.KeyValuePair<T1, T2> _data;
 
-		public ReadonlyPair (System.Collections.Generic.KeyValuePair<T, V> data)
+		public ReadonlyPair (System.Collections.Generic.KeyValuePair<T1, T2> data)
 		{
 			_data = data;
 		}
 
-		public T Key {
+		public T1 Key {
 			get {
 				return _data.Key;
 			}
 		}
 
-		public V Value {
+		public T2 Value {
 			get {
 				return _data.Value;
 			}

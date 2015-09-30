@@ -10,9 +10,9 @@ namespace ListasExtra.Treelike
 	{
 		readonly T[] _dat;
 
-		public void CopyTo (T[] Array, int index)
+		public void CopyTo (T[] array, int index)
 		{
-			_dat.CopyTo (Array, index);
+			_dat.CopyTo (array, index);
 		}
 
 		/// <summary>
@@ -20,7 +20,7 @@ namespace ListasExtra.Treelike
 		/// </summary>
 		/// <returns>The sección inicial.</returns>
 		/// <param name="ht">Altura de la sección inicial</param>
-		public TreePath<T> getSecciónInicial (int ht)
+		public TreePath<T> SecciónInicial (int ht)
 		{
 			if (Length < ht)
 				throw new Exception ("No se puede calcular una sección inicial de longitud mayor que el objeto original.");
@@ -34,7 +34,7 @@ namespace ListasExtra.Treelike
 			return ret;
 		}
 
-		public T getLast {
+		public T Último {
 			get {
 				return _dat [_dat.Length - 1];
 			}

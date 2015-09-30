@@ -4,20 +4,20 @@ namespace ListasExtra.Enumerator
 {
 	public class SerialEnumerator<T> : IEnumerator<T>
 	{
-		protected List<IEnumerator<T>> _enum;
-		protected int currEnumIndex;
+		protected List<IEnumerator<T>> Enum;
+		protected int CurrEnumIndex;
 
-		protected IEnumerator<T> currEnum {
+		protected IEnumerator<T> CurrEnum {
 			get {
-				return _enum [currEnumIndex];
+				return Enum [CurrEnumIndex];
 			}
 		}
 
 		public SerialEnumerator (IEnumerable<IEnumerable<T>> enums)
 		{
-			_enum = new List<IEnumerator<T>> ();
+			Enum = new List<IEnumerator<T>> ();
 			foreach (var x in enums) {
-				_enum.Add (x.GetEnumerator ()); 
+				Enum.Add (x.GetEnumerator ()); 
 			}
 
 		}
@@ -26,23 +26,23 @@ namespace ListasExtra.Enumerator
 
 		public bool MoveNext ()
 		{
-			while (currEnumIndex < _enum.Count && !currEnum.MoveNext ()) {
-				currEnumIndex++;
+			while (CurrEnumIndex < Enum.Count && !CurrEnum.MoveNext ()) {
+				CurrEnumIndex++;
 			}
-			return currEnumIndex != _enum.Count;
+			return CurrEnumIndex != Enum.Count;
 		}
 
 		public void Reset ()
 		{
-			currEnumIndex = 0;
-			foreach (var x in _enum) {
+			CurrEnumIndex = 0;
+			foreach (var x in Enum) {
 				x.Reset ();
 			}
 		}
 
 		public object Current {
 			get {
-				return currEnum.Current;
+				return CurrEnum.Current;
 			}
 		}
 
@@ -52,7 +52,7 @@ namespace ListasExtra.Enumerator
 
 		public void Dispose ()
 		{
-			foreach (var x in _enum) {
+			foreach (var x in Enum) {
 				x.Dispose ();
 			}
 		}

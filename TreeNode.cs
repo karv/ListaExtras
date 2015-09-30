@@ -7,7 +7,7 @@ namespace ListasExtra.Treelike
 	/// </summary>
 	public class TreeNode<T> : ITreeNode<T>
 	{
-		public TreeList<T>.enumOpcionOrden ordenEnumeración = TreeList<T>.enumOpcionOrden.PadrePrimero;
+		public TreeList<T>.EnumOpcionOrden OrdenEnumeración = TreeList<T>.EnumOpcionOrden.PadrePrimero;
 		TreePath<T> _obj;
 		List<ITreeNode<T>> _succ;
 
@@ -55,13 +55,13 @@ namespace ListasExtra.Treelike
 
 		IEnumerator<TreePath<T>> IEnumerable<TreePath<T>>.GetEnumerator ()
 		{
-			return new TreeEnumerator<T> (_succ, objeto);
+			return new TreeEnumerator<T> (_succ, Objeto);
 
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return new TreeEnumerator<T> (_succ, objeto);
+			return new TreeEnumerator<T> (_succ, Objeto);
 		}
 
 		#endregion
@@ -70,13 +70,13 @@ namespace ListasExtra.Treelike
 		/// Devuevle la lista de sucesores.
 		/// </summary>
 		/// <value>The get succ.</value>
-		public List<ITreeNode<T>> getSucc {
+		public List<ITreeNode<T>> Sucesor {
 			get {
 				return _succ;
 			}
 		}
 
-		public TreePath<T> objeto {
+		public TreePath<T> Objeto {
 			get {
 				return _obj ?? new TreePath<T> (0);
 			}
@@ -87,7 +87,7 @@ namespace ListasExtra.Treelike
 		/// </summary>
 		/// <returns>The tree from.</returns>
 		/// <param name="stem">Stem.</param>
-		public ITreeNode<T> getTreeFrom (TreePath<T> stem)
+		public ITreeNode<T> ÁrbolDesde (TreePath<T> stem)
 		{
 			if (stem.Length == 0) {
 				return this;
@@ -95,14 +95,14 @@ namespace ListasExtra.Treelike
 				ITreeNode<T> suc = this.FindSucc (stem [0]);
 				var substem = new T[stem.Length - 1];
 				stem.CopyTo (substem, 1);
-				return suc.getTreeFrom ((TreePath<T>)substem);
+				return suc.ÁrbolDesde ((TreePath<T>)substem);
 			}
 		}
 
 		public int Count {
 			get {
 				int ret = 1;
-				foreach (var x in getSucc) {
+				foreach (var x in Sucesor) {
 					ret += x.Count;
 				}
 				return ret;

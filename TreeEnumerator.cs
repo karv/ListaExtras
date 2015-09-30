@@ -4,13 +4,13 @@ namespace ListasExtra.Treelike
 {
 	class TreeEnumerator<T> : ListasExtra.Enumerator.SerialEnumerator<TreePath<T>>, IEnumerator<TreePath<T>>
 	{
-		public enum enumOpcionOrden
+		public enum EnumOpcionOrden
 		{
 			PadrePrimero,
 			HijosPrimero
 		}
 
-		public enumOpcionOrden orden = enumOpcionOrden.PadrePrimero;
+		public EnumOpcionOrden Orden = EnumOpcionOrden.PadrePrimero;
 		/// <summary>
 		/// Devuelve o establece si este nodo ya se enumeró.
 		/// </summary>
@@ -25,7 +25,7 @@ namespace ListasExtra.Treelike
 
 		new public bool MoveNext ()
 		{
-			if (orden == enumOpcionOrden.PadrePrimero && !Myself) {
+			if (Orden == EnumOpcionOrden.PadrePrimero && !Myself) {
 				Myself = true;
 				EnPadre = true;
 				return true;
@@ -33,7 +33,7 @@ namespace ListasExtra.Treelike
 			EnPadre = false;
 
 			bool baseRet = base.MoveNext ();
-			if (orden == enumOpcionOrden.HijosPrimero && !baseRet)
+			if (Orden == EnumOpcionOrden.HijosPrimero && !baseRet)
 				return true;
 			return baseRet;
 		}

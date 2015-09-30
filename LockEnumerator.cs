@@ -9,11 +9,11 @@ namespace ListasExtra.Lock
 	/// </summary>
 	public class LockEnumerator<T> : IEnumerator<T>
 	{
-		public readonly IEnumerator<T> baseEnumerator;
+		public readonly IEnumerator<T> BaseEnumerator;
 
 		public LockEnumerator (IEnumerator<T> baseEnum)
 		{
-			baseEnumerator = baseEnum;
+			BaseEnumerator = baseEnum;
 		}
 
 		public Action<object> OnTerminate;
@@ -22,7 +22,7 @@ namespace ListasExtra.Lock
 
 		public bool MoveNext ()
 		{
-			bool ret = baseEnumerator.MoveNext ();
+			bool ret = BaseEnumerator.MoveNext ();
 			if (!ret && OnTerminate != null)
 				OnTerminate.Invoke (this);
 			return ret;
@@ -30,12 +30,12 @@ namespace ListasExtra.Lock
 
 		public void Reset ()
 		{
-			baseEnumerator.Reset ();
+			BaseEnumerator.Reset ();
 		}
 
 		object IEnumerator.Current {
 			get {
-				return baseEnumerator.Current;
+				return BaseEnumerator.Current;
 			}
 		}
 
@@ -45,7 +45,7 @@ namespace ListasExtra.Lock
 
 		public void Dispose ()
 		{
-			baseEnumerator.Dispose ();
+			BaseEnumerator.Dispose ();
 		}
 
 		#endregion
@@ -54,7 +54,7 @@ namespace ListasExtra.Lock
 
 		public T Current {
 			get {
-				return baseEnumerator.Current;
+				return BaseEnumerator.Current;
 			}
 		}
 

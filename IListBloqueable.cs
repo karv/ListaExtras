@@ -32,7 +32,7 @@ namespace ListasExtra.Lock
 		/// Devuelve o establece si el enumerador está bloqueado.
 		/// </summary>
 		/// <value><c>true</c> if locked; otherwise, <c>false</c>.</value>
-		bool bloqueado { get; set; }
+		bool Bloqueado { get; set; }
 	}
 }
 

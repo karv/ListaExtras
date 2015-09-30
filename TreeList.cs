@@ -9,7 +9,7 @@ namespace ListasExtra.Treelike
 	/// </summary>
 	public class TreeList<T> : TreeNode<T>, ICollection<TreePath<T>>
 	{
-		public enum enumOpcionOrden
+		public enum EnumOpcionOrden
 		{
 			PadrePrimero,
 			HijosPrimero
@@ -29,12 +29,12 @@ namespace ListasExtra.Treelike
 			ITreeNode<T> iter = this;
 			TreePath<T> objz;
 			for (int i = 1; i <= item.Length; i++) {
-				objz = item.getSecciónInicial (i);
+				objz = item.SecciónInicial (i);
 				if (Contains (objz))
-					iter = getTreeFrom (objz);
+					iter = ÁrbolDesde (objz);
 				else {
 					ITreeNode<T> Agrega = new TreeNode<T> ((T[])objz);
-					iter.getSucc.Add (Agrega);
+					iter.Sucesor.Add (Agrega);
 					iter = Agrega;
 				}
 			}
@@ -42,46 +42,47 @@ namespace ListasExtra.Treelike
 
 		public void Add (T item)
 		{			
-			T[] Adding = new T[objeto.Length + 1];
+			T[] Adding = new T[Objeto.Length + 1];
 
-			objeto.CopyTo (Adding, 0);
-			Adding [objeto.Length] = item;
+			Objeto.CopyTo (Adding, 0);
+			Adding [Objeto.Length] = item;
 			Add ((TreePath<T>)Adding); 
 		}
 
 		public void Add (ITreeNode<T> item)
 		{
-			getSucc.Add (item);
+			Sucesor.Add (item);
 		}
 
 		public void Clear ()
 		{
-			getSucc.Clear ();
+			Sucesor.Clear ();
 		}
 
 		public bool Contains (T[] item)
 		{
 			return Contains ((TreePath<T>)item); 
 		}
-
+			
+		// Analysis disable UnusedVariable.Compiler
 		public bool Contains (TreePath<T> item)
 		{
 			ITreeNode<T> iter = this;
 			int i = 0;
-			foreach (var x in item) {
-				if (!iter.getSucc.Exists (y => y.objeto.Equals (item.getSecciónInicial (++i))))
+			foreach (var x in item) {//TODO obviamente no sirve, $x$ no se usa.
+				if (!iter.Sucesor.Exists (y => y.Objeto.Equals (item.SecciónInicial (++i))))
 					return false;
-				else
-					iter = iter.getSucc.Find (y => y.objeto.Equals (item.getSecciónInicial (i)));
+				iter = iter.Sucesor.Find (y => y.Objeto.Equals (item.SecciónInicial (i)));
 			}
 			return true;
 		}
+		// Analysis restore UnusedVariable.Compiler
 
 		public void CopyTo (TreePath<T>[] array, int arrayIndex)
 		{			
 			// TODO por probar
 			for (int i = 0; i < arrayIndex; i++) {
-				array [i] = getSucc [arrayIndex + i].objeto;
+				array [i] = Sucesor [arrayIndex + i].Objeto;
 			}
 		}
 
@@ -96,19 +97,19 @@ namespace ListasExtra.Treelike
 			int ctr = item.Length;
 
 			if (ctr == 0)
-				getSucc.Clear ();
+				Sucesor.Clear ();
 			
+			// Analysis disable UnusedVariable.Compiler
 			foreach (var x in item) {
+				// Analysis restore UnusedVariable.Compiler
 				if (ctr == 1) { // Si x = last(item)
-					return (iter.getSucc.RemoveAll (y => y.objeto.Equals (item)) > 0);
+					return (iter.Sucesor.RemoveAll (y => y.Objeto.Equals (item)) > 0);
 				}
 
-				if (!iter.getSucc.Exists (y => y.objeto.Equals (item.getSecciónInicial (item.Length - ctr + 1))))
+				if (!iter.Sucesor.Exists (y => y.Objeto.Equals (item.SecciónInicial (item.Length - ctr + 1))))
 					return false;
-				else {
-					iter = iter.getSucc.Find (y => y.objeto.Equals (item.getSecciónInicial (item.Length - ctr + 1)));
-					ctr--;
-				}
+				iter = iter.Sucesor.Find (y => y.Objeto.Equals (item.SecciónInicial (item.Length - ctr + 1)));
+				ctr--;
 					
 			}
 			return true;
@@ -123,12 +124,12 @@ namespace ListasExtra.Treelike
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return new TreeEnumerator<T> (getSucc, objeto);
+			return new TreeEnumerator<T> (Sucesor, Objeto);
 		}
 
 		IEnumerator<TreePath<T>> IEnumerable<TreePath<T>>.GetEnumerator ()
 		{
-			return new TreeEnumerator<T> (getSucc, objeto);
+			return new TreeEnumerator<T> (Sucesor, Objeto);
 		}
 
 	}

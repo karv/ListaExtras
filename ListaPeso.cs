@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace ListasExtra
 {
@@ -10,31 +9,31 @@ namespace ListasExtra
 	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
-	/// <typeparam name="V">Rango(co-dominio) de la función.</typeparam>
+	/// <typeparam name="TVal">Rango(co-dominio) de la función.</typeparam>
 	[DataContract (Name = "ListaPeso")]
 	public class ListaPeso<T, TVal> : IDictionary<T, TVal>
 	{
 		#region Accesor
 
-		public TVal this [T Key] {
+		public TVal this [T key] {
 			get {
 				TVal ret;
-				return TryGetValue (Key, out ret) ? ret : Nulo;
+				return TryGetValue (key, out ret) ? ret : Nulo;
 			}
 			set {
 				// Encontrar la Key buscada.
 				foreach (var x in Keys.ToList()) {
-					if (_Comparador (x, Key)) {
+					if (_Comparador (x, key)) {
 						TVal prev = Model [x];
 						Model [x] = value;
-						AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (Key, prev, Model [x]));
+						AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (key, prev, Model [x]));
 						return;
 					}
 				}
 
 				// Si es entrada nueva, se agrega.
-				Model.Add (Key, value);
-				AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (Key, Nulo, Model [Key]));
+				Model.Add (key, value);
+				AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (key, Nulo, Model [key]));
 			}
 		}
 
@@ -73,7 +72,7 @@ namespace ListasExtra
 			set;
 		}
 
-		public ReadonlyPair<T, TVal> getEntrada (T entrada)
+		public ReadonlyPair<T, TVal> Entrada (T entrada)
 		{
 			foreach (var x in this) {
 				if (x.Key.Equals (entrada)) {
@@ -186,14 +185,14 @@ namespace ListasExtra
 		/// Obtiene la entrda cuyo valor es máximo.
 		/// </summary>
 		/// <returns></returns>		
-		public T ObtenerMáximo (Func<TVal, TVal, bool> Comparador)
+		public T ObtenerMáximo (Func<TVal, TVal, bool> comparador)
 		{
 			if (!Any ()) {
 				return default(T);
 			} else {
 				T tmp = Keys.ToArray () [0];
 				foreach (T x in Keys) {
-					if (Comparador (this [x], this [tmp]))
+					if (comparador (this [x], this [tmp]))
 						tmp = x;
 				}
 				return tmp;
@@ -244,10 +243,10 @@ namespace ListasExtra
 
 		#region Lista
 
-		public bool ContainsKey (T Key)
+		public bool ContainsKey (T key)
 		{
 			foreach (var x in Keys) {
-				if (_Comparador (x, Key))
+				if (_Comparador (x, key))
 					return true;
 			}
 			return false;
@@ -256,12 +255,12 @@ namespace ListasExtra
 		/// <summary>
 		/// Revisa si existe un objeto con las con las condiciones dadas.
 		/// </summary>
-		/// <param name="Pred">Predicado a exaluar.</param>
+		/// <param name="pred">Predicado a exaluar.</param>
 		/// <returns>Devuelve true si existe un objeto que cumple Pred.</returns>
-		public bool Any (Func<T, TVal, bool> Pred)
+		public bool Any (Func<T, TVal, bool> pred)
 		{
 			foreach (var x in Keys) {
-				if (Pred (x, this [x]))
+				if (pred (x, this [x]))
 					return true;
 			}
 			return false;
@@ -317,13 +316,13 @@ namespace ListasExtra
 		/// <summary>
 		/// Suma esta lista en otra.
 		/// </summary>
-		/// <param name="S">Lista sumando.</param>
+		/// <param name="sumando">Lista sumando.</param>
 		/// <returns></returns>
-		public ListaPeso<T, TVal> SumarA (ListaPeso<T, TVal> S)
+		public ListaPeso<T, TVal> SumarA (ListaPeso<T, TVal> sumando)
 		{
 			var ret = (ListaPeso<T, TVal>)MemberwiseClone ();
-			foreach (T x in S.Keys) {
-				ret.Add (x, S [x]);
+			foreach (T x in sumando.Keys) {
+				ret.Add (x, sumando [x]);
 			}
 			return ret;
 		}
@@ -331,17 +330,17 @@ namespace ListasExtra
 		/// <summary>
 		/// Suma dos ListaExtra.ListaPeso coordenada a coordenada.
 		/// </summary>
-		/// <param name="Left">Primer sumando.</param>
-		/// <param name="Right">Segundo sumando.</param>
+		/// <param name="left">Primer sumando.</param>
+		/// <param name="right">Segundo sumando.</param>
 		/// <returns></returns>
-		public static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> Left, ListaPeso<T, TVal> Right)
+		public static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> left, ListaPeso<T, TVal> right)
 		{
-			return Left.SumarA (Right);
+			return left.SumarA (right);
 		}
 
-		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> Left, ListaPeso<T, TVal> Right)
+		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> left, ListaPeso<T, TVal> right)
 		{
-			return Sumar (Left, Right);
+			return Sumar (left, right);
 		}
 
 		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> x)
@@ -349,9 +348,9 @@ namespace ListasExtra
 			return x.Inverso ();
 		}
 
-		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> Left, ListaPeso<T, TVal> Right)
+		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> left, ListaPeso<T, TVal> right)
 		{
-			return Left + -Right;
+			return left + -right;
 		}
 
 		#endregion

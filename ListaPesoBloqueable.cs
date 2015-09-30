@@ -27,11 +27,10 @@ namespace ListasExtra.Lock
 	/// <summary>
 	/// Es una listapeso en el que se puede editar mientras se realiza una iteración 'foreach'.
 	/// </summary>
-	public class ListaPesoBloqueable<T, V> : ListaPeso<T, V>, IListBloqueable<KeyValuePair<T, V>>, IEnumerable <KeyValuePair<T, V>>
+	public class ListaPesoBloqueable<TKey, TVal> : ListaPeso<TKey, TVal>, IListBloqueable<KeyValuePair<TKey, TVal>>, IEnumerable <KeyValuePair<TKey, TVal>>
 	{
-		public ListaPesoBloqueable (Func<V, V, V> OperSuma, V ObjetoNulo) : base (OperSuma, ObjetoNulo)
+		public ListaPesoBloqueable (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo) : base (operSuma, objetoNulo)
 		{
-			
 		}
 
 		/// <summary>
@@ -45,10 +44,10 @@ namespace ListasExtra.Lock
 			Promesas.Clear ();
 		}
 
-		public new void Add (T key, V val)
+		public new void Add (TKey key, TVal val)
 		{
-			if (bloqueado)
-				Promesas.Add (new KeyValuePair<T, V> (key, val));
+			if (Bloqueado)
+				Promesas.Add (new KeyValuePair<TKey, TVal> (key, val));
 			else {
 				base [key] = Suma (base [key], val);
 			}
@@ -60,7 +59,7 @@ namespace ListasExtra.Lock
 
 		bool _locked;
 
-		public bool bloqueado {
+		public bool Bloqueado {
 			get {
 				return _locked;
 			}
@@ -77,18 +76,18 @@ namespace ListasExtra.Lock
 			}
 		}
 
-		IList<KeyValuePair<T, V>> Promesas = new List<KeyValuePair<T, V>> ();
+		IList<KeyValuePair<TKey, TVal>> Promesas = new List<KeyValuePair<TKey, TVal>> ();
 
-		public new V this [T key] {
+		public new TVal this [TKey key] {
 			get {
 				return base [key];
 			}
 
 			set {
-				if (bloqueado) {
+				if (Bloqueado) {
 					System.Diagnostics.Debug.Write ("Use ListaPesoBloqueable.Add (key, delta) en lugar de éste si es posible.");
 
-					Promesas.Add (new KeyValuePair<T, V> (key, value));
+					Promesas.Add (new KeyValuePair<TKey, TVal> (key, value));
 				} else {
 					base [key] = value; 
 				}
@@ -102,28 +101,28 @@ namespace ListasExtra.Lock
 
 		public new System.Collections.IEnumerator GetEnumerator ()
 		{
-			bloqueado = true;
-			var x = new  LockEnumerator<KeyValuePair<T, V>> (base.GetEnumerator ());
+			Bloqueado = true;
+			var x = new  LockEnumerator<KeyValuePair<TKey, TVal>> (base.GetEnumerator ());
 			x.OnTerminate = unblock;
 			return x;
 		}
 
-		int IList<KeyValuePair<T, V>>.IndexOf (KeyValuePair<T, V> item)
+		int IList<KeyValuePair<TKey, TVal>>.IndexOf (KeyValuePair<TKey, TVal> item)
 		{
 			throw new NotImplementedException ();
 		}
 
-		void IList<KeyValuePair<T, V>>.Insert (int index, KeyValuePair<T, V> item)
+		void IList<KeyValuePair<TKey, TVal>>.Insert (int index, KeyValuePair<TKey, TVal> item)
 		{
 			throw new NotImplementedException ();
 		}
 
-		void IList<KeyValuePair<T, V>>.RemoveAt (int index)
+		void IList<KeyValuePair<TKey, TVal>>.RemoveAt (int index)
 		{
 			throw new NotImplementedException ();
 		}
 
-		KeyValuePair<T, V> IList<KeyValuePair<T, V>>.this [int index] {
+		KeyValuePair<TKey, TVal> IList<KeyValuePair<TKey, TVal>>.this [int index] {
 			get {
 				throw new NotImplementedException ();
 			}
@@ -132,20 +131,20 @@ namespace ListasExtra.Lock
 			}
 		}
 
-		bool IListBloqueable<KeyValuePair<T, V>>.bloqueado {
+		bool IListBloqueable<KeyValuePair<TKey, TVal>>.Bloqueado {
 			get {
-				return bloqueado;
+				return Bloqueado;
 			}
 			set {
-				bloqueado = value;
+				Bloqueado = value;
 			}
 		}
 
-		IEnumerator<KeyValuePair<T, V>> IEnumerable<KeyValuePair<T, V>>.GetEnumerator ()
+		IEnumerator<KeyValuePair<TKey, TVal>> IEnumerable<KeyValuePair<TKey, TVal>>.GetEnumerator ()
 		{
-			var x = new  LockEnumerator<KeyValuePair<T, V>> (base.GetEnumerator ());
+			var x = new  LockEnumerator<KeyValuePair<TKey, TVal>> (base.GetEnumerator ());
 			x.OnTerminate = unblock;
-			bloqueado = true;
+			Bloqueado = true;
 			return x;
 		}
 
@@ -154,7 +153,7 @@ namespace ListasExtra.Lock
 		void unblock (object en)
 		{
 			_enumInstances.Remove (en);
-			bloqueado &= _enumInstances.Count != 0;
+			Bloqueado &= _enumInstances.Count != 0;
 		}
 
 		#endregion
