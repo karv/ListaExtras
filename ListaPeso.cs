@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace ListasExtra
 {
@@ -11,29 +12,29 @@ namespace ListasExtra
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="V">Rango(co-dominio) de la función.</typeparam>
 	[DataContract (Name = "ListaPeso")]
-	public class ListaPeso<T, V> : IDictionary<T, V>
+	public class ListaPeso<T, TVal> : IDictionary<T, TVal>
 	{
 		#region Accesor
 
-		public V this [T Key] {
+		public TVal this [T Key] {
 			get {
-				V ret;
+				TVal ret;
 				return TryGetValue (Key, out ret) ? ret : Nulo;
 			}
 			set {
 				// Encontrar la Key buscada.
 				foreach (var x in Keys.ToList()) {
 					if (_Comparador (x, Key)) {
-						V prev = _model [x];
-						_model [x] = value;
-						AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, V> (Key, prev, _model [x]));
+						TVal prev = Model [x];
+						Model [x] = value;
+						AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (Key, prev, Model [x]));
 						return;
 					}
 				}
 
 				// Si es entrada nueva, se agrega.
-				_model.Add (Key, value);
-				AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, V> (Key, Nulo, _model [Key]));
+				Model.Add (Key, value);
+				AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (Key, Nulo, Model [Key]));
 			}
 		}
 
@@ -41,16 +42,16 @@ namespace ListasExtra
 
 		#region Internos
 
-		IDictionary<T, V> _model;
+		protected IDictionary<T, TVal> Model { get; }
 
 		/// <summary>
 		/// La operación suma.
 		/// </summary>
-		public Func<V, V, V> Suma;
+		public Func<TVal, TVal, TVal> Suma;
 		/// <summary>
 		/// La operación inverso, si la tiene.
 		/// </summary>
-		public Func<V, V> Inv;
+		public Func<TVal, TVal> Inv;
 
 		Func<T, T, bool> _Comparador = (x, y) => x.Equals (y);
 
@@ -67,16 +68,16 @@ namespace ListasExtra
 		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
 		/// </summary>
-		public V Nulo {
+		public TVal Nulo {
 			get;
 			set;
 		}
 
-		public ReadonlyPair<T, V> getEntrada (T entrada)
+		public ReadonlyPair<T, TVal> getEntrada (T entrada)
 		{
 			foreach (var x in this) {
 				if (x.Key.Equals (entrada)) {
-					return new ReadonlyPair<T, V> (x);
+					return new ReadonlyPair<T, TVal> (x);
 				}
 			}
 			return null;
@@ -86,78 +87,78 @@ namespace ListasExtra
 
 		#region IDictionary
 
-		public void Add (T key, V value)
+		public void Add (T key, TVal value)
 		{
-			_model.Add (key, value);
+			Model.Add (key, value);
 		}
 
 		public bool Remove (T key)
 		{
-			return _model.Remove (key);
+			return Model.Remove (key);
 		}
 
-		public bool TryGetValue (T key, out V value)
+		public bool TryGetValue (T key, out TVal value)
 		{
-			return _model.TryGetValue (key, out value);
+			return Model.TryGetValue (key, out value);
 		}
 
 		public ICollection<T> Keys {
 			get {
-				return _model.Keys;
+				return Model.Keys;
 			}
 		}
 
-		public ICollection<V> Values {
+		public ICollection<TVal> Values {
 			get {
-				return _model.Values;
+				return Model.Values;
 			}
 		}
 
-		public void Add (KeyValuePair<T, V> item)
+		public void Add (KeyValuePair<T, TVal> item)
 		{
-			_model.Add (item);
+			Model.Add (item);
 		}
 
 		public void Clear ()
 		{
-			_model.Clear ();
+			Model.Clear ();
 		}
 
-		public bool Contains (KeyValuePair<T, V> item)
+		public bool Contains (KeyValuePair<T, TVal> item)
 		{
-			return _model.Contains (item);
+			return Model.Contains (item);
 		}
 
-		public void CopyTo (KeyValuePair<T, V>[] array, int arrayIndex)
+		public void CopyTo (KeyValuePair<T, TVal>[] array, int arrayIndex)
 		{
-			_model.CopyTo (array, arrayIndex);
+			Model.CopyTo (array, arrayIndex);
 		}
 
-		public bool Remove (KeyValuePair<T, V> item)
+		public bool Remove (KeyValuePair<T, TVal> item)
 		{
 			return Remove (item);
 		}
 
 		public int Count {
 			get {
-				return _model.Count;
+				return Model.Count;
 			}
 		}
 
 		public bool IsReadOnly {
 			get {
-				return _model.IsReadOnly;
+				return Model.IsReadOnly;
 			}
 		}
 
-		public IEnumerator<KeyValuePair<T, V>> GetEnumerator ()
+		public IEnumerator<KeyValuePair<T, TVal>> GetEnumerator ()
 		{
-			return _model.GetEnumerator ();
+			return Model.GetEnumerator ();
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
 		{
-			return _model.GetEnumerator ();
+			return Model.GetEnumerator ();
 		}
 
 		#endregion
@@ -168,9 +169,9 @@ namespace ListasExtra
 		/// Devuelve la suma sobre las Keys, de sus respectivos Values.
 		/// </summary>
 		/// <returns>Devuelve el objeto resultante de aplicar la operación a cada valor.</returns>
-		public V SumaTotal ()
+		public TVal SumaTotal ()
 		{
-			V tot = Nulo;
+			TVal tot = Nulo;
 			foreach (T x in Keys) {
 				tot = Suma (tot, this [x]);
 			}
@@ -185,7 +186,7 @@ namespace ListasExtra
 		/// Obtiene la entrda cuyo valor es máximo.
 		/// </summary>
 		/// <returns></returns>		
-		public T ObtenerMáximo (Func<V, V, bool> Comparador)
+		public T ObtenerMáximo (Func<TVal, TVal, bool> Comparador)
 		{
 			if (!Any ()) {
 				return default(T);
@@ -206,7 +207,7 @@ namespace ListasExtra
 		/// <summary>
 		/// Se llama cuando se cambia algún valor.
 		/// </summary>
-		public event EventHandler<CambioElementoEventArgs<T,V>> AlCambiarValor;
+		public event EventHandler<CambioElementoEventArgs<T,TVal>> AlCambiarValor;
 
 		#endregion
 
@@ -215,12 +216,12 @@ namespace ListasExtra
 		/// <summary>
 		/// Inicializa una instancia de la clase.
 		/// </summary>
-		/// <param name="OperSuma">Operador suma inicial.</param>
-		/// <param name="ObjetoNulo">Objeto cero inicial.</param>
-		ListaPeso (Func<V, V, V> OperSuma, V ObjetoNulo)
+		/// <param name="operSuma">Operador suma inicial.</param>
+		/// <param name="objetoNulo">Objeto cero inicial.</param>
+		protected ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
 		{
-			Suma = OperSuma;
-			Nulo = ObjetoNulo;
+			Suma = operSuma;
+			Nulo = objetoNulo;
 		}
 
 		/// <summary>
@@ -229,10 +230,10 @@ namespace ListasExtra
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
 		/// <param name="modelo">Modelo</param>
-		public ListaPeso (Func<V, V, V> operSuma, V objetoNulo, IDictionary<T, V> modelo = null)
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo, IDictionary<T, TVal> modelo = null)
 			: this (operSuma, objetoNulo)
 		{
-			_model = modelo ?? new Dictionary<T, V> ();
+			Model = modelo ?? new Dictionary<T, TVal> ();
 		}
 
 		protected ListaPeso ()
@@ -257,7 +258,7 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="Pred">Predicado a exaluar.</param>
 		/// <returns>Devuelve true si existe un objeto que cumple Pred.</returns>
-		public bool Any (Func<T, V, bool> Pred)
+		public bool Any (Func<T, TVal, bool> Pred)
 		{
 			foreach (var x in Keys) {
 				if (Pred (x, this [x]))
@@ -283,13 +284,13 @@ namespace ListasExtra
 		/// <returns>Un ISet que contiene a cada elemento del soporte.</returns>
 		public ISet<T> Soporte ()
 		{
-			return new HashSet<T> (_model.Keys);
+			return new HashSet<T> (Model.Keys);
 		}
 
 		public override string ToString ()
 		{
 			string ret = "";
-			foreach (var item in _model) {
+			foreach (var item in Model) {
 				ret += string.Format ("{0} -> {1}\n", item.Key, item.Value);
 			}
 			return ret;
@@ -301,11 +302,11 @@ namespace ListasExtra
 		/// Devuelve la lista inversa a esta instancia.
 		/// </summary>
 		/// <returns></returns>
-		public ListaPeso<T, V> Inverso ()
+		public ListaPeso<T, TVal> Inverso ()
 		{
 			if (Inv == null)
 				throw new NullReferenceException ("No está definito Inv");
-			var ret = new ListaPeso<T, V> (Suma, Nulo);
+			var ret = new ListaPeso<T, TVal> (Suma, Nulo);
 			ret.Inv = Inv;
 			foreach (var x in Keys) {
 				ret.Add (x, Inv (this [x]));
@@ -318,9 +319,9 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="S">Lista sumando.</param>
 		/// <returns></returns>
-		public ListaPeso<T, V> SumarA (ListaPeso<T, V> S)
+		public ListaPeso<T, TVal> SumarA (ListaPeso<T, TVal> S)
 		{
-			var ret = (ListaPeso<T, V>)MemberwiseClone ();
+			var ret = (ListaPeso<T, TVal>)MemberwiseClone ();
 			foreach (T x in S.Keys) {
 				ret.Add (x, S [x]);
 			}
@@ -333,27 +334,59 @@ namespace ListasExtra
 		/// <param name="Left">Primer sumando.</param>
 		/// <param name="Right">Segundo sumando.</param>
 		/// <returns></returns>
-		public static ListaPeso<T, V> Sumar (ListaPeso<T, V> Left, ListaPeso<T, V> Right)
+		public static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> Left, ListaPeso<T, TVal> Right)
 		{
 			return Left.SumarA (Right);
 		}
 
-		public static ListaPeso<T, V> operator + (ListaPeso<T, V> Left, ListaPeso<T, V> Right)
+		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> Left, ListaPeso<T, TVal> Right)
 		{
 			return Sumar (Left, Right);
 		}
 
-		public static ListaPeso<T, V> operator - (ListaPeso<T, V> x)
+		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> x)
 		{
 			return x.Inverso ();
 		}
 
-		public static ListaPeso<T, V> operator - (ListaPeso<T, V> Left, ListaPeso<T, V> Right)
+		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> Left, ListaPeso<T, TVal> Right)
 		{
 			return Left + -Right;
 		}
 
 		#endregion
+	}
+
+	/// <summary>
+	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
+	/// </summary>
+	/// <typeparam name="T1">Tipo de parámetro de la funcion</typeparam>
+	/// <typeparam name="T2">Tipo de parámetro de la funcion</typeparam>
+	/// <typeparam name="TVal">Tipo de valor</typeparam>
+	public class ListaPeso<T1, T2, TVal> 
+		:ListaPeso<Tuple<T1, T2>, TVal>
+	{
+
+		/// <summary>
+		/// Initializes a new instance of the ListaPeso class.
+		/// </summary>
+		/// <param name="operSuma">Suma</param>
+		/// <param name="objetoNulo">Objeto nulo</param>
+		/// <param name="modelo">Modelo de diccionario</param>
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo, IDictionary<Tuple<T1, T2>, TVal> modelo = null)
+			: base (operSuma, objetoNulo, modelo)
+		{
+		}
+
+		public TVal this [T1 x, T2 y] {
+			get {
+				return base [new Tuple<T1, T2> (x, y)];
+			}
+			set {
+				base [new Tuple<T1, T2> (x, y)] = value;
+			}
+		}
+
 	}
 
 	[DataContract (Name = "ListaPeso")]
@@ -423,6 +456,18 @@ namespace ListasExtra
 	}
 
 
+	/// <summary>
+	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
+	/// </summary>
+	/// <typeparam name="T1">Tipo de parámetro de la funcion</typeparam>
+	/// <typeparam name="T2">Tipo de parámetro de la funcion</typeparam>
+	public class ListaPesoFloat<T1, T2> : ListaPeso<T1, T2, float>
+	{
+		public ListaPesoFloat () :
+			base ((x, y) => x + y, 0)
+		{
+		}
+	}
 
 	public static class ComparadoresPred
 	{
