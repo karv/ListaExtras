@@ -10,7 +10,7 @@
     <RootNamespace>Pruebas</RootNamespace>
     <AssemblyName>Pruebas</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <ReleaseVersion>0.2.2</ReleaseVersion>
+    <ReleaseVersion>0.2.2.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +41,7 @@
     <Compile Include="TreeList.cs" />
     <Compile Include="Cola.Test.cs" />
     <Compile Include="IListExt.cs" />
+    <Compile Include="TestParNoOrdenado.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

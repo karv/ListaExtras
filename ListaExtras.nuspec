@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ListaExtras</id>
-    <version>0.2.2</version>
+    <version>0.2.2.1</version>
     <title>Lista extras</title>
     <authors>Edgar Carballo</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

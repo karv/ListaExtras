@@ -11,7 +11,7 @@
     <RootNamespace>ListasExtra</RootNamespace>
     <AssemblyName>ListaExtras</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <ReleaseVersion>0.2.2</ReleaseVersion>
+    <ReleaseVersion>0.2.2.1</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -66,6 +66,8 @@
     <Compile Include="ICola.cs" />
     <Compile Include="Cola.cs" />
     <Compile Include="CollecciónExt.cs" />
+    <Compile Include="ParNoOrdenado.cs" />
+    <Compile Include="ParPosibilidad.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
