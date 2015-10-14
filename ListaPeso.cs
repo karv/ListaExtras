@@ -318,7 +318,7 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="sumando">Lista sumando.</param>
 		/// <returns></returns>
-		public ListaPeso<T, TVal> SumarA (ListaPeso<T, TVal> sumando)
+		ListaPeso<T, TVal> SumarA (IDictionary<T, TVal> sumando)
 		{
 			var ret = (ListaPeso<T, TVal>)MemberwiseClone ();
 			foreach (T x in sumando.Keys) {
@@ -333,12 +333,12 @@ namespace ListasExtra
 		/// <param name="left">Primer sumando.</param>
 		/// <param name="right">Segundo sumando.</param>
 		/// <returns></returns>
-		public static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> left, ListaPeso<T, TVal> right)
+		protected static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> left, IDictionary<T, TVal> right)
 		{
 			return left.SumarA (right);
 		}
 
-		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> left, ListaPeso<T, TVal> right)
+		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> left, IDictionary<T, TVal> right)
 		{
 			return Sumar (left, right);
 		}
@@ -348,9 +348,13 @@ namespace ListasExtra
 			return x.Inverso ();
 		}
 
-		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> left, ListaPeso<T, TVal> right)
+		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> left, IDictionary<T, TVal> right)
 		{
-			return left + -right;
+			var ret = left.MemberwiseClone () as ListaPeso<T, TVal>;
+			foreach (var x in right) {
+				ret [x.Key] = ret.Suma (ret.Inv (x.Value), ret [x.Key]);
+			}
+			return ret;
 		}
 
 		#endregion
@@ -414,9 +418,9 @@ namespace ListasExtra
 			return true;
 		}
 
-		public static ListaPeso<T> operator + (ListaPeso<T> left, ListaPeso<T> right)
+		public static ListaPeso<T> operator + (ListaPeso<T> left, IDictionary<T, float> right)
 		{
-			return (ListaPeso<T>)ListaPeso<T, float>.Sumar (left, right);
+			return ListaPeso<T, float>.Sumar (left, right) as ListaPeso<T>;
 		}
 
 		public static ListaPeso<T> operator * (ListaPeso<T> left, float right)
