@@ -42,6 +42,7 @@
     <Compile Include="Cola.Test.cs" />
     <Compile Include="IListExt.cs" />
     <Compile Include="TestParNoOrdenado.cs" />
+    <Compile Include="TestDict.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

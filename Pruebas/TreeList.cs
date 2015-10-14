@@ -1,6 +1,8 @@
 ﻿using System;
 using ListasExtra.Treelike;
 using NUnit.Framework;
+using System.Collections.Generic;
+using ListasExtra.Extensiones;
 
 namespace Pruebas
 {
@@ -20,6 +22,7 @@ namespace Pruebas
 			Console.WriteLine(tl.Contains(o));
 			Console.WriteLine(tl.Count);
 		}
+
 	}
 }
 
