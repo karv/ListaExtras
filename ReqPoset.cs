@@ -4,32 +4,19 @@ namespace ListasExtra.Poset
 {
 	public class ReqPoset<T>: IReqPoset<T>
 	{
-		readonly T _objeto;
-
-		public T Objeto {
-			get {
-				return _objeto;
-			}
-		}
-
-		readonly IDictionary <IReqPoset<T>, float> _reqs;
-
-		public IDictionary<IReqPoset<T>, float> Reqs {
-			get {
-				return _reqs;
-			}
-		}
-
-		public ReqPoset (T objeto)
+		public ReqPoset (T objeto) : this (objeto, new Dictionary<IReqPoset<T>, float> ())
 		{
-			_objeto = objeto;
-			_reqs = new Dictionary <IReqPoset<T>, float> ();
 		}
 
-		public ReqPoset (T objeto, IDictionary<IReqPoset<T>, float> reqs) : this (objeto)
+		public ReqPoset (T objeto, IDictionary<IReqPoset<T>, float> reqs)
 		{
-			_reqs = reqs;
+			Objeto = objeto;
+			Reqs = reqs;
 		}
+
+		public T Objeto { get; }
+
+		public IDictionary<IReqPoset<T>, float> Reqs { get; }
 
 		/// <summary>
 		/// Revisa si este objeto es satisfacido por un diccionario.
@@ -40,7 +27,7 @@ namespace ListasExtra.Poset
 		public bool LoSatisface (IDictionary<T, float> comparador)
 		{
 			float val;
-			foreach (var x in _reqs) {
+			foreach (var x in Reqs) {
 				if (!comparador.TryGetValue (x.Key.Objeto, out val) || val < x.Value)
 					return false;
 			}
@@ -52,13 +39,36 @@ namespace ListasExtra.Poset
 		/// </summary>
 		/// <returns><c>true</c>, si , <c>false</c> otherwise.</returns>
 		/// <param name="comparador">Comparador.</param>
-		public bool IsAbierto (ICollection<T> comparador)
+		public bool EsAbierto (ICollection<T> comparador)
 		{
-			foreach (var x in _reqs) {
+			foreach (var x in Reqs) {
 				if (!comparador.Contains (x.Key.Objeto))
 					return false;
 			}
 			return true;
+		}
+
+		public IDictionary<T, float> EnumerarRequerimientos ()
+		{
+			var ret = new Dictionary<T, float> ();
+			foreach (var x in Reqs) {
+				PickMax (ret, x.Key.Objeto, x.Value);
+				PickMax (ret, x.Key.EnumerarRequerimientos ());
+			}
+			return ret;
+		}
+
+		static void PickMax (IDictionary<T, float> dict, T key, float nuevo)
+		{
+			if (dict.ContainsKey (key) && dict [key] < nuevo)
+				dict [key] = nuevo;
+		}
+
+		static void PickMax (IDictionary<T, float> dict, IDictionary<T, float> comparer)
+		{
+			foreach (var x in comparer) {
+				PickMax (dict, x.Key, x.Value);
+			}
 		}
 	}
 }
