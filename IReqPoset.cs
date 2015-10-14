@@ -23,28 +23,12 @@ namespace ListasExtra.Poset
 		/// <returns><c>true</c>, if satisface was loed, <c>false</c> otherwise.</returns>
 		/// <param name="comparador">Comparador.</param>
 		bool LoSatisface (IDictionary <T, float> comparador);
-	}
 
-	public static class ExtIReqPoset
-	{
 		/// <summary>
-		/// Revisa si este objeto es satisfacido por un diccionario.
-		/// Es recusrivio
+		/// Enumera los requerimientos hereditariamente
 		/// </summary>
-		/// <returns><c>true</c>, if satisface her was loed, <c>false</c> otherwise.</returns>
-		/// <param name="reqr">Reqr.</param>
-		/// <param name="comparador">Comparador.</param>
-		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		public static bool LoSatisfaceHer<T> (this IReqPoset<T> reqr, IDictionary<T, float> comparador)
-		{
-			if (!reqr.LoSatisface (comparador))
-				return false;
-			foreach (var x in reqr.Reqs) {
-				if (!x.Key.LoSatisface (comparador))
-					return false;
-			}
-			return true;
-		}
+		/// <returns>The requerimientos.</returns>
+		IDictionary<T, float> EnumerarRequerimientos ();
 	}
-}
 
+}
