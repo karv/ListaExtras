@@ -18,6 +18,8 @@ namespace Pruebas
 
 			Assert.AreEqual(0, p.Excepto(1));
 			Assert.AreEqual(1, p.Excepto(0));
+
+			Assert.AreEqual(p, new ParNoOrdenado<int>(1, 0));
 			Assert.Throws<Exception>(delegate
 			{
 				p.Excepto(2);

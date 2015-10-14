@@ -21,6 +21,8 @@ namespace Pruebas
 			{
 				Assert.AreEqual(clon[i], i);
 			}
+
+			Assert.False(ReferenceEquals(diagonal, clon));
 		}
 	}
 }
