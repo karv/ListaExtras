@@ -16,14 +16,25 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of this class.
+		/// </summary>
 		public ListaCíclica () : base ()
 		{
 		}
 
-		public ListaCíclica (IEnumerable<T> coll) : base (coll)
+		/// <summary>
+		/// Initializes a new instance of this class.
+		/// </summary>
+		/// <param name="coll">Colección inicial</param>
+		public ListaCíclica (IEnumerable<T> coll) : base (coll) //TEST
 		{
 		}
 
+		/// <summary>
+		/// Gets or sets the element with the specified i.
+		/// </summary>
+		/// <param name="i">The index.</param>
 		public new T this [int i] {
 			get {
 				return base [(i + InternalZero) % Count];
@@ -70,6 +81,9 @@ namespace ListasExtra
 				InternalZero++;
 		}
 
+		/// <summary>
+		/// Mira el siguiente elemento de la lista, sin mover el cursor.
+		/// </summary>
 		public T Peek {
 			get {
 				return this [0];
@@ -90,6 +104,9 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Gets the enumerator.
+		/// </summary>
 		public new IEnumerator GetEnumerator ()
 		{
 			return (this as IEnumerable).GetEnumerator ();

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using ListasExtra;
+using System.Collections.Generic;
 
 namespace Pruebas
 {
@@ -31,6 +32,20 @@ namespace Pruebas
 			{
 				System.Console.Write(i + "|");
 			}
+		}
+
+		[Test]
+		public void ProbarCtor()
+		{
+			var l = new List<int>();
+			for (int i = 0; i < 100; i++)
+			{
+				l.Add(i);
+			}
+			var test = new ListaCíclica<int>(l);
+			Assert.AreEqual(100, test.Count);
+			Assert.AreEqual(0, test.Siguiente);
+			System.Console.WriteLine(test);
 		}
 	}
 }
