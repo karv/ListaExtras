@@ -22,8 +22,9 @@ namespace Pruebas
 			Assert.AreEqual(1, testList.Siguiente);
 			Assert.AreEqual(20, testList.Count);
 
-
+			testList.Insert(3, 20);
+			Assert.AreEqual(2, testList.Siguiente);
+			System.Console.WriteLine(testList);
 		}
 	}
 }
-

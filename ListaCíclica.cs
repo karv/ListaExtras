@@ -53,8 +53,36 @@ namespace ListasExtra
 		/// <param name="objeto">Objeto.</param>
 		public new void Add (T objeto)
 		{
-			Insert (InternalZero, objeto);
+			base.Insert (InternalZero, objeto);
 			InternalZero++;
+		}
+
+		/// <summary>
+		/// Insert the specified index and objeto.
+		/// </summary>
+		/// <param name="index">Index.</param>
+		/// <param name="objeto">Objeto.</param>
+		public new void Insert (int index, T objeto)
+		{
+			base.Insert ((index + InternalZero) % Count, objeto);
+			if (index == 0 || InternalZero + index > Count)
+				InternalZero++;
+		}
+
+		public T Peek {
+			get {
+				return this [0];
+			}
+		}
+
+
+		public override string ToString ()
+		{
+			var ret = string.Format ("ListaCíclica:\n");
+			for (int i = 0; i < Count; i++) {
+				ret += ":" + this [i];
+			}
+			return ret;
 		}
 	}
 }
