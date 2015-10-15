@@ -44,6 +44,7 @@
     <Compile Include="TestParNoOrdenado.cs" />
     <Compile Include="TestDict.cs" />
     <Compile Include="TestReqPoset.cs" />
+    <Compile Include="TestListaCíclica.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
