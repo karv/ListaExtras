@@ -47,5 +47,19 @@ namespace Pruebas
 			Assert.AreEqual(0, test.Siguiente);
 			System.Console.WriteLine(test);
 		}
+
+		[Test]
+		public void ProbarSkip()
+		{
+			var test = new ListaCíclica<int>();
+			for (int i = 0; i < 100; i++)
+			{
+				test.Add(i);
+			}
+			test.Skip(5);
+			Assert.AreEqual(5, test.Peek);
+			test.Skip(-8);
+			Assert.AreEqual(97, test.Peek);
+		}
 	}
 }

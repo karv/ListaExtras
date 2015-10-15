@@ -13,6 +13,8 @@ namespace ListasExtra
 			}
 			set {
 				_internalZero = value % Count;
+				if (_internalZero < 0)
+					_internalZero += Count;
 			}
 		}
 
@@ -102,6 +104,15 @@ namespace ListasExtra
 			for (int i = 0; i < Count; i++) {
 				yield return this [i];
 			}
+		}
+
+		/// <summary>
+		/// Se brinca n elementos
+		/// </summary>
+		/// <param name="n">número de elementos, acepta negativos</param>
+		public void Skip (int n)
+		{
+			InternalZero += n;
 		}
 
 		/// <summary>
