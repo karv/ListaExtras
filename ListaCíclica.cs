@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 
 namespace ListasExtra
 {
-	public class ListaCíclica<T>:List<T> //TEST
+	public class ListaCíclica<T>:List<T>, IEnumerable<T>, IEnumerable //TEST
 	{
 		int _internalZero;
 
@@ -75,6 +76,24 @@ namespace ListasExtra
 			}
 		}
 
+		IEnumerator<T> IEnumerable<T>.GetEnumerator ()
+		{
+			for (int i = 0; i < Count; i++) {
+				yield return this [i];
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			for (int i = 0; i < Count; i++) {
+				yield return this [i];
+			}
+		}
+
+		public new IEnumerator GetEnumerator ()
+		{
+			return (this as IEnumerable).GetEnumerator ();
+		}
 
 		public override string ToString ()
 		{

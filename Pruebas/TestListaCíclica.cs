@@ -25,6 +25,12 @@ namespace Pruebas
 			testList.Insert(3, 20);
 			Assert.AreEqual(2, testList.Siguiente);
 			System.Console.WriteLine(testList);
+
+			System.Console.WriteLine(testList[0]);
+			foreach (var i in testList)
+			{
+				System.Console.Write(i + "|");
+			}
 		}
 	}
 }
