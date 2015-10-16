@@ -43,7 +43,7 @@ namespace Pruebas
 		[Test]
 		public void TestParPosibilidad()
 		{
-			var A = -1;
+			const int A = -1;
 			var B = new List<int>();
 			var pp = new ParPosibilidad<int>(A, B);
 

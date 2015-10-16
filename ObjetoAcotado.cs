@@ -3,14 +3,19 @@ using System;
 
 namespace ListasExtra
 {
+	/// <summary>
+	/// Objeto acotado.
+	/// </summary>
 	[DataContract]
 	public class ObjetoAcotado<T>
 	{
+		//TODO conversión implícita entre T y esta clase
 		public T CotaSup;
 		public T CotaInf;
 		T _Valor;
 
 		public Func<T, T, Boolean> EsMenor { get; set; }
+		//TODO hacer IComparable
 
 		public T Valor {
 			get {

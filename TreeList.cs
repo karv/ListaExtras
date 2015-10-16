@@ -7,6 +7,7 @@ namespace ListasExtra.Treelike
 	/// Lista en árbol.
 	/// Note que siempre {} \in this
 	/// </summary>
+	[Obsolete]
 	public class TreeList<T> : TreeNode<T>, ICollection<TreePath<T>>
 	{
 		public enum EnumOpcionOrden
@@ -69,7 +70,7 @@ namespace ListasExtra.Treelike
 		{
 			ITreeNode<T> iter = this;
 			int i = 0;
-			foreach (var x in item) {//TODO obviamente no sirve, $x$ no se usa.
+			foreach (TreePath<T> x in item) {
 				if (!iter.Sucesor.Exists (y => y.Objeto.Equals (item.SecciónInicial (++i))))
 					return false;
 				iter = iter.Sucesor.Find (y => y.Objeto.Equals (item.SecciónInicial (i)));
@@ -80,7 +81,6 @@ namespace ListasExtra.Treelike
 
 		public void CopyTo (TreePath<T>[] array, int arrayIndex)
 		{			
-			// TODO por probar
 			for (int i = 0; i < arrayIndex; i++) {
 				array [i] = Sucesor [arrayIndex + i].Objeto;
 			}

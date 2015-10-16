@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace ListasExtra
 {
-	public class ListaCíclica<T>:List<T>, IEnumerable<T>, IEnumerable //TEST
+	public class ListaCíclica<T>:List<T>, IEnumerable<T>, IEnumerable
 	{
 		int _internalZero;
 
@@ -21,7 +21,7 @@ namespace ListasExtra
 		/// <summary>
 		/// Initializes a new instance of this class.
 		/// </summary>
-		public ListaCíclica () : base ()
+		public ListaCíclica ()
 		{
 		}
 
@@ -29,7 +29,7 @@ namespace ListasExtra
 		/// Initializes a new instance of this class.
 		/// </summary>
 		/// <param name="coll">Colección inicial</param>
-		public ListaCíclica (IEnumerable<T> coll) : base (coll) //TEST
+		public ListaCíclica (IEnumerable<T> coll) : base (coll)
 		{
 		}
 
