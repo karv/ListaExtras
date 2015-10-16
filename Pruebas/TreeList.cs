@@ -1,8 +1,6 @@
 ﻿using System;
 using ListasExtra.Treelike;
 using NUnit.Framework;
-using System.Collections.Generic;
-using ListasExtra.Extensiones;
 
 namespace Pruebas
 {

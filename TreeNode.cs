@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace ListasExtra.Treelike
 {
 	/// <summary>
 	///  Representa un nodo en un treelist
 	/// </summary>
+	[Obsolete]
 	public class TreeNode<T> : ITreeNode<T>
 	{
 		public TreeList<T>.EnumOpcionOrden OrdenEnumeración = TreeList<T>.EnumOpcionOrden.PadrePrimero;

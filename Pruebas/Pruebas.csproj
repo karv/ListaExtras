@@ -10,7 +10,7 @@
     <RootNamespace>Pruebas</RootNamespace>
     <AssemblyName>Pruebas</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <ReleaseVersion>0.2.3.2</ReleaseVersion>
+    <ReleaseVersion>0.2.4</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,6 +44,7 @@
     <Compile Include="TestParNoOrdenado.cs" />
     <Compile Include="TestDict.cs" />
     <Compile Include="TestReqPoset.cs" />
+    <Compile Include="TestListaCíclica.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

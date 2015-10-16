@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace ListasExtra.Treelike
 {
+	[Obsolete]
 	class TreeEnumerator<T> : ListasExtra.Enumerator.SerialEnumerator<TreePath<T>>, IEnumerator<TreePath<T>>
 	{
 		public enum EnumOpcionOrden
