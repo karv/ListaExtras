@@ -6,6 +6,7 @@ namespace ListasExtra.Treelike
 	/// <summary>
 	/// Representa un camino en un árbol.
 	/// </summary>
+	[Obsolete]
 	public class TreePath<T> : IEnumerable, IEquatable<TreePath<T>>
 	{
 		readonly T[] _dat;
