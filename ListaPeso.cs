@@ -318,11 +318,12 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="sumando">Lista sumando.</param>
 		/// <returns></returns>
-		ListaPeso<T, TVal> SumarA (IDictionary<T, TVal> sumando)
+		[Obsolete]
+		ListaPeso<T, TVal> SumarA (IDictionary<T, TVal> sumando) //TEST
 		{
 			var ret = (ListaPeso<T, TVal>)MemberwiseClone ();
 			foreach (T x in sumando.Keys) {
-				ret.Add (x, sumando [x]);
+				ret [x] = Suma (ret [x], sumando [x]);
 			}
 			return ret;
 		}
@@ -335,7 +336,15 @@ namespace ListasExtra
 		/// <returns></returns>
 		protected static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> left, IDictionary<T, TVal> right)
 		{
-			return left.SumarA (right);
+			var ret = new ListaPeso<T, TVal> (left.Suma, left.Nulo, null);
+
+			foreach (var x in left) {
+				ret [x.Key] = x.Value;
+			}
+			foreach (var x in right) {
+				ret [x.Key] = ret.Suma (ret [x.Key], x.Value);
+			}
+			return ret;
 		}
 
 		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> left, IDictionary<T, TVal> right)
@@ -416,11 +425,6 @@ namespace ListasExtra
 					return false;
 			}
 			return true;
-		}
-
-		public static ListaPeso<T> operator + (ListaPeso<T> left, IDictionary<T, float> right)
-		{
-			return ListaPeso<T, float>.Sumar (left, right) as ListaPeso<T>;
 		}
 
 		public static ListaPeso<T> operator * (ListaPeso<T> left, float right)
