@@ -427,6 +427,20 @@ namespace ListasExtra
 			return true;
 		}
 
+		public static ListaPeso<T> operator + (ListaPeso<T> left, IDictionary<T, float> right)
+		{
+			var ret = new ListaPeso<T> ();
+				
+			foreach (var x in left) {
+				ret [x.Key] = x.Value;
+			}
+			foreach (var x in right) {
+				ret [x.Key] = ret.Suma (ret [x.Key], x.Value);
+			}
+			return ret;
+
+		}
+
 		public static ListaPeso<T> operator * (ListaPeso<T> left, float right)
 		{
 			var ret = new ListaPeso<T> ();

@@ -41,7 +41,7 @@ namespace Pruebas
 			}
 			var lp2 = new ListaPeso<int>();
 			lp2[3] = 1;
-			var sumado = lp + lp2;
+			ListaPeso<int> sumado = lp + lp2;
 
 			// Probar que ni lp ni lp2 han cambiado y que sumado vale lo que debe
 			for (int i = 0; i < 100; i++)
@@ -49,6 +49,16 @@ namespace Pruebas
 				Assert.AreEqual(1, lp[i]);
 				Assert.AreEqual(i == 3 ? 1 : 0, lp2[i]);
 				Assert.AreEqual(i == 3 ? 2 : 1, sumado[i]);
+			}
+
+			ListaPeso<int> mult = sumado * 2f;
+			// Probar que ni lp ni lp2 han cambiado y que sumado vale lo que debe
+			for (int i = 0; i < 100; i++)
+			{
+				Assert.AreEqual(1, lp[i]);
+				Assert.AreEqual(i == 3 ? 1 : 0, lp2[i]);
+				Assert.AreEqual(i == 3 ? 2 : 1, sumado[i]);
+				Assert.AreEqual(i == 3 ? 4 : 2, mult[i]);
 			}
 		}
 	}
