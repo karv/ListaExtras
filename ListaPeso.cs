@@ -489,49 +489,4 @@ namespace ListasExtra
 		{
 		}
 	}
-
-	public static class ComparadoresPred
-	{
-		public static Boolean EsMenor (Double x, Double y)
-		{
-			return x < y;
-		}
-
-		public static Boolean EsMenor (Single x, Single y)
-		{
-			return x < y;
-		}
-	}
-
-	public static class OperadoresPred
-	{
-		public static Double Suma (Double x, Double y)
-		{
-			return x + y;
-		}
-
-		public static long Suma (long x, long y)
-		{
-			return x + y;
-		}
-
-		public static ObjetoAcotado<Double> Suma (ObjetoAcotado<Double> x, ObjetoAcotado<Double> y)
-		{
-			ObjetoAcotado<Double> ret = new ObjetoAcotado<double> (x.EsMenor);
-			ret.CotaSup = Math.Max (x.CotaSup, y.CotaSup);
-			ret.CotaInf = Math.Min (x.CotaInf, y.CotaInf);
-			ret.Valor = x.Valor + y.Valor;
-			return ret;
-		}
-	}
-
-	public static class ExtDouble
-	{
-		public static ObjetoAcotado<Double> ToAcotado (this Double x)
-		{
-			var ret = new ObjetoAcotado<Double> (ComparadoresPred.EsMenor, Double.MinValue, Double.MaxValue, 0);
-			ret.Valor = x;
-			return ret;
-		}
-	}
 }
