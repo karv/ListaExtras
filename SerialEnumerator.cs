@@ -1,73 +1,28 @@
 ﻿using System.Collections.Generic;
 
-namespace ListasExtra.Enumerator
+namespace ListasExtra.Enumerable
 {
-	public class SerialEnumerator<T> : IEnumerator<T>
+	public class SerialEnumerable<T> : IEnumerable<T>
 	{
-		protected List<IEnumerator<T>> Enum;
-		protected int CurrEnumIndex;
+		protected IEnumerable<IEnumerable<T>> Enum;
 
-		protected IEnumerator<T> CurrEnum {
-			get {
-				return Enum [CurrEnumIndex];
-			}
-		}
-
-		public SerialEnumerator (IEnumerable<IEnumerable<T>> enums)
+		public SerialEnumerable (IEnumerable<IEnumerable<T>> enume)
 		{
-			Enum = new List<IEnumerator<T>> ();
-			foreach (var x in enums) {
-				Enum.Add (x.GetEnumerator ()); 
-			}
-
+			Enum = enume;
 		}
 
-		#region IEnumerator implementation
-
-		public bool MoveNext ()
-		{
-			while (CurrEnumIndex < Enum.Count && !CurrEnum.MoveNext ()) {
-				CurrEnumIndex++;
-			}
-			return CurrEnumIndex != Enum.Count;
-		}
-
-		public void Reset ()
-		{
-			CurrEnumIndex = 0;
-			foreach (var x in Enum) {
-				x.Reset ();
-			}
-		}
-
-		public object Current {
-			get {
-				return CurrEnum.Current;
-			}
-		}
-
-		#endregion
-
-		#region IDisposable implementation
-
-		public void Dispose ()
+		public IEnumerator<T> GetEnumerator ()
 		{
 			foreach (var x in Enum) {
-				x.Dispose ();
+				foreach (var y in x) {
+					yield return y;
+				}
 			}
 		}
 
-		#endregion
-
-		#region IEnumerator implementation
-
-		T IEnumerator<T>.Current {
-			get {
-				return (T)Current;
-			}
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		{
+			return GetEnumerator ();
 		}
-
-		#endregion
 	}
 }
-
