@@ -38,7 +38,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestListaPeso.cs" />
-    <Compile Include="TreeList.cs" />
     <Compile Include="Cola.Test.cs" />
     <Compile Include="IListExt.cs" />
     <Compile Include="TestParNoOrdenado.cs" />

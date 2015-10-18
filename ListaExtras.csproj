@@ -49,12 +49,7 @@
     <Compile Include="ISet.cs" />
     <Compile Include="IListBloqueable.cs" />
     <Compile Include="ListaPesoBloqueable.cs" />
-    <Compile Include="ITreeNode.cs" />
-    <Compile Include="TreeNode.cs" />
-    <Compile Include="TreeEnumerator.cs" />
     <Compile Include="SerialEnumerator.cs" />
-    <Compile Include="TreeList.cs" />
-    <Compile Include="TreePath.cs" />
     <Compile Include="ReqPoset.cs" />
     <Compile Include="IReqPoset.cs" />
     <Compile Include="LockEnumerator.cs" />
