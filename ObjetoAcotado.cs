@@ -1,12 +1,10 @@
-﻿using System.Runtime.Serialization;
-using System;
+﻿using System;
 
 namespace ListasExtra
 {
 	/// <summary>
 	/// Objeto acotado.
 	/// </summary>
-	[DataContract]
 	public class ObjetoAcotado<T>
 	{
 		//TODO conversión implícita entre T y esta clase

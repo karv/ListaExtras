@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace ListasExtra
 {
@@ -10,7 +9,6 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="TVal">Rango(co-dominio) de la función.</typeparam>
-	[DataContract (Name = "ListaPeso")]
 	public class ListaPeso<T, TVal> : IDictionary<T, TVal>
 	{
 		#region Accesor
@@ -401,7 +399,6 @@ namespace ListasExtra
 
 	}
 
-	[DataContract (Name = "ListaPeso")]
 	public class ListaPeso<T> : ListaPeso<T, Single>
 	{
 		public ListaPeso (IDictionary<T, float> modelo = null)
