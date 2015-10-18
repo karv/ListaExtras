@@ -476,7 +476,6 @@ namespace ListasExtra
 
 	}
 
-
 	/// <summary>
 	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
 	/// </summary>
