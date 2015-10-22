@@ -50,8 +50,59 @@ namespace ListasExtra
 
 		public bool Equals (ParNoOrdenado<T> other)
 		{
-			return (A.Equals (other.A) && B.Equals (other.B)) || A.Equals (other.B) && B.Equals (other.A);
+			var numn = NumNulos;
+
+			if (numn != other.NumNulos)
+				return false;
+			
+			switch (numn) {
+			case 0:
+				return true;
+
+			case 1:
+				var nnulA = noNulo;
+				var nnulB = other.noNulo;
+				return nnulA.Equals (nnulB);
+
+			case 2:
+				return (A.Equals (other.A) && B.Equals (other.B)) || A.Equals (other.B) && B.Equals (other.A);
+
+			default:
+				throw new Exception ("WTF?");
+			}
 		}
+
+		// Analysis disable CompareNonConstrainedGenericWithNull
+		/// <summary>
+		/// El número de nulos
+		/// <value>The number nulos.</value>
+		int NumNulos {
+			get { 
+				int ret = 0;
+				if (A != null)
+					ret++;
+				if (B != null)
+					ret++;
+				return ret;
+			}
+		}
+
+		/// <summary>
+		///  Devuelve el único elemento no nulo.
+		/// </summary>
+		/// <value>The no nulo.</value>
+		T noNulo {
+			get {
+				if (A == null)
+					return B;
+				if (B == null)
+					return A;
+
+				throw new Exception ("No existe el único no nulo en el par " + this);
+			}
+		}
+		// Analysis restore CompareNonConstrainedGenericWithNull
+
 
 		public override string ToString ()
 		{
