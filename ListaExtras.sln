@@ -41,7 +41,7 @@ Global
 		{BC64930B-AC9C-4A6C-A27A-546567B9C363}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		version = 0.2.4.1
+		version = 0.2.4.2
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ListaExtras.vsmdi
