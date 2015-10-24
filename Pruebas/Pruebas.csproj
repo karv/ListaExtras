@@ -44,6 +44,7 @@
     <Compile Include="TestDict.cs" />
     <Compile Include="TestReqPoset.cs" />
     <Compile Include="TestListaCíclica.cs" />
+    <Compile Include="TestAcotados.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
