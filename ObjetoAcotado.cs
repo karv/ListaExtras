@@ -6,9 +6,9 @@ namespace ListasExtra
 	/// <summary>
 	/// Objeto acotado.
 	/// </summary>
+	[Obsolete ("Es difícil usar, hacerlo manualmente")]
 	public class ObjetoAcotado<T>
 	{
-		//TODO conversión implícita entre T y esta clase
 		public T CotaSup;
 		public T CotaInf;
 		T _valor;
