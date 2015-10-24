@@ -317,7 +317,7 @@ namespace ListasExtra
 		/// <param name="sumando">Lista sumando.</param>
 		/// <returns></returns>
 		[Obsolete]
-		ListaPeso<T, TVal> SumarA (IDictionary<T, TVal> sumando) //TEST
+		ListaPeso<T, TVal> SumarA (IDictionary<T, TVal> sumando)
 		{
 			var ret = (ListaPeso<T, TVal>)MemberwiseClone ();
 			foreach (T x in sumando.Keys) {
