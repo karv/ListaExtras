@@ -26,7 +26,7 @@ namespace ListasExtra.Lock
 	/// Es un enumerator que puede bloquear su modificación temporalmente.
 	/// útil para multithreading
 	/// </summary>
-	public interface IListBloqueable<T> : IList<T>
+	public interface IListBloqueable<T> : IEnumerable<T>
 	{
 		/// <summary>
 		/// Devuelve o establece si el enumerador está bloqueado.
