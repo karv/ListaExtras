@@ -417,10 +417,12 @@ namespace ListasExtra
 
 		public static bool operator >= (ListaPeso<T> left, IDictionary<T, float> right)
 		{
-			foreach (var x in left.Keys) {
-				if (left [x] > right [x])
+			foreach (var x in right.Keys) {
+				if (left [x] < right [x])
 					return false;
 			}
+			//TODO También revisar x en left.Keys, puede que sean negativos.
+			//     Todo esto en cada operador
 			return true;
 		}
 
