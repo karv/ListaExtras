@@ -96,7 +96,6 @@ namespace ListasExtra.Lock
 
 		#endregion
 
-
 		#region ILockable
 
 		public new System.Collections.IEnumerator GetEnumerator ()

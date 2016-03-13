@@ -41,26 +41,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Set.cs" />
-    <Compile Include="ISet.cs" />
-    <Compile Include="IListBloqueable.cs" />
-    <Compile Include="ListaPesoBloqueable.cs" />
-    <Compile Include="SerialEnumerator.cs" />
-    <Compile Include="ReqPoset.cs" />
-    <Compile Include="IReqPoset.cs" />
-    <Compile Include="LockEnumerator.cs" />
     <Compile Include="ReadonlyPair.cs" />
     <Compile Include="CambioElementoEventArgs.cs" />
     <Compile Include="ListaPeso.cs" />
     <Compile Include="ListaContador.cs" />
     <Compile Include="ObjetoAcotado.cs" />
-    <Compile Include="ICola.cs" />
-    <Compile Include="Cola.cs" />
-    <Compile Include="CollecciónExt.cs" />
     <Compile Include="ParNoOrdenado.cs" />
     <Compile Include="ParPosibilidad.cs" />
-    <Compile Include="IDictionaryExt.cs" />
     <Compile Include="ListaCíclica.cs" />
+    <Compile Include="Cola\Cola.cs" />
+    <Compile Include="Cola\ICola.cs" />
+    <Compile Include="Extensiones\CollecciónExt.cs" />
+    <Compile Include="Extensiones\IDictionaryExt.cs" />
+    <Compile Include="Lock\IListBloqueable.cs" />
+    <Compile Include="Poset\IReqPoset.cs" />
+    <Compile Include="Set\ISet.cs" />
+    <Compile Include="Lock\ListaPesoBloqueable.cs" />
+    <Compile Include="Lock\LockEnumerator.cs" />
+    <Compile Include="Poset\ReqPoset.cs" />
+    <Compile Include="Enumerable\SerialEnumerator.cs" />
+    <Compile Include="Set\Set.cs" />
+    <Compile Include="ListaProbabilidad.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -76,8 +77,17 @@
         <Policies>
           <TextStylePolicy TabsToSpaces="False" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
           <CSharpFormattingPolicy inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+          <DotNetNamingPolicy DirectoryNamespaceAssociation="PrefixedHierarchical" ResourceNamePolicy="FileName" />
         </Policies>
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Cola\" />
+    <Folder Include="Extensiones\" />
+    <Folder Include="Lock\" />
+    <Folder Include="Poset\" />
+    <Folder Include="Set\" />
+    <Folder Include="Enumerable\" />
+  </ItemGroup>
 </Project>
