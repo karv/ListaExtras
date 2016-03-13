@@ -11,7 +11,7 @@
     <RootNamespace>ListasExtra</RootNamespace>
     <AssemblyName>ListaExtras</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <ReleaseVersion>0.2.4.2</ReleaseVersion>
+    <ReleaseVersion>0.2.5</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -34,42 +34,35 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Set.cs" />
-    <Compile Include="ISet.cs" />
-    <Compile Include="IListBloqueable.cs" />
-    <Compile Include="ListaPesoBloqueable.cs" />
-    <Compile Include="ITreeNode.cs" />
-    <Compile Include="TreeNode.cs" />
-    <Compile Include="TreeEnumerator.cs" />
-    <Compile Include="SerialEnumerator.cs" />
-    <Compile Include="TreeList.cs" />
-    <Compile Include="TreePath.cs" />
-    <Compile Include="ReqPoset.cs" />
-    <Compile Include="IReqPoset.cs" />
-    <Compile Include="LockEnumerator.cs" />
     <Compile Include="ReadonlyPair.cs" />
     <Compile Include="CambioElementoEventArgs.cs" />
     <Compile Include="ListaPeso.cs" />
     <Compile Include="ListaContador.cs" />
     <Compile Include="ObjetoAcotado.cs" />
-    <Compile Include="ICola.cs" />
-    <Compile Include="Cola.cs" />
-    <Compile Include="CollecciónExt.cs" />
     <Compile Include="ParNoOrdenado.cs" />
     <Compile Include="ParPosibilidad.cs" />
-    <Compile Include="IDictionaryExt.cs" />
     <Compile Include="ListaCíclica.cs" />
+    <Compile Include="Cola\Cola.cs" />
+    <Compile Include="Cola\ICola.cs" />
+    <Compile Include="Extensiones\CollecciónExt.cs" />
+    <Compile Include="Extensiones\IDictionaryExt.cs" />
+    <Compile Include="Lock\IListBloqueable.cs" />
+    <Compile Include="Poset\IReqPoset.cs" />
+    <Compile Include="Set\ISet.cs" />
+    <Compile Include="Lock\ListaPesoBloqueable.cs" />
+    <Compile Include="Lock\LockEnumerator.cs" />
+    <Compile Include="Poset\ReqPoset.cs" />
+    <Compile Include="Enumerable\SerialEnumerator.cs" />
+    <Compile Include="Set\Set.cs" />
+    <Compile Include="ListaProbabilidad.cs" />
+    <Compile Include="Acotados\Float.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -85,8 +78,18 @@
         <Policies>
           <TextStylePolicy TabsToSpaces="False" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
           <CSharpFormattingPolicy inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+          <DotNetNamingPolicy DirectoryNamespaceAssociation="PrefixedHierarchical" ResourceNamePolicy="FileName" />
         </Policies>
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Cola\" />
+    <Folder Include="Extensiones\" />
+    <Folder Include="Lock\" />
+    <Folder Include="Poset\" />
+    <Folder Include="Set\" />
+    <Folder Include="Enumerable\" />
+    <Folder Include="Acotados\" />
+  </ItemGroup>
 </Project>

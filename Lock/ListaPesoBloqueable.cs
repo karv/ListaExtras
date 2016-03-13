@@ -27,7 +27,7 @@ namespace ListasExtra.Lock
 	/// <summary>
 	/// Es una listapeso en el que se puede editar mientras se realiza una iteración 'foreach'.
 	/// </summary>
-	public class ListaPesoBloqueable<TKey, TVal> : ListaPeso<TKey, TVal>, IListBloqueable<KeyValuePair<TKey, TVal>>, IEnumerable <KeyValuePair<TKey, TVal>>
+	public class ListaPesoBloqueable<TKey, TVal> : ListaPeso<TKey, TVal>, IListBloqueable<KeyValuePair<TKey, TVal>>
 	{
 		public ListaPesoBloqueable (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo) : base (operSuma, objetoNulo)
 		{
@@ -96,7 +96,6 @@ namespace ListasExtra.Lock
 
 		#endregion
 
-
 		#region ILockable
 
 		public new System.Collections.IEnumerator GetEnumerator ()
@@ -105,30 +104,6 @@ namespace ListasExtra.Lock
 			var x = new  LockEnumerator<KeyValuePair<TKey, TVal>> (base.GetEnumerator ());
 			x.OnTerminate = unblock;
 			return x;
-		}
-
-		int IList<KeyValuePair<TKey, TVal>>.IndexOf (KeyValuePair<TKey, TVal> item)
-		{
-			throw new NotImplementedException ();
-		}
-
-		void IList<KeyValuePair<TKey, TVal>>.Insert (int index, KeyValuePair<TKey, TVal> item)
-		{
-			throw new NotImplementedException ();
-		}
-
-		void IList<KeyValuePair<TKey, TVal>>.RemoveAt (int index)
-		{
-			throw new NotImplementedException ();
-		}
-
-		KeyValuePair<TKey, TVal> IList<KeyValuePair<TKey, TVal>>.this [int index] {
-			get {
-				throw new NotImplementedException ();
-			}
-			set {
-				throw new NotImplementedException ();
-			}
 		}
 
 		bool IListBloqueable<KeyValuePair<TKey, TVal>>.Bloqueado {

@@ -1,46 +1,47 @@
-﻿using System.Runtime.Serialization;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ListasExtra
 {
 	/// <summary>
 	/// Objeto acotado.
 	/// </summary>
-	[DataContract]
+	[Obsolete ("Es difícil usar, hacerlo manualmente")]
 	public class ObjetoAcotado<T>
 	{
-		//TODO conversión implícita entre T y esta clase
 		public T CotaSup;
 		public T CotaInf;
-		T _Valor;
+		T _valor;
 
-		public Func<T, T, Boolean> EsMenor { get; set; }
-		//TODO hacer IComparable
+		public IComparer<T> Comparador { get; }
+
+		bool EsMenor (T x, T y)
+		{
+			return Comparador.Compare (x, y) == -1;
+		}
 
 		public T Valor {
 			get {
-				return _Valor;
+				return _valor;
 			}
 			set {
+				_valor = EsMenor (value, CotaSup) ? (EsMenor (value, CotaInf) ? CotaInf : value) : CotaSup;
+				if (_valor.Equals (CotaInf))
+					AlLlegarMínimo?.Invoke ();
+				
+				if (_valor.Equals (CotaSup))
+					AlLlegarMáximo?.Invoke ();
 
-				_Valor = EsMenor (value, CotaSup) ? (EsMenor (value, CotaInf) ? CotaInf : value) : CotaSup;
-				if (_Valor.Equals (CotaInf)) {
-					EventHandler Handler = LlegóMínimo;
-					Handler (this, null);
-				}
-				if (_Valor.Equals (CotaSup)) {
-					EventHandler Handler = LlegóMáximo;
-					Handler (this, null);
-				}
+				AlCambiar.Invoke ();
 			}
 		}
 
-		public ObjetoAcotado (Func<T, T, Boolean> comparador)
+		public ObjetoAcotado (IComparer<T> comparador)
 		{
-			EsMenor = comparador;
+			Comparador = comparador;
 		}
 
-		public ObjetoAcotado (Func<T, T, Boolean> comparador, T min, T max, T inicial)
+		public ObjetoAcotado (IComparer<T> comparador, T min, T max, T inicial = default(T))
 			: this (comparador)
 		{
 			CotaInf = min;
@@ -53,8 +54,14 @@ namespace ListasExtra
 			return Valor.ToString ();
 		}
 		//Eventos
-		public event EventHandler LlegóMínimo;
-		public event EventHandler LlegóMáximo;
+		public event Action AlLlegarMínimo;
+		public event Action AlLlegarMáximo;
+		public event Action AlCambiar;
+
+		// operadores
+		public static implicit operator T (ObjetoAcotado<T> obj)
+		{
+			return obj.Valor;
+		}
 	}
 }
-

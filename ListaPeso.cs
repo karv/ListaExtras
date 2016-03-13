@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace ListasExtra
 {
@@ -10,7 +9,6 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="TVal">Rango(co-dominio) de la función.</typeparam>
-	[DataContract (Name = "ListaPeso")]
 	public class ListaPeso<T, TVal> : IDictionary<T, TVal>
 	{
 		#region Accesor
@@ -319,7 +317,7 @@ namespace ListasExtra
 		/// <param name="sumando">Lista sumando.</param>
 		/// <returns></returns>
 		[Obsolete]
-		ListaPeso<T, TVal> SumarA (IDictionary<T, TVal> sumando) //TEST
+		ListaPeso<T, TVal> SumarA (IDictionary<T, TVal> sumando)
 		{
 			var ret = (ListaPeso<T, TVal>)MemberwiseClone ();
 			foreach (T x in sumando.Keys) {
@@ -401,7 +399,6 @@ namespace ListasExtra
 
 	}
 
-	[DataContract (Name = "ListaPeso")]
 	public class ListaPeso<T> : ListaPeso<T, Single>
 	{
 		public ListaPeso (IDictionary<T, float> modelo = null)
@@ -420,10 +417,12 @@ namespace ListasExtra
 
 		public static bool operator >= (ListaPeso<T> left, IDictionary<T, float> right)
 		{
-			foreach (var x in left.Keys) {
-				if (left [x] > right [x])
+			foreach (var x in right.Keys) {
+				if (left [x] < right [x])
 					return false;
 			}
+			//TODO También revisar x en left.Keys, puede que sean negativos.
+			//     Todo esto en cada operador
 			return true;
 		}
 
@@ -476,7 +475,6 @@ namespace ListasExtra
 
 	}
 
-
 	/// <summary>
 	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
 	/// </summary>
@@ -487,51 +485,6 @@ namespace ListasExtra
 		public ListaPesoFloat () :
 			base ((x, y) => x + y, 0)
 		{
-		}
-	}
-
-	public static class ComparadoresPred
-	{
-		public static Boolean EsMenor (Double x, Double y)
-		{
-			return x < y;
-		}
-
-		public static Boolean EsMenor (Single x, Single y)
-		{
-			return x < y;
-		}
-	}
-
-	public static class OperadoresPred
-	{
-		public static Double Suma (Double x, Double y)
-		{
-			return x + y;
-		}
-
-		public static long Suma (long x, long y)
-		{
-			return x + y;
-		}
-
-		public static ObjetoAcotado<Double> Suma (ObjetoAcotado<Double> x, ObjetoAcotado<Double> y)
-		{
-			ObjetoAcotado<Double> ret = new ObjetoAcotado<double> (x.EsMenor);
-			ret.CotaSup = Math.Max (x.CotaSup, y.CotaSup);
-			ret.CotaInf = Math.Min (x.CotaInf, y.CotaInf);
-			ret.Valor = x.Valor + y.Valor;
-			return ret;
-		}
-	}
-
-	public static class ExtDouble
-	{
-		public static ObjetoAcotado<Double> ToAcotado (this Double x)
-		{
-			var ret = new ObjetoAcotado<Double> (ComparadoresPred.EsMenor, Double.MinValue, Double.MaxValue, 0);
-			ret.Valor = x;
-			return ret;
 		}
 	}
 }
