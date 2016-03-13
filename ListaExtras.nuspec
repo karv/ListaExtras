@@ -2,12 +2,12 @@
 <package >
   <metadata>
     <id>ListaExtras</id>
-    <version>0.2.4.2</version>
+    <version>0.2.5</version>
     <title>Lista extras</title>
     <authors>Edgar Carballo</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Un poco de ayuda para trabajar con listas. En particular diccionarios</description>
-    <copyright>Copyright 2015</copyright>
+    <copyright></copyright>
   </metadata>
   <files>
     <file src="bin/Release/ListaExtras.dll" target="lib" />
