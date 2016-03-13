@@ -6,7 +6,7 @@ namespace ListasExtra
 	/// <summary>
 	/// Una lista de probabilidades
 	/// </summary>
-	public class ListaProbabilidad<T>
+	public class ListaProbabilidad<T> : ICollection<T>
 	{
 		public ListaProbabilidad (Func<T, double> peso)
 		{
@@ -20,6 +20,17 @@ namespace ListasExtra
 			Peso = peso;
 		}
 
+		public ListaProbabilidad (IEnumerable<T> lista, Func<T, double> peso, Random rand = null) : this (peso)
+		{
+			if (rand == null)
+				rand = new Random ();
+			Randomizer = rand;
+
+			foreach (var item in lista) {
+				Add (item);
+			}
+		}
+
 		/// <summary>
 		/// El generador de pseudoaleatorios.
 		/// </summary>
@@ -30,22 +41,28 @@ namespace ListasExtra
 		/// </summary>
 		public Func<T, double> Peso { get; }
 
-		readonly Dictionary<T, double> _data = new Dictionary<T, double> ();
+		readonly List<T> _data = new List<T> ();
 
 		/// <summary>
 		/// Agrega un objeto con peso
 		/// </summary>
 		public void Add (T obj)
 		{
-			_data.Add (obj, Peso (obj));
+			_data.Add (obj);
+			OnAdd?.Invoke (obj);
 		}
 
 		/// <summary>
 		/// Elimina un objeto
 		/// </summary>
-		public void Remove (T obj)
+		public bool Remove (T obj)
 		{
-			_data.Remove (obj);
+			if (_data.Remove (obj)) {
+				OnRemove?.Invoke (obj);
+				return true;
+			}
+			return false;
+				
 		}
 
 		/// <summary>
@@ -74,9 +91,11 @@ namespace ListasExtra
 
 		public double Suma ()
 		{
-			var _dataSnapshot = new Dictionary<T, double> (_data);
+			var _dataSnapshot = AsDictionary ();
 			double suma = 0;
 			foreach (var x in _dataSnapshot) {
+				if (x.Value < 0)
+					throw new NotMeasureException (string.Format ("El peso de {0} actualmente tiene un valor negativo {1}.", x.Key, x.Value));
 				suma += x.Value;
 			}
 
@@ -88,7 +107,7 @@ namespace ListasExtra
 			var suma = Suma ();
 			if (suma == 0)
 				throw new NotMeasureException ();
-			var _dataSnapshot = new Dictionary<T, double> (_data);
+			var _dataSnapshot = AsDictionary ();
 			var ret = new Dictionary<T, double> ();
 			foreach (var x in _dataSnapshot) {
 				ret.Add (x.Key, x.Value / suma);
@@ -97,6 +116,59 @@ namespace ListasExtra
 			return ret;
 		}
 
+		/// <summary>
+		/// Devuelve un dicionario asignando a cada elemento de esta lista su valor actual de peso.
+		/// </summary>
+		public Dictionary<T, double> AsDictionary ()
+		{
+			var ret = new Dictionary<T, double> (_data.Count);
+			foreach (var x in _data) {
+				ret.Add (x, Peso (x));
+			}
+			return ret;
+		}
+
+		#region ICollection
+
+		public void Clear ()
+		{
+			_data.Clear ();
+		}
+
+		public bool Contains (T item)
+		{
+			return _data.Contains (item);
+		}
+
+		public void CopyTo (T[] array, int arrayIndex)
+		{
+			_data.CopyTo (array, arrayIndex);
+		}
+
+		public IEnumerator<T> GetEnumerator ()
+		{
+			return _data.GetEnumerator ();
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		{
+			return _data.GetEnumerator ();
+		}
+
+		public bool IsReadOnly {
+			get {
+				return false;
+			}
+		}
+
+		#endregion
+
+		#region Eventos
+
+		public event Action<T> OnRemove;
+		public event Action<T> OnAdd;
+
+		#endregion
 
 		[Serializable]
 		/// <summary>
