@@ -62,6 +62,7 @@
     <Compile Include="Enumerable\SerialEnumerator.cs" />
     <Compile Include="Set\Set.cs" />
     <Compile Include="ListaProbabilidad.cs" />
+    <Compile Include="Acotados\Float.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -89,5 +90,6 @@
     <Folder Include="Poset\" />
     <Folder Include="Set\" />
     <Folder Include="Enumerable\" />
+    <Folder Include="Acotados\" />
   </ItemGroup>
 </Project>
