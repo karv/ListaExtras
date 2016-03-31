@@ -9,7 +9,7 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="TVal">Rango(co-dominio) de la función.</typeparam>
-	public class ListaPeso<T, TVal> : IDictionary<T, TVal>
+	public class ListaPeso<T, TVal> : IDictionary<T, TVal>, IEquatable<IDictionary<T, TVal>>
 	{
 		#region Accesor
 
@@ -275,6 +275,15 @@ namespace ListasExtra
 
 		#endregion
 
+		#region IEquatable
+
+		public bool Equals (IDictionary<T, TVal> other)
+		{
+			return this == other;
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Devuelve una copia del soporte.
 		/// </summary>
@@ -399,7 +408,7 @@ namespace ListasExtra
 
 	}
 
-	public class ListaPeso<T> : ListaPeso<T, Single>
+	public class ListaPeso<T> : ListaPeso<T, Single>, IComparable<IDictionary<T, Single>>
 	{
 		public ListaPeso (IDictionary<T, float> modelo = null)
 			: base ((x, y) => x + y, 0, modelo)
@@ -472,6 +481,14 @@ namespace ListasExtra
 			this [key] += value;
 		}
 
+		#region IComparable
+
+		public int CompareTo (IDictionary<T, float> other)
+		{
+			return this <= other ? -1 : this >= other ? 1 : 0;
+		}
+
+		#endregion
 
 	}
 
