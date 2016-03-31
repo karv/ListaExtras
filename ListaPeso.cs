@@ -430,8 +430,10 @@ namespace ListasExtra
 				if (left [x] < right [x])
 					return false;
 			}
-			//TODO También revisar x en left.Keys, puede que sean negativos.
-			//     Todo esto en cada operador
+			foreach (var x in left.Keys) {
+				if (left [x] < right [x])
+					return false;
+			}
 			return true;
 		}
 
