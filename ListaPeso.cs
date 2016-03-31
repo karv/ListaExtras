@@ -21,7 +21,7 @@ namespace ListasExtra
 			set {
 				// Encontrar la Key buscada.
 				foreach (var x in Keys.ToList()) {
-					if (_Comparador (x, key)) {
+					if (_comparador (x, key)) {
 						TVal prev = Model [x];
 						Model [x] = value;
 						AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (key, prev, Model [x]));
@@ -50,15 +50,15 @@ namespace ListasExtra
 		/// </summary>
 		public Func<TVal, TVal> Inv;
 
-		Func<T, T, bool> _Comparador = (x, y) => x.Equals (y);
+		Func<T, T, bool> _comparador = (x, y) => x.Equals (y);
 
 		/// <summary>
 		/// Devuelve o establece qué función sirve para saber si dos T's son idénticos para esta lista.
 		/// Por default es x.Equals(y).
 		/// </summary>
 		public Func<T, T, bool> Comparador {
-			get { return _Comparador; }
-			set { _Comparador = value; }
+			get { return _comparador; }
+			set { _comparador = value; }
 		}
 
 
@@ -244,7 +244,7 @@ namespace ListasExtra
 		public bool ContainsKey (T key)
 		{
 			foreach (var x in Keys) {
-				if (_Comparador (x, key))
+				if (_comparador (x, key))
 					return true;
 			}
 			return false;
