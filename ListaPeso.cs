@@ -21,7 +21,7 @@ namespace ListasExtra
 			set {
 				// Encontrar la Key buscada.
 				foreach (var x in Keys.ToList()) {
-					if (_comparador (x, key)) {
+					if (Comparador (x, key)) {
 						TVal prev = Model [x];
 						Model [x] = value;
 						AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (key, prev, Model [x]));
@@ -50,16 +50,12 @@ namespace ListasExtra
 		/// </summary>
 		public Func<TVal, TVal> Inv;
 
-		Func<T, T, bool> _comparador = (x, y) => x.Equals (y);
 
 		/// <summary>
 		/// Devuelve o establece qué función sirve para saber si dos T's son idénticos para esta lista.
 		/// Por default es x.Equals(y).
 		/// </summary>
-		public Func<T, T, bool> Comparador {
-			get { return _comparador; }
-			set { _comparador = value; }
-		}
+		public Func<T, T, bool> Comparador { get; set; }
 
 
 		/// <summary>
@@ -175,6 +171,15 @@ namespace ListasExtra
 			return tot;
 		}
 
+		/// <summary>
+		/// Devuelve una copia del soporte.
+		/// </summary>
+		/// <returns>Un ISet que contiene a cada elemento del soporte.</returns>
+		public ISet<T> Soporte ()
+		{
+			return new HashSet<T> (Model.Keys);
+		}
+
 		#endregion
 
 		#region Orden y máximos
@@ -215,7 +220,7 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
-		protected ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
+		protected ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo) : this ()
 		{
 			Suma = operSuma;
 			Nulo = objetoNulo;
@@ -235,6 +240,12 @@ namespace ListasExtra
 
 		protected ListaPeso ()
 		{
+			// Analysis disable ConvertIfStatementToConditionalTernaryExpression
+			if (typeof(T).IsAssignableFrom (typeof(IEquatable<T>)))
+				Comparador = (x, y) => ((IEquatable<T>)x).Equals (y);
+			else
+				Comparador = (x, y) => x.Equals (y);
+			// Analysis restore ConvertIfStatementToConditionalTernaryExpression
 		}
 
 		#endregion
@@ -244,7 +255,7 @@ namespace ListasExtra
 		public bool ContainsKey (T key)
 		{
 			foreach (var x in Keys) {
-				if (_comparador (x, key))
+				if (Comparador (x, key))
 					return true;
 			}
 			return false;
@@ -284,14 +295,7 @@ namespace ListasExtra
 
 		#endregion
 
-		/// <summary>
-		/// Devuelve una copia del soporte.
-		/// </summary>
-		/// <returns>Un ISet que contiene a cada elemento del soporte.</returns>
-		public ISet<T> Soporte ()
-		{
-			return new HashSet<T> (Model.Keys);
-		}
+		#region Generales
 
 		public override string ToString ()
 		{
@@ -301,6 +305,8 @@ namespace ListasExtra
 			}
 			return ret;
 		}
+
+		#endregion
 
 		#region Operacional
 
