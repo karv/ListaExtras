@@ -63,6 +63,7 @@
     <Compile Include="Set\Set.cs" />
     <Compile Include="ListaProbabilidad.cs" />
     <Compile Include="Acotados\Float.cs" />
+    <Compile Include="Árboles\IÁrbolEnraizado.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -91,5 +92,6 @@
     <Folder Include="Set\" />
     <Folder Include="Enumerable\" />
     <Folder Include="Acotados\" />
+    <Folder Include="Árboles\" />
   </ItemGroup>
 </Project>

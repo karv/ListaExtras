@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListaExtras", "ListaExtras.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pruebas", "Pruebas\Pruebas.csproj", "{BC64930B-AC9C-4A6C-A27A-546567B9C363}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtk", "Gtk\Gtk.csproj", "{8D7305CD-EC77-4F88-A803-0140A46A5562}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,18 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Debug|x86.Build.0 = Debug|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Release|x86.ActiveCfg = Release|Any CPU
+		{8D7305CD-EC77-4F88-A803-0140A46A5562}.Release|x86.Build.0 = Release|Any CPU
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
