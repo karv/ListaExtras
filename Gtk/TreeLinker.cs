@@ -16,13 +16,13 @@ namespace ListasExtra.Gtk
 		/// <typeparam name="T">Clase de nodos del árbol</typeparam>
 		public static void Append<T> (this TreeStore store,
 		                              IÁrbolEnraizado<T> tree,
-		                              Func<T, Array> encaje,
+		                              Func<IÁrbolEnraizado<T>, Array> encaje,
 		                              TreeIter? iter = null)
 		{
 			TreeIter newIter;
-			newIter = !iter.HasValue ? store.AppendValues (encaje (tree.Nodo)) : store.AppendValues (
+			newIter = !iter.HasValue ? store.AppendValues (encaje (tree)) : store.AppendValues (
 				iter.Value,
-				encaje (tree.Nodo));
+				encaje (tree));
 
 			foreach (var tr in tree.Sucesores)
 			{
