@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace ListasExtra
 {
+	[Serializable]
 	/// <summary>
 	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
 	/// </summary>
@@ -13,25 +14,40 @@ namespace ListasExtra
 	{
 		#region Accesor
 
-		public TVal this [T key] {
-			get {
+		public TVal this [T key]
+		{
+			get
+			{
 				TVal ret;
 				return TryGetValue (key, out ret) ? ret : Nulo;
 			}
-			set {
+			set
+			{
 				// Encontrar la Key buscada.
-				foreach (var x in Keys.ToList()) {
-					if (Comparador (x, key)) {
+				foreach (var x in Keys.ToList())
+				{
+					if (Comparador (x, key))
+					{
 						TVal prev = Model [x];
 						Model [x] = value;
-						AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (key, prev, Model [x]));
+						AlCambiarValor?.Invoke (
+							this,
+							new CambioElementoEventArgs<T, TVal> (
+								key,
+								prev,
+								Model [x]));
 						return;
 					}
 				}
 
 				// Si es entrada nueva, se agrega.
 				Model.Add (key, value);
-				AlCambiarValor?.Invoke (this, new CambioElementoEventArgs<T, TVal> (key, Nulo, Model [key]));
+				AlCambiarValor?.Invoke (
+					this,
+					new CambioElementoEventArgs<T, TVal> (
+						key,
+						Nulo,
+						Model [key]));
 			}
 		}
 
@@ -61,15 +77,14 @@ namespace ListasExtra
 		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
 		/// </summary>
-		public TVal Nulo {
-			get;
-			set;
-		}
+		public TVal Nulo { get; set; }
 
 		public ReadonlyPair<T, TVal> Entrada (T entrada)
 		{
-			foreach (var x in this) {
-				if (x.Key.Equals (entrada)) {
+			foreach (var x in this)
+			{
+				if (x.Key.Equals (entrada))
+				{
 					return new ReadonlyPair<T, TVal> (x);
 				}
 			}
@@ -95,14 +110,18 @@ namespace ListasExtra
 			return Model.TryGetValue (key, out value);
 		}
 
-		public ICollection<T> Keys {
-			get {
+		public ICollection<T> Keys
+		{
+			get
+			{
 				return Model.Keys;
 			}
 		}
 
-		public ICollection<TVal> Values {
-			get {
+		public ICollection<TVal> Values
+		{
+			get
+			{
 				return Model.Values;
 			}
 		}
@@ -122,7 +141,7 @@ namespace ListasExtra
 			return Model.Contains (item);
 		}
 
-		public void CopyTo (KeyValuePair<T, TVal>[] array, int arrayIndex)
+		public void CopyTo (KeyValuePair<T, TVal> [] array, int arrayIndex)
 		{
 			Model.CopyTo (array, arrayIndex);
 		}
@@ -132,14 +151,18 @@ namespace ListasExtra
 			return Remove (item);
 		}
 
-		public int Count {
-			get {
+		public int Count
+		{
+			get
+			{
 				return Model.Count;
 			}
 		}
 
-		public bool IsReadOnly {
-			get {
+		public bool IsReadOnly
+		{
+			get
+			{
 				return Model.IsReadOnly;
 			}
 		}
@@ -165,7 +188,8 @@ namespace ListasExtra
 		public TVal SumaTotal ()
 		{
 			TVal tot = Nulo;
-			foreach (T x in Keys) {
+			foreach (T x in Keys)
+			{
 				tot = Suma (tot, this [x]);
 			}
 			return tot;
@@ -190,11 +214,15 @@ namespace ListasExtra
 		/// <returns></returns>		
 		public T ObtenerMáximo (Func<TVal, TVal, bool> comparador)
 		{
-			if (!Any ()) {
+			if (!Any ())
+			{
 				return default(T);
-			} else {
+			}
+			else
+			{
 				T tmp = Keys.ToArray () [0];
-				foreach (T x in Keys) {
+				foreach (T x in Keys)
+				{
 					if (comparador (this [x], this [tmp]))
 						tmp = x;
 				}
@@ -220,7 +248,8 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
-		protected ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo) : this ()
+		protected ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
+			: this ()
 		{
 			Suma = operSuma;
 			Nulo = objetoNulo;
@@ -232,7 +261,9 @@ namespace ListasExtra
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
 		/// <param name="modelo">Modelo</param>
-		public ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo, IDictionary<T, TVal> modelo = null)
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo,
+		                  IDictionary<T, TVal> modelo = null)
 			: this (operSuma, objetoNulo)
 		{
 			Model = modelo ?? new Dictionary<T, TVal> ();
@@ -241,7 +272,7 @@ namespace ListasExtra
 		protected ListaPeso ()
 		{
 			// Analysis disable ConvertIfStatementToConditionalTernaryExpression
-			if (typeof(T).IsAssignableFrom (typeof(IEquatable<T>)))
+			if (typeof (T).IsAssignableFrom (typeof (IEquatable<T>)))
 				Comparador = (x, y) => ((IEquatable<T>)x).Equals (y);
 			else
 				Comparador = (x, y) => x.Equals (y);
@@ -254,7 +285,8 @@ namespace ListasExtra
 
 		public bool ContainsKey (T key)
 		{
-			foreach (var x in Keys) {
+			foreach (var x in Keys)
+			{
 				if (Comparador (x, key))
 					return true;
 			}
@@ -268,7 +300,8 @@ namespace ListasExtra
 		/// <returns>Devuelve true si existe un objeto que cumple Pred.</returns>
 		public bool Any (Func<T, TVal, bool> pred)
 		{
-			foreach (var x in Keys) {
+			foreach (var x in Keys)
+			{
 				if (pred (x, this [x]))
 					return true;
 			}
@@ -300,7 +333,8 @@ namespace ListasExtra
 		public override string ToString ()
 		{
 			string ret = "";
-			foreach (var item in Model) {
+			foreach (var item in Model)
+			{
 				ret += string.Format ("{0} -> {1}\n", item.Key, item.Value);
 			}
 			return ret;
@@ -320,7 +354,8 @@ namespace ListasExtra
 				throw new NullReferenceException ("No está definito Inv");
 			var ret = new ListaPeso<T, TVal> (Suma, Nulo);
 			ret.Inv = Inv;
-			foreach (var x in Keys) {
+			foreach (var x in Keys)
+			{
 				ret.Add (x, Inv (this [x]));
 			}
 			return ret;
@@ -335,7 +370,8 @@ namespace ListasExtra
 		ListaPeso<T, TVal> SumarA (IDictionary<T, TVal> sumando)
 		{
 			var ret = (ListaPeso<T, TVal>)MemberwiseClone ();
-			foreach (T x in sumando.Keys) {
+			foreach (T x in sumando.Keys)
+			{
 				ret [x] = Suma (ret [x], sumando [x]);
 			}
 			return ret;
@@ -347,20 +383,24 @@ namespace ListasExtra
 		/// <param name="left">Primer sumando.</param>
 		/// <param name="right">Segundo sumando.</param>
 		/// <returns></returns>
-		protected static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> left, IDictionary<T, TVal> right)
+		protected static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> left,
+		                                           IDictionary<T, TVal> right)
 		{
 			var ret = new ListaPeso<T, TVal> (left.Suma, left.Nulo, null);
 
-			foreach (var x in left) {
+			foreach (var x in left)
+			{
 				ret [x.Key] = x.Value;
 			}
-			foreach (var x in right) {
+			foreach (var x in right)
+			{
 				ret [x.Key] = ret.Suma (ret [x.Key], x.Value);
 			}
 			return ret;
 		}
 
-		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> left, IDictionary<T, TVal> right)
+		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> left,
+		                                             IDictionary<T, TVal> right)
 		{
 			return Sumar (left, right);
 		}
@@ -370,18 +410,71 @@ namespace ListasExtra
 			return x.Inverso ();
 		}
 
-		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> left, IDictionary<T, TVal> right)
+		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> left,
+		                                             IDictionary<T, TVal> right)
 		{
 			var ret = left.MemberwiseClone () as ListaPeso<T, TVal>;
-			foreach (var x in right) {
+			foreach (var x in right)
+			{
 				ret [x.Key] = ret.Suma (ret.Inv (x.Value), ret [x.Key]);
 			}
+			return ret;
+		}
+
+		public static bool operator == (ListaPeso<T, TVal> left,
+		                                IDictionary<T, TVal> right)
+		{
+			var supp = left.Soporte ();
+			supp.UnionWith (right.Keys);
+			foreach (var x in supp)
+			{
+				if (right.ContainsKey (x))
+				{
+					if (!left [x].Equals (right [x]))
+						return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public static bool operator != (ListaPeso<T, TVal> left,
+		                                IDictionary<T, TVal> right)
+		{
+			return !(left == right);
+		}
+
+
+		public override bool Equals (object obj)
+		{
+			var dict = obj as IDictionary<T, TVal>;
+			if (dict == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this == dict;
+			}
+		}
+
+		public override int GetHashCode ()
+		{
+			int ret = 0;
+			foreach (var x in Keys)
+				ret += x.GetHashCode ();
+			foreach (var x in Values)
+				ret += x.GetHashCode ();
 			return ret;
 		}
 
 		#endregion
 	}
 
+	[Serializable]
 	/// <summary>
 	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
 	/// </summary>
@@ -389,7 +482,7 @@ namespace ListasExtra
 	/// <typeparam name="T2">Tipo de parámetro de la funcion</typeparam>
 	/// <typeparam name="TVal">Tipo de valor</typeparam>
 	public class ListaPeso<T1, T2, TVal> 
-		:ListaPeso<Tuple<T1, T2>, TVal>
+		: ListaPeso<Tuple<T1, T2>, TVal>
 	{
 
 		/// <summary>
@@ -398,22 +491,28 @@ namespace ListasExtra
 		/// <param name="operSuma">Suma</param>
 		/// <param name="objetoNulo">Objeto nulo</param>
 		/// <param name="modelo">Modelo de diccionario</param>
-		public ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo, IDictionary<Tuple<T1, T2>, TVal> modelo = null)
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo,
+		                  IDictionary<Tuple<T1, T2>, TVal> modelo = null)
 			: base (operSuma, objetoNulo, modelo)
 		{
 		}
 
-		public TVal this [T1 x, T2 y] {
-			get {
+		public TVal this [T1 x, T2 y]
+		{
+			get
+			{
 				return base [new Tuple<T1, T2> (x, y)];
 			}
-			set {
+			set
+			{
 				base [new Tuple<T1, T2> (x, y)] = value;
 			}
 		}
 
 	}
 
+	[Serializable]
 	public class ListaPeso<T> : ListaPeso<T, Single>, IComparable<IDictionary<T, Single>>
 	{
 		public ListaPeso (IDictionary<T, float> modelo = null)
@@ -421,36 +520,44 @@ namespace ListasExtra
 		{
 		}
 
-		public static bool operator <= (ListaPeso<T> left, IDictionary<T, float> right)
+		public static bool operator <= (ListaPeso<T> left,
+		                                IDictionary<T, float> right)
 		{
-			foreach (var x in left.Keys) {
+			foreach (var x in left.Keys)
+			{
 				if (left [x] > right [x])
 					return false;
 			}
 			return true;
 		}
 
-		public static bool operator >= (ListaPeso<T> left, IDictionary<T, float> right)
+		public static bool operator >= (ListaPeso<T> left,
+		                                IDictionary<T, float> right)
 		{
-			foreach (var x in right.Keys) {
+			foreach (var x in right.Keys)
+			{
 				if (left [x] < right [x])
 					return false;
 			}
-			foreach (var x in left.Keys) {
+			foreach (var x in left.Keys)
+			{
 				if (left [x] < right [x])
 					return false;
 			}
 			return true;
 		}
 
-		public static ListaPeso<T> operator + (ListaPeso<T> left, IDictionary<T, float> right)
+		public static ListaPeso<T> operator + (ListaPeso<T> left,
+		                                       IDictionary<T, float> right)
 		{
 			var ret = new ListaPeso<T> ();
 				
-			foreach (var x in left) {
+			foreach (var x in left)
+			{
 				ret [x.Key] = x.Value;
 			}
-			foreach (var x in right) {
+			foreach (var x in right)
+			{
 				ret [x.Key] = ret.Suma (ret [x.Key], x.Value);
 			}
 			return ret;
@@ -460,7 +567,8 @@ namespace ListasExtra
 		public static ListaPeso<T> operator * (ListaPeso<T> left, float right)
 		{
 			var ret = new ListaPeso<T> ();
-			foreach (var x in left) {
+			foreach (var x in left)
+			{
 				ret [x.Key] = x.Value * right;
 			}
 			return ret;
@@ -477,7 +585,8 @@ namespace ListasExtra
 			soporte.UnionWith (right.Soporte ());
 
 			var ret = 0f;
-			foreach (var x in soporte) {
+			foreach (var x in soporte)
+			{
 				ret += left [x] * right [x];
 			}
 
@@ -500,6 +609,7 @@ namespace ListasExtra
 
 	}
 
+	[Serializable]
 	/// <summary>
 	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
 	/// </summary>
@@ -507,8 +617,8 @@ namespace ListasExtra
 	/// <typeparam name="T2">Tipo de parámetro de la funcion</typeparam>
 	public class ListaPesoFloat<T1, T2> : ListaPeso<T1, T2, float>
 	{
-		public ListaPesoFloat () :
-			base ((x, y) => x + y, 0)
+		public ListaPesoFloat ()
+			: base ((x, y) => x + y, 0)
 		{
 		}
 	}

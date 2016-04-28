@@ -2,6 +2,7 @@
 
 namespace ListasExtra
 {
+	[Serializable]
 	/// <summary>
 	/// Par no ordenado.
 	/// </summary>
@@ -38,8 +39,10 @@ namespace ListasExtra
 			throw new Exception ("No existe el ÚNICO punto distinto de el punto dado.");
 		}
 
-		public T this [int i] {
-			get {
+		public T this [int i]
+		{
+			get
+			{
 				if (i == 0)
 					return A;
 				if (i == 1)
@@ -55,20 +58,21 @@ namespace ListasExtra
 			if (numn != other.NumNulos)
 				return false;
 			
-			switch (numn) {
-			case 0:
-				return true;
+			switch (numn)
+			{
+				case 0:
+					return true;
 
-			case 1:
-				var nnulA = noNulo;
-				var nnulB = other.noNulo;
-				return nnulA.Equals (nnulB);
+				case 1:
+					var nnulA = noNulo;
+					var nnulB = other.noNulo;
+					return nnulA.Equals (nnulB);
 
-			case 2:
-				return (A.Equals (other.A) && B.Equals (other.B)) || A.Equals (other.B) && B.Equals (other.A);
+				case 2:
+					return (A.Equals (other.A) && B.Equals (other.B)) || A.Equals (other.B) && B.Equals (other.A);
 
-			default:
-				throw new Exception ("WTF?");
+				default:
+					throw new Exception ("WTF?");
 			}
 		}
 
@@ -76,8 +80,10 @@ namespace ListasExtra
 		/// <summary>
 		/// El número de nulos
 		/// <value>The number nulos.</value>
-		int NumNulos {
-			get { 
+		int NumNulos
+		{
+			get
+			{ 
 				int ret = 0;
 				if (A != null)
 					ret++;
@@ -91,8 +97,10 @@ namespace ListasExtra
 		///  Devuelve el único elemento no nulo.
 		/// </summary>
 		/// <value>The no nulo.</value>
-		T noNulo {
-			get {
+		T noNulo
+		{
+			get
+			{
 				if (A == null)
 					return B;
 				if (B == null)
@@ -110,4 +118,3 @@ namespace ListasExtra
 		}
 	}
 }
-

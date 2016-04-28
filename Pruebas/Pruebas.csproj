@@ -35,6 +35,9 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Store">
+      <HintPath>..\packages\Store.0.2\lib\Store.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestListaPeso.cs" />
@@ -46,6 +49,7 @@
     <Compile Include="TestListaCíclica.cs" />
     <Compile Include="TestListaProb.cs" />
     <Compile Include="TestAcotados.cs" />
+    <Compile Include="TestSerial.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

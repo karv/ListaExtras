@@ -18,9 +18,11 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+using System;
 
 namespace ListasExtra
 {
+	[Serializable]
 	public class ReadonlyPair<T1, T2>
 	{
 		System.Collections.Generic.KeyValuePair<T1, T2> _data;
@@ -30,17 +32,20 @@ namespace ListasExtra
 			_data = data;
 		}
 
-		public T1 Key {
-			get {
+		public T1 Key
+		{
+			get
+			{
 				return _data.Key;
 			}
 		}
 
-		public T2 Value {
-			get {
+		public T2 Value
+		{
+			get
+			{
 				return _data.Value;
 			}
 		}
 	}
 }
-

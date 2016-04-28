@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ListasExtra
 {
+	[Serializable]
 	/// <summary>
 	/// Una lista de probabilidades
 	/// </summary>
@@ -20,13 +21,17 @@ namespace ListasExtra
 			Peso = peso;
 		}
 
-		public ListaProbabilidad (IEnumerable<T> lista, Func<T, double> peso, Random rand = null) : this (peso)
+		public ListaProbabilidad (IEnumerable<T> lista,
+		                          Func<T, double> peso,
+		                          Random rand = null)
+			: this (peso)
 		{
 			if (rand == null)
 				rand = new Random ();
 			Randomizer = rand;
 
-			foreach (var item in lista) {
+			foreach (var item in lista)
+			{
 				Add (item);
 			}
 		}
@@ -57,7 +62,8 @@ namespace ListasExtra
 		/// </summary>
 		public bool Remove (T obj)
 		{
-			if (_data.Remove (obj)) {
+			if (_data.Remove (obj))
+			{
 				OnRemove?.Invoke (obj);
 				return true;
 			}
@@ -75,7 +81,8 @@ namespace ListasExtra
 
 			var norm = _normalizedData ();
 			var st = Randomizer.NextDouble ();
-			foreach (var d in norm) {
+			foreach (var d in norm)
+			{
 				st -= d.Value;
 				if (st <= 0)
 					return d.Key;
@@ -83,8 +90,10 @@ namespace ListasExtra
 			throw new Exception ("¿Qué pasó aquí?");
 		}
 
-		public int Count {
-			get {
+		public int Count
+		{
+			get
+			{
 				return _data.Count;
 			}
 		}
@@ -93,9 +102,13 @@ namespace ListasExtra
 		{
 			var _dataSnapshot = AsDictionary ();
 			double suma = 0;
-			foreach (var x in _dataSnapshot) {
+			foreach (var x in _dataSnapshot)
+			{
 				if (x.Value < 0)
-					throw new NotMeasureException (string.Format ("El peso de {0} actualmente tiene un valor negativo {1}.", x.Key, x.Value));
+					throw new NotMeasureException (string.Format (
+						"El peso de {0} actualmente tiene un valor negativo {1}.",
+						x.Key,
+						x.Value));
 				suma += x.Value;
 			}
 
@@ -109,7 +122,8 @@ namespace ListasExtra
 				throw new NotMeasureException ();
 			var _dataSnapshot = AsDictionary ();
 			var ret = new Dictionary<T, double> ();
-			foreach (var x in _dataSnapshot) {
+			foreach (var x in _dataSnapshot)
+			{
 				ret.Add (x.Key, x.Value / suma);
 			}
 
@@ -122,7 +136,8 @@ namespace ListasExtra
 		public Dictionary<T, double> AsDictionary ()
 		{
 			var ret = new Dictionary<T, double> (_data.Count);
-			foreach (var x in _data) {
+			foreach (var x in _data)
+			{
 				ret.Add (x, Peso (x));
 			}
 			return ret;
@@ -140,7 +155,7 @@ namespace ListasExtra
 			return _data.Contains (item);
 		}
 
-		public void CopyTo (T[] array, int arrayIndex)
+		public void CopyTo (T [] array, int arrayIndex)
 		{
 			_data.CopyTo (array, arrayIndex);
 		}
@@ -155,8 +170,10 @@ namespace ListasExtra
 			return _data.GetEnumerator ();
 		}
 
-		public bool IsReadOnly {
-			get {
+		public bool IsReadOnly
+		{
+			get
+			{
 				return false;
 			}
 		}
