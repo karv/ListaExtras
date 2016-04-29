@@ -65,5 +65,10 @@ namespace Pruebas
 				Assert.AreEqual (i == 3 ? 4 : 2, mult [i]);
 			}
 		}
+
+		[Test]
+		public void TestIgualNulo ()
+		{
+		}
 	}
 }

@@ -323,7 +323,21 @@ namespace ListasExtra
 
 		public bool Equals (IDictionary<T, TVal> other)
 		{
-			return this == other;
+			var supp = Soporte ();
+			supp.UnionWith (other.Keys);
+			foreach (var x in supp)
+			{
+				if (other.ContainsKey (x))
+				{
+					if (!this [x].Equals (other [x]))
+						return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 
 		#endregion
@@ -418,56 +432,6 @@ namespace ListasExtra
 			{
 				ret [x.Key] = ret.Suma (ret.Inv (x.Value), ret [x.Key]);
 			}
-			return ret;
-		}
-
-		public static bool operator == (ListaPeso<T, TVal> left,
-		                                IDictionary<T, TVal> right)
-		{
-			var supp = left.Soporte ();
-			supp.UnionWith (right.Keys);
-			foreach (var x in supp)
-			{
-				if (right.ContainsKey (x))
-				{
-					if (!left [x].Equals (right [x]))
-						return false;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			return true;
-		}
-
-		public static bool operator != (ListaPeso<T, TVal> left,
-		                                IDictionary<T, TVal> right)
-		{
-			return !(left == right);
-		}
-
-
-		public override bool Equals (object obj)
-		{
-			var dict = obj as IDictionary<T, TVal>;
-			if (dict == null)
-			{
-				return false;
-			}
-			else
-			{
-				return this == dict;
-			}
-		}
-
-		public override int GetHashCode ()
-		{
-			int ret = 0;
-			foreach (var x in Keys)
-				ret += x.GetHashCode ();
-			foreach (var x in Values)
-				ret += x.GetHashCode ();
 			return ret;
 		}
 
