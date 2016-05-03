@@ -56,28 +56,31 @@ namespace ListasExtra
 
 		#region Internos
 
+		[DataMember]
 		protected IDictionary<T, TVal> Model { get; }
 
 		/// <summary>
 		/// La operación suma.
 		/// </summary>
+		[DataMember]
 		public Func<TVal, TVal, TVal> Suma;
 		/// <summary>
 		/// La operación inverso, si la tiene.
 		/// </summary>
+		[DataMember]
 		public Func<TVal, TVal> Inv;
-
 
 		/// <summary>
 		/// Devuelve o establece qué función sirve para saber si dos T's son idénticos para esta lista.
 		/// Por default es x.Equals(y).
 		/// </summary>
+		[DataMember]
 		public Func<T, T, bool> Comparador { get; set; }
-
 
 		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
 		/// </summary>
+		[DataMember]
 		public TVal Nulo { get; set; }
 
 		public ReadonlyPair<T, TVal> Entrada (T entrada)
@@ -272,6 +275,7 @@ namespace ListasExtra
 
 		protected ListaPeso ()
 		{
+			Model = new Dictionary<T, TVal> ();
 			// Analysis disable ConvertIfStatementToConditionalTernaryExpression
 			if (typeof (T).IsAssignableFrom (typeof (IEquatable<T>)))
 				Comparador = (x, y) => ((IEquatable<T>)x).Equals (y);
@@ -437,6 +441,16 @@ namespace ListasExtra
 		}
 
 		#endregion
+
+		#region Serializable
+
+		public void GetObjectData (SerializationInfo info, StreamingContext context)
+		{
+			var iser = Model as ISerializable;
+			iser.GetObjectData (info, context);
+		}
+
+		#endregion
 	}
 
 	/// <summary>
@@ -477,7 +491,6 @@ namespace ListasExtra
 	}
 
 	[Serializable]
-	[DataContract]
 	public class ListaPeso<T> : ListaPeso<T, Single>, IComparable<IDictionary<T, Single>>
 	{
 		public ListaPeso (IDictionary<T, float> modelo = null)
@@ -584,6 +597,15 @@ namespace ListasExtra
 	{
 		public ListaPesoFloat ()
 			: base ((x, y) => x + y, 0)
+		{
+		}
+
+		public ListaPesoFloat (Func<float, float, float> operSuma,
+		                       float objetoNulo,
+		                       IDictionary<Tuple<T1, T2>, float> modelo)
+			: base (operSuma,
+			        objetoNulo,
+			        modelo)
 		{
 		}
 	}
