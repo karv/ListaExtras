@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace ListasExtra
 {
@@ -476,6 +477,7 @@ namespace ListasExtra
 	}
 
 	[Serializable]
+	[DataContract]
 	public class ListaPeso<T> : ListaPeso<T, Single>, IComparable<IDictionary<T, Single>>
 	{
 		public ListaPeso (IDictionary<T, float> modelo = null)
