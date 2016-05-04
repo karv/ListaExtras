@@ -231,7 +231,5 @@ namespace ListasExtra.Extensiones
 		}
 
 		#endregion
-
-		// TODO los comparadores de orden entre diccionarios
 	}
 }
