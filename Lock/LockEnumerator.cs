@@ -16,15 +16,18 @@ namespace ListasExtra.Lock
 			BaseEnumerator = baseEnum;
 		}
 
-		public Action<object> OnTerminate;
+		/// <summary>
+		/// Ocurre al terminar de enumerar
+		/// </summary>
+		public event Action<object> OnTerminate;
 
 		#region IEnumerator implementation
 
 		public bool MoveNext ()
 		{
 			bool ret = BaseEnumerator.MoveNext ();
-			if (!ret && OnTerminate != null)
-				OnTerminate.Invoke (this);
+			if (!ret)
+				OnTerminate?.Invoke (this);
 			return ret;
 		}
 
@@ -33,8 +36,10 @@ namespace ListasExtra.Lock
 			BaseEnumerator.Reset ();
 		}
 
-		object IEnumerator.Current {
-			get {
+		object IEnumerator.Current
+		{
+			get
+			{
 				return BaseEnumerator.Current;
 			}
 		}
@@ -46,14 +51,17 @@ namespace ListasExtra.Lock
 		public void Dispose ()
 		{
 			BaseEnumerator.Dispose ();
+			OnTerminate = null;
 		}
 
 		#endregion
 
 		#region IEnumerator implementation
 
-		public T Current {
-			get {
+		public T Current
+		{
+			get
+			{
 				return BaseEnumerator.Current;
 			}
 		}

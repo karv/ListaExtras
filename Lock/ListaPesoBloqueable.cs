@@ -116,7 +116,7 @@ namespace ListasExtra.Lock
 		{
 			Bloqueado = true;
 			var x = new  LockEnumerator<KeyValuePair<TKey, TVal>> (base.GetEnumerator ());
-			x.OnTerminate = unblock;
+			x.OnTerminate += unblock;
 			return x;
 		}
 
@@ -135,7 +135,7 @@ namespace ListasExtra.Lock
 		IEnumerator<KeyValuePair<TKey, TVal>> IEnumerable<KeyValuePair<TKey, TVal>>.GetEnumerator ()
 		{
 			var x = new  LockEnumerator<KeyValuePair<TKey, TVal>> (base.GetEnumerator ());
-			x.OnTerminate = unblock;
+			x.OnTerminate += unblock;
 			Bloqueado = true;
 			return x;
 		}
@@ -177,7 +177,5 @@ namespace ListasExtra.Lock
 			}
 			return true;
 		}
-
-
 	}
 }
