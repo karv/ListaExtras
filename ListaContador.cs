@@ -2,11 +2,12 @@
 
 namespace ListasExtra
 {
-	[Serializable]
 	/// <summary>
 	/// Es sólo una listaPeso de enteros largos.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
+	[Serializable]
+	[Obsolete]
 	public class ListaContador<T> : ListaPeso<T, long>
 	{
 		public ListaContador ()

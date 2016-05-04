@@ -8,6 +8,7 @@ namespace Pruebas
 	public class TestListaPeso
 	{
 		[Test]
+		[Obsolete]
 		public void TestCase ()
 		{
 			var lp = new ListaPeso<int> ();
@@ -26,6 +27,7 @@ namespace Pruebas
 		}
 
 		[Test]
+		[Obsolete]
 		public void TestMulti ()
 		{
 			var lp = new ListaPesoFloat<int, int> ();
@@ -36,6 +38,7 @@ namespace Pruebas
 		}
 
 		[Test]
+		[Obsolete]
 		public void TestSumaDuplicada ()
 		{
 			var lp = new ListaPeso<int> ();

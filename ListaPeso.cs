@@ -4,12 +4,13 @@ using System.Linq;
 
 namespace ListasExtra
 {
-	[Serializable]
 	/// <summary>
 	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
 	/// </summary>
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="TVal">Rango(co-dominio) de la función.</typeparam>
+	[Serializable]
+	[Obsolete]
 	public class ListaPeso<T, TVal> : IDictionary<T, TVal>, IEquatable<IDictionary<T, TVal>>
 	{
 		#region Accesor
@@ -474,17 +475,17 @@ namespace ListasExtra
 		#endregion
 	}
 
-	[Serializable]
 	/// <summary>
 	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
 	/// </summary>
 	/// <typeparam name="T1">Tipo de parámetro de la funcion</typeparam>
 	/// <typeparam name="T2">Tipo de parámetro de la funcion</typeparam>
 	/// <typeparam name="TVal">Tipo de valor</typeparam>
+	[Serializable]
+	[Obsolete]
 	public class ListaPeso<T1, T2, TVal> 
 		: ListaPeso<Tuple<T1, T2>, TVal>
 	{
-
 		/// <summary>
 		/// Initializes a new instance of the ListaPeso class.
 		/// </summary>
@@ -513,6 +514,7 @@ namespace ListasExtra
 	}
 
 	[Serializable]
+	[Obsolete]
 	public class ListaPeso<T> : ListaPeso<T, Single>, IComparable<IDictionary<T, Single>>
 	{
 		public ListaPeso (IDictionary<T, float> modelo = null)
@@ -609,12 +611,13 @@ namespace ListasExtra
 
 	}
 
-	[Serializable]
 	/// <summary>
 	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
 	/// </summary>
 	/// <typeparam name="T1">Tipo de parámetro de la funcion</typeparam>
 	/// <typeparam name="T2">Tipo de parámetro de la funcion</typeparam>
+	[Serializable]
+	[Obsolete]
 	public class ListaPesoFloat<T1, T2> : ListaPeso<T1, T2, float>
 	{
 		public ListaPesoFloat ()
