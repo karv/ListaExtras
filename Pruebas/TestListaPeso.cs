@@ -66,6 +66,22 @@ namespace Pruebas
 			}
 		}
 
+		[Test]
+		public void TestDataContract ()
+		{
+			var lp = new ListaPeso<int> ();
+			for (int i = 0; i < 100; i++)
+			{
+				lp [i] = i;
+			}
 
+			Store.DataContractStore<ListaPeso<int>>.Serialize ("test.xml", lp);
+			var lpClone = Store.DataContractStore<ListaPeso<int>>.Deserialize ("test.xml");
+
+			for (int i = 0; i < 100; i++)
+			{
+				Assert.AreEqual (lp [i], lpClone [i]);
+			}
+		}
 	}
 }
