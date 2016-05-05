@@ -2,13 +2,16 @@
 
 namespace ListasExtra.Poset
 {
+	/// <summary>
+	/// Representa un objeto que tiene depencencias a otros objetos de tipo dado
+	/// </summary>
 	public interface IReqPoset<T>
 	{
 		/// <summary>
 		/// Objeto vinculado
 		/// </summary>
 		/// <value>The objeto.</value>
-		T Objeto{ get; }
+		T Objeto { get; }
 
 		/// <summary>
 		/// Requicitos

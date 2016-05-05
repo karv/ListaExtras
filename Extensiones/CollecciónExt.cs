@@ -24,6 +24,11 @@ namespace ListasExtra.Extensiones
 			return lista [r.Next (lista.Count)];
 		}
 
+		/// <summary>
+		/// Devuelve un elemento aleatorio de una colección
+		/// </summary>
+		/// <param name="coll">Colección</param>
+		/// <param name="r">Generador aleatorio</param>
 		public static T Aleatorio<T> (this ICollection<T> coll, Random r = null)
 		{
 			if (coll == null)
@@ -33,8 +38,10 @@ namespace ListasExtra.Extensiones
 
 			r = r ?? random;
 			int currrnd = coll.Count;
-			foreach (var x in coll) {
-				if (r.Next (currrnd--) == 0) {
+			foreach (var x in coll)
+			{
+				if (r.Next (currrnd--) == 0)
+				{
 					return x;
 				}
 			}
@@ -42,4 +49,3 @@ namespace ListasExtra.Extensiones
 		}
 	}
 }
-

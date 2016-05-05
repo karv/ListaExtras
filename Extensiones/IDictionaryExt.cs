@@ -230,8 +230,48 @@ namespace ListasExtra.Extensiones
 			return true;
 		}
 
-		#endregion
+		/// <summary>
+		/// Devuelve un nuevo diccionario que consiste en el producto escalar con un entero y este diccionario.
+		/// </summary>
+		/// <param name="dict">Diccionario</param>
+		/// <param name="veces">Factor</param>
+		public static Dictionary<TKey, int> Veces<TKey> (this IDictionary<TKey, int> dict,
+		                                                 int veces)
+		{
+			var ret = new Dictionary<TKey, int> ();
+			foreach (var x in dict)
+				ret.Add (x.Key, x.Value * veces);
+			return ret;
+		}
 
-		// TODO los comparadores de orden entre diccionarios
+		/// <summary>
+		/// Devuelve un nuevo diccionario que consiste en el producto escalar con un flotante y este diccionario.
+		/// </summary>
+		/// <param name="dict">Diccionario</param>
+		/// <param name="veces">Factor</param>
+		public static Dictionary<TKey, float> Veces<TKey> (this IDictionary<TKey, float> dict,
+		                                                   float veces)
+		{
+			var ret = new Dictionary<TKey, float> ();
+			foreach (var x in dict)
+				ret.Add (x.Key, x.Value * veces);
+			return ret;
+		}
+
+		/// <summary>
+		/// Devuelve un nuevo diccionario que consiste en el producto escalar con un double y este diccionario.
+		/// </summary>
+		/// <param name="dict">Diccionario</param>
+		/// <param name="veces">Factor</param>
+		public static Dictionary<TKey, double> Veces<TKey> (this IDictionary<TKey, double> dict,
+		                                                    double veces)
+		{
+			var ret = new Dictionary<TKey, double> ();
+			foreach (var x in dict)
+				ret.Add (x.Key, x.Value * veces);
+			return ret;
+		}
+
+		#endregion
 	}
 }

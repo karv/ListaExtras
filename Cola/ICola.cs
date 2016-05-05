@@ -16,7 +16,7 @@ namespace ListasExtra.Cola
 		/// <summary>
 		/// Devuelve el último objeto en la cola. No lo elimina
 		/// </summary>
-		T Mirar{ get; }
+		T Mirar { get; }
 
 		/// <summary>
 		/// Agrega un objeto a la cola.
@@ -24,7 +24,9 @@ namespace ListasExtra.Cola
 		/// <param name="obj">Objeto a agregar</param>
 		void Encolar (T obj);
 
-		ulong Count{ get; }
+		/// <summary>
+		/// Número de objetos encolados
+		/// </summary>
+		ulong Count { get; }
 	}
 }
-

@@ -7,7 +7,6 @@ namespace ListasExtra
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	[Serializable]
-	[Obsolete]
 	public class ListaContador<T> : ListaPeso<T, long>
 	{
 		public ListaContador ()

@@ -8,7 +8,6 @@ namespace Pruebas
 	public class TestSerial
 	{
 		[Test]
-		[Obsolete]
 		public void TestListaPeso ()
 		{
 			var rr = new ListaPeso<int> ();

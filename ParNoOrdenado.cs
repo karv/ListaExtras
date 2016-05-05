@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ListasExtra
 {
@@ -109,8 +110,17 @@ namespace ListasExtra
 				throw new Exception ("No existe el único no nulo en el par " + this);
 			}
 		}
-		// Analysis restore CompareNonConstrainedGenericWithNull
 
+		/// <summary>
+		/// Devuelve un conjunto que representa a este par.
+		/// </summary>
+		public Set.Set<T> AsSet ()
+		{
+			var ret = new Set.Set<T> ();
+			ret.Add (A);
+			ret.Add (B);
+			return ret;
+		}
 
 		public override string ToString ()
 		{

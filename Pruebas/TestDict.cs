@@ -45,6 +45,8 @@ namespace Pruebas
 
 			var dict3 = IDictionaryExt.Restar (dict2, dict1);
 			Assert.True (IDictionaryExt.IgualPorEntrada (dict3, dict1));
+
+			Assert.True (IDictionaryExt.IgualPorEntrada (dict1.Veces (2), dict2));
 		}
 	}
 }
