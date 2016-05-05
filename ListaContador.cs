@@ -6,6 +6,7 @@ namespace ListasExtra
 	/// Es sólo una listaPeso de enteros largos.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
+	[Serializable]
 	public class ListaContador<T> : ListaPeso<T, long>
 	{
 		public ListaContador ()
@@ -16,8 +17,10 @@ namespace ListasExtra
 		public long ContarSi (Func<T, bool> selector)
 		{
 			long ret = 0;
-			foreach (var x in Keys) {
-				if (selector.Invoke (x)) {
+			foreach (var x in Keys)
+			{
+				if (selector.Invoke (x))
+				{
 					ret += this [x];
 				}
 			}
@@ -26,4 +29,3 @@ namespace ListasExtra
 		}
 	}
 }
-

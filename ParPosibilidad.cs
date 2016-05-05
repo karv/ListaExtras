@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace ListasExtra
 {
+	[Serializable]
 	/// <summary>
 	/// Representa un par ordenado de posibiildad
 	/// </summary>

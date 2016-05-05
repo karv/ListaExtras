@@ -29,7 +29,8 @@ namespace ListasExtra.Lock
 	/// </summary>
 	public class ListaPesoBloqueable<TKey, TVal> : ListaPeso<TKey, TVal>, IListBloqueable<KeyValuePair<TKey, TVal>>
 	{
-		public ListaPesoBloqueable (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo) : base (operSuma, objetoNulo)
+		public ListaPesoBloqueable (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
+			: base (operSuma, objetoNulo)
 		{
 		}
 
@@ -38,7 +39,8 @@ namespace ListasExtra.Lock
 		/// </summary>
 		public void Commit ()
 		{
-			foreach (var x in Promesas) {
+			foreach (var x in Promesas)
+			{
 				this [x.Key] = Suma (base [x.Key], x.Value);
 			}
 			Promesas.Clear ();
@@ -48,7 +50,8 @@ namespace ListasExtra.Lock
 		{
 			if (Bloqueado)
 				Promesas.Add (new KeyValuePair<TKey, TVal> (key, val));
-			else {
+			else
+			{
 				base [key] = Suma (base [key], val);
 			}
 		}
@@ -59,15 +62,19 @@ namespace ListasExtra.Lock
 
 		bool _locked;
 
-		public bool Bloqueado {
-			get {
+		public bool Bloqueado
+		{
+			get
+			{
 				return _locked;
 			}
-			set {
+			set
+			{
 				bool released = _locked && !value;
 				_locked = value;
 
-				if (released) {
+				if (released)
+				{
 					Commit ();
 
 					if (OnRelease != null)
@@ -78,17 +85,23 @@ namespace ListasExtra.Lock
 
 		IList<KeyValuePair<TKey, TVal>> Promesas = new List<KeyValuePair<TKey, TVal>> ();
 
-		public new TVal this [TKey key] {
-			get {
+		public new TVal this [TKey key]
+		{
+			get
+			{
 				return base [key];
 			}
 
-			set {
-				if (Bloqueado) {
+			set
+			{
+				if (Bloqueado)
+				{
 					System.Diagnostics.Debug.Write ("Use ListaPesoBloqueable.Add (key, delta) en lugar de éste si es posible.");
 
 					Promesas.Add (new KeyValuePair<TKey, TVal> (key, value));
-				} else {
+				}
+				else
+				{
 					base [key] = value; 
 				}
 			}
@@ -102,15 +115,18 @@ namespace ListasExtra.Lock
 		{
 			Bloqueado = true;
 			var x = new  LockEnumerator<KeyValuePair<TKey, TVal>> (base.GetEnumerator ());
-			x.OnTerminate = unblock;
+			x.OnTerminate += unblock;
 			return x;
 		}
 
-		bool IListBloqueable<KeyValuePair<TKey, TVal>>.Bloqueado {
-			get {
+		bool IListBloqueable<KeyValuePair<TKey, TVal>>.Bloqueado
+		{
+			get
+			{
 				return Bloqueado;
 			}
-			set {
+			set
+			{
 				Bloqueado = value;
 			}
 		}
@@ -118,7 +134,7 @@ namespace ListasExtra.Lock
 		IEnumerator<KeyValuePair<TKey, TVal>> IEnumerable<KeyValuePair<TKey, TVal>>.GetEnumerator ()
 		{
 			var x = new  LockEnumerator<KeyValuePair<TKey, TVal>> (base.GetEnumerator ());
-			x.OnTerminate = unblock;
+			x.OnTerminate += unblock;
 			Bloqueado = true;
 			return x;
 		}
@@ -139,7 +155,8 @@ namespace ListasExtra.Lock
 	/// </summary>
 	public class ListaPesoBloqueable<T> : ListaPesoBloqueable<T, float>
 	{
-		public ListaPesoBloqueable () : base ((x, y) => x + y, 0)
+		public ListaPesoBloqueable ()
+			: base ((x, y) => x + y, 0)
 		{
 		}
 
@@ -151,13 +168,12 @@ namespace ListasExtra.Lock
 		/// <param name="comparador">Una lista para comparar</param>
 		public bool Contains (ListaPeso<T> comparador)
 		{
-			foreach (var x in comparador) {
+			foreach (var x in comparador)
+			{
 				if (this [x.Key] < x.Value)
 					return false;
 			}
 			return true;
 		}
-
-
 	}
 }

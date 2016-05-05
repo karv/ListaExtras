@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ListaExtrasGtk</id>
+    <version>0.1</version>
+    <title>ListaExtras Gtk</title>
+    <authors>Edgar Carballo</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Enlace de ListaExtras para modelos de datos internos Gtk</description>
+    <copyright>Copyright 2016</copyright>
+    <tags>ListaExtras Gtk</tags>
+  </metadata>
+  <files>
+    <file src="bin/Release/Gtk.dll" target="lib" />
+  </files>
+</package>

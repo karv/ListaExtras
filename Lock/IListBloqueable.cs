@@ -35,4 +35,3 @@ namespace ListasExtra.Lock
 		bool Bloqueado { get; set; }
 	}
 }
-

@@ -1,17 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
+using System;
 
 namespace ListasExtra
 {
-	public class ListaCíclica<T>:List<T>, IEnumerable<T>, IEnumerable
+	[Serializable]
+	/// <summary>
+	/// Arreglo 1-dimensional de tamaño dinámico de índices cíclicos
+	/// </summary>
+	public class ListaCíclica<T> : List<T>, IEnumerable<T>, IEnumerable
 	{
 		int _internalZero;
 
-		int InternalZero {
-			get {
+		int InternalZero
+		{
+			get
+			{
 				return _internalZero;
 			}
-			set {
+			set
+			{
 				_internalZero = value % Count;
 				if (_internalZero < 0)
 					_internalZero += Count;
@@ -29,7 +37,8 @@ namespace ListasExtra
 		/// Initializes a new instance of this class.
 		/// </summary>
 		/// <param name="coll">Colección inicial</param>
-		public ListaCíclica (IEnumerable<T> coll) : base (coll)
+		public ListaCíclica (IEnumerable<T> coll)
+			: base (coll)
 		{
 		}
 
@@ -37,11 +46,14 @@ namespace ListasExtra
 		/// Gets or sets the element with the specified i.
 		/// </summary>
 		/// <param name="i">The index.</param>
-		public new T this [int i] {
-			get {
+		public new T this [int i]
+		{
+			get
+			{
 				return base [(i + InternalZero) % Count];
 			}
-			set {
+			set
+			{
 				base [(i + InternalZero) % Count] = value;
 			}
 		}
@@ -49,8 +61,10 @@ namespace ListasExtra
 		/// <summary>
 		/// Devuelve el siguiente elemento de la lista
 		/// </summary>
-		public T Siguiente {
-			get {
+		public T Siguiente
+		{
+			get
+			{
 				var ret = base [InternalZero];
 				InternalZero++;
 				return ret;
@@ -86,22 +100,26 @@ namespace ListasExtra
 		/// <summary>
 		/// Mira el siguiente elemento de la lista, sin mover el cursor.
 		/// </summary>
-		public T Peek {
-			get {
+		public T Peek
+		{
+			get
+			{
 				return this [0];
 			}
 		}
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator ()
 		{
-			for (int i = 0; i < Count; i++) {
+			for (int i = 0; i < Count; i++)
+			{
 				yield return this [i];
 			}
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
-			for (int i = 0; i < Count; i++) {
+			for (int i = 0; i < Count; i++)
+			{
 				yield return this [i];
 			}
 		}
@@ -126,7 +144,8 @@ namespace ListasExtra
 		public override string ToString ()
 		{
 			var ret = string.Format ("ListaCíclica:\n");
-			for (int i = 0; i < Count; i++) {
+			for (int i = 0; i < Count; i++)
+			{
 				ret += ":" + this [i];
 			}
 			return ret;
