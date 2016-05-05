@@ -27,7 +27,6 @@ namespace ListasExtra.Lock
 	/// <summary>
 	/// Es una listapeso en el que se puede editar mientras se realiza una iteración 'foreach'.
 	/// </summary>
-	[Obsolete]
 	public class ListaPesoBloqueable<TKey, TVal> : ListaPeso<TKey, TVal>, IListBloqueable<KeyValuePair<TKey, TVal>>
 	{
 		public ListaPesoBloqueable (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
@@ -154,7 +153,6 @@ namespace ListasExtra.Lock
 	/// <summary>
 	/// Lista peso bloqueable.
 	/// </summary>
-	[Obsolete]
 	public class ListaPesoBloqueable<T> : ListaPesoBloqueable<T, float>
 	{
 		public ListaPesoBloqueable ()
