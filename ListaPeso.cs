@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace ListasExtra
 {
@@ -55,28 +56,31 @@ namespace ListasExtra
 
 		#region Internos
 
+		[DataMember]
 		protected IDictionary<T, TVal> Model { get; }
 
 		/// <summary>
 		/// La operación suma.
 		/// </summary>
+		[DataMember]
 		public Func<TVal, TVal, TVal> Suma;
 		/// <summary>
 		/// La operación inverso, si la tiene.
 		/// </summary>
+		[DataMember]
 		public Func<TVal, TVal> Inv;
-
 
 		/// <summary>
 		/// Devuelve o establece qué función sirve para saber si dos T's son idénticos para esta lista.
 		/// Por default es x.Equals(y).
 		/// </summary>
+		[DataMember]
 		public Func<T, T, bool> Comparador { get; set; }
-
 
 		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
 		/// </summary>
+		[DataMember]
 		public TVal Nulo { get; set; }
 
 		public ReadonlyPair<T, TVal> Entrada (T entrada)
@@ -271,6 +275,7 @@ namespace ListasExtra
 
 		protected ListaPeso ()
 		{
+			Model = new Dictionary<T, TVal> ();
 			// Analysis disable ConvertIfStatementToConditionalTernaryExpression
 			if (typeof (T).IsAssignableFrom (typeof (IEquatable<T>)))
 				Comparador = (x, y) => ((IEquatable<T>)x).Equals (y);
@@ -323,7 +328,21 @@ namespace ListasExtra
 
 		public bool Equals (IDictionary<T, TVal> other)
 		{
-			return this == other;
+			var supp = Soporte ();
+			supp.UnionWith (other.Keys);
+			foreach (var x in supp)
+			{
+				if (other.ContainsKey (x))
+				{
+					if (!this [x].Equals (other [x]))
+						return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 
 		#endregion
@@ -421,54 +440,14 @@ namespace ListasExtra
 			return ret;
 		}
 
-		public static bool operator == (ListaPeso<T, TVal> left,
-		                                IDictionary<T, TVal> right)
-		{
-			var supp = left.Soporte ();
-			supp.UnionWith (right.Keys);
-			foreach (var x in supp)
-			{
-				if (right.ContainsKey (x))
-				{
-					if (!left [x].Equals (right [x]))
-						return false;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			return true;
-		}
+		#endregion
 
-		public static bool operator != (ListaPeso<T, TVal> left,
-		                                IDictionary<T, TVal> right)
-		{
-			return !(left == right);
-		}
+		#region Serializable
 
-
-		public override bool Equals (object obj)
+		public void GetObjectData (SerializationInfo info, StreamingContext context)
 		{
-			var dict = obj as IDictionary<T, TVal>;
-			if (dict == null)
-			{
-				return false;
-			}
-			else
-			{
-				return this == dict;
-			}
-		}
-
-		public override int GetHashCode ()
-		{
-			int ret = 0;
-			foreach (var x in Keys)
-				ret += x.GetHashCode ();
-			foreach (var x in Values)
-				ret += x.GetHashCode ();
-			return ret;
+			var iser = Model as ISerializable;
+			iser.GetObjectData (info, context);
 		}
 
 		#endregion
@@ -618,6 +597,15 @@ namespace ListasExtra
 	{
 		public ListaPesoFloat ()
 			: base ((x, y) => x + y, 0)
+		{
+		}
+
+		public ListaPesoFloat (Func<float, float, float> operSuma,
+		                       float objetoNulo,
+		                       IDictionary<Tuple<T1, T2>, float> modelo)
+			: base (operSuma,
+			        objetoNulo,
+			        modelo)
 		{
 		}
 	}
