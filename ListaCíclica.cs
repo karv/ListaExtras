@@ -12,7 +12,7 @@ namespace ListasExtra
 	{
 		int _internalZero;
 
-		int InternalZero
+		protected int InternalZero
 		{
 			get
 			{
