@@ -12,7 +12,7 @@ namespace ListasExtra
 	{
 		int _internalZero;
 
-		int InternalZero
+		protected int InternalZero
 		{
 			get
 			{
@@ -43,6 +43,15 @@ namespace ListasExtra
 		}
 
 		/// <summary>
+		/// Mueve la base cero del cursor un entero.
+		/// </summary>
+		/// <param name="index">Index.</param>
+		public void Move (int index)
+		{
+			InternalZero += index;
+		}
+
+		/// <summary>
 		/// Gets or sets the element with the specified i.
 		/// </summary>
 		/// <param name="i">The index.</param>
@@ -56,6 +65,11 @@ namespace ListasExtra
 			{
 				base [(i + InternalZero) % Count] = value;
 			}
+		}
+
+		public new void RemoveAt (int index)
+		{
+			base.RemoveAt ((index + InternalZero) % Count);
 		}
 
 		/// <summary>
