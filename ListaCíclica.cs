@@ -20,6 +20,11 @@ namespace ListasExtra
 			}
 			set
 			{
+				if (Count == 0)
+				{
+					_internalZero = 0;
+					return;
+				}
 				_internalZero = value % Count;
 				if (_internalZero < 0)
 					_internalZero += Count;
