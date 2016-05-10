@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ListasExtra
 {
-	[Serializable]
 	/// <summary>
 	/// Par no ordenado.
 	/// </summary>
+	[Serializable]
 	public struct ParNoOrdenado<T> : IEquatable<ParNoOrdenado<T>> 
 		where T : IEquatable<T>
 	{
@@ -14,6 +13,11 @@ namespace ListasExtra
 
 		T B { get; }
 
+		/// <summary>
+		/// Initializes a new instance of this struct.
+		/// </summary>
+		/// <param name="a">Entrada cero</param>
+		/// <param name="b">Entrada uno</param>
 		public ParNoOrdenado (T a, T b)
 		{
 			A = a;
@@ -40,6 +44,10 @@ namespace ListasExtra
 			throw new Exception ("No existe el ÚNICO punto distinto de el punto dado.");
 		}
 
+		/// <summary>
+		/// Devuelve la primera o segunda entrada de este par
+		/// </summary>
+		/// <param name="i">Entrada, base cero</param>
 		public T this [int i]
 		{
 			get
@@ -52,6 +60,12 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified ParOrdenado is equal to the current ParOrdenado"/>.
+		/// </summary>
+		/// <param name="other">The ParOrdenado  to compare with the current ParOrdenado .</param>
+		/// <returns><c>true</c> if the specified ParOrdenado is equal to the current
+		/// ParOrdenado; otherwise, <c>false</c>.</returns>
 		public bool Equals (ParNoOrdenado<T> other)
 		{
 			var numn = NumNulos;
@@ -77,9 +91,9 @@ namespace ListasExtra
 			}
 		}
 
-		// Analysis disable CompareNonConstrainedGenericWithNull
 		/// <summary>
 		/// El número de nulos
+		/// </summary>
 		/// <value>The number nulos.</value>
 		int NumNulos
 		{

@@ -20,17 +20,20 @@ namespace Pruebas
 			Assert.AreEqual (1, p.Excepto (0));
 
 			Assert.AreEqual (p, new ParNoOrdenado<int> (1, 0));
-			Assert.Throws<Exception> (delegate {
+			Assert.Throws<Exception> (delegate
+			{
 				p.Excepto (2);
 			});
 
 			Assert.AreEqual (p [0], 0);
 			Assert.AreEqual (p [1], 1);
-			Assert.Throws<IndexOutOfRangeException> (delegate {
+			Assert.Throws<IndexOutOfRangeException> (delegate
+			{
 				p.Excepto (p [2]);
 			});
 
-			Assert.Throws<IndexOutOfRangeException> (delegate {
+			Assert.Throws<IndexOutOfRangeException> (delegate
+			{
 				p.Excepto (p [-1]);
 			});
 
@@ -44,7 +47,8 @@ namespace Pruebas
 			var B = new List<int> ();
 			var pp = new ParPosibilidad<int> (A, B);
 
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 100; i++)
+			{
 				B.Add (i);
 			}
 
@@ -78,4 +82,3 @@ namespace Pruebas
 		}
 	}
 }
-

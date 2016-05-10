@@ -4,14 +4,17 @@ using System;
 
 namespace ListasExtra
 {
-	[Serializable]
 	/// <summary>
 	/// Arreglo 1-dimensional de tamaño dinámico de índices cíclicos
 	/// </summary>
+	[Serializable]
 	public class ListaCíclica<T> : List<T>, IEnumerable<T>, IEnumerable
 	{
 		int _internalZero;
 
+		/// <summary>
+		/// El valor de índice que está desfasada esta clase de la List base
+		/// </summary>
 		protected int InternalZero
 		{
 			get
@@ -72,6 +75,10 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Removes at index.
+		/// </summary>
+		/// <param name="index">Index.</param>
 		public new void RemoveAt (int index)
 		{
 			base.RemoveAt ((index + InternalZero) % Count);
@@ -160,6 +167,9 @@ namespace ListasExtra
 			return (this as IEnumerable).GetEnumerator ();
 		}
 
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents this"/>.
+		/// </summary>
 		public override string ToString ()
 		{
 			var ret = string.Format ("ListaCíclica:\n");

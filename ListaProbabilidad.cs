@@ -3,24 +3,30 @@ using System.Collections.Generic;
 
 namespace ListasExtra
 {
-	[Serializable]
 	/// <summary>
 	/// Una lista de probabilidades
 	/// </summary>
+	[Serializable]
 	public class ListaProbabilidad<T> : ICollection<T>
 	{
+		/// <param name="peso">Función que asigna peso a cada elemento</param>
 		public ListaProbabilidad (Func<T, double> peso)
 		{
 			Randomizer = new Random ();
 			Peso = peso;
 		}
 
+		/// <param name="peso">Función que asigna peso a cada elemento</param>
+		/// <param name="rand">Fuente de entropía</param>
 		public ListaProbabilidad (Func<T, double> peso, Random rand)
 		{
 			Randomizer = rand;
 			Peso = peso;
 		}
 
+		/// <param name="lista">Colección inicial</param>
+		/// <param name="peso">Función que asigna peso a cada elemento</param>
+		/// <param name="rand">Fuente de entropía</param>
 		public ListaProbabilidad (IEnumerable<T> lista,
 		                          Func<T, double> peso,
 		                          Random rand = null)
@@ -79,7 +85,7 @@ namespace ListasExtra
 			if (Count == 0)
 				throw new NotMeasureException ();
 
-			var norm = _normalizedData ();
+			var norm = NormalizedData ();
 			var st = Randomizer.NextDouble ();
 			foreach (var d in norm)
 			{
@@ -90,6 +96,9 @@ namespace ListasExtra
 			throw new Exception ("¿Qué pasó aquí?");
 		}
 
+		/// <summary>
+		/// Devuelve el número de elementos.
+		/// </summary>
 		public int Count
 		{
 			get
@@ -98,7 +107,10 @@ namespace ListasExtra
 			}
 		}
 
-		public double Suma ()
+		/// <summary>
+		/// Devuelve la suma de los pesos de sus elementos
+		/// </summary>
+		protected double Suma ()
 		{
 			var _dataSnapshot = AsDictionary ();
 			double suma = 0;
@@ -115,7 +127,11 @@ namespace ListasExtra
 			return suma;
 		}
 
-		Dictionary<T, double> _normalizedData ()
+		/// <summary>
+		/// Normaliza el peso para convertirlo en probabilidad
+		/// </summary>
+		/// <returns>The data.</returns>
+		protected Dictionary<T, double> NormalizedData ()
 		{
 			var suma = Suma ();
 			if (suma == 0)
@@ -187,26 +203,34 @@ namespace ListasExtra
 
 		#endregion
 
-		[Serializable]
 		/// <summary>
 		/// Exception cuando se intenta usar una medida como probabilidad cuando no lo es.
 		/// </summary>
+		[Serializable]
 		public class NotMeasureException : Exception
 		{
+			/// <summary>
+			/// Initializes a new instance of this class.
+			/// </summary>
 			public NotMeasureException ()
 			{
 			}
 
+			/// <param name="message">Message.</param>
 			public NotMeasureException (string message)
 				: base (message)
 			{
 			}
 
+			/// <param name="message">Message.</param>
+			/// <param name="inner">Inner.</param>
 			public NotMeasureException (string message, Exception inner)
 				: base (message, inner)
 			{
 			}
 
+			/// <param name="info">Info.</param>
+			/// <param name="context">Context.</param>
 			protected NotMeasureException (System.Runtime.Serialization.SerializationInfo info,
 			                               System.Runtime.Serialization.StreamingContext context)
 				: base (info,

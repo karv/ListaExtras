@@ -26,7 +26,6 @@ namespace Pruebas
 			}
 
 			Assert.AreEqual (10, prob.Count);
-			Assert.AreEqual (45, prob.Suma ());
 
 			const double expFactor = numPruebas / 45.0;
 

@@ -2,13 +2,16 @@
 
 namespace ListasExtra.Set
 {
-	[System.Diagnostics.DebuggerDisplayAttribute ("Count = {Count}")]
 	/// <summary>
 	/// Representa un conjunto de elementos sin un control sobre el orden.
 	/// </summary>
 	/// <typeparam name="T">Tipo de objetos</typeparam>
+	[System.Diagnostics.DebuggerDisplayAttribute ("Count = {Count}")]
 	public class Set<T> : HashSet<T>, ISet<T>
 	{
+		/// <summary>
+		/// Initializes a new instance of this class.
+		/// </summary>
 		public Set ()
 		{
 			_dat = new HashSet<T> ();
@@ -43,6 +46,5 @@ namespace ListasExtra.Set
 			_dat.Remove (ret);
 			return ret;
 		}
-			
 	}
 }
