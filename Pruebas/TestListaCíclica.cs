@@ -77,6 +77,15 @@ namespace Pruebas
 			test.Move (3);
 			test.Add (3);
 			Assert.AreEqual (3, test [0]);
+
+			test.Clear ();
+			test.Add (0);
+			test.Add (1);
+			test.Add (2);
+			test.RemoveAt (0);
+			test.RemoveAt (0);
+			test.RemoveAt (0);
+			test.Add (3);
 		}
 	}
 }

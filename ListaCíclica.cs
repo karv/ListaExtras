@@ -75,6 +75,16 @@ namespace ListasExtra
 		public new void RemoveAt (int index)
 		{
 			base.RemoveAt ((index + InternalZero) % Count);
+			InternalZero = _internalZero;
+		}
+
+		/// <summary>
+		/// Vacía esta lista y devuelve el cursor a cero
+		/// </summary>
+		public new void Clear ()
+		{
+			InternalZero = 0;
+			base.Clear ();
 		}
 
 		/// <summary>
