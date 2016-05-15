@@ -19,8 +19,8 @@ namespace ListasExtra
 		{
 			get
 			{
-				TVal ret;
-				return TryGetValue (key, out ret) ? ret : Nulo;
+				var ret = Entrada (key);
+				return ret == null ? Nulo : ret.Value;
 			}
 			set
 			{
@@ -83,15 +83,15 @@ namespace ListasExtra
 		[DataMember]
 		public TVal Nulo { get; set; }
 
+		/// <summary>
+		/// Devuelve la entrada correspondiente a un Key
+		/// </summary>
+		/// <param name="entrada">Key de la entrada</param>
 		public ReadonlyPair<T, TVal> Entrada (T entrada)
 		{
 			foreach (var x in this)
-			{
-				if (x.Key.Equals (entrada))
-				{
+				if (Comparador (x.Key, entrada))
 					return new ReadonlyPair<T, TVal> (x);
-				}
-			}
 			return null;
 		}
 
@@ -277,7 +277,7 @@ namespace ListasExtra
 		{
 			Model = new Dictionary<T, TVal> ();
 			// Analysis disable ConvertIfStatementToConditionalTernaryExpression
-			if (typeof (T).IsAssignableFrom (typeof (IEquatable<T>)))
+			if (typeof (T).GetInterfaces ().Contains (typeof (IEquatable<T>)))
 				Comparador = (x, y) => ((IEquatable<T>)x).Equals (y);
 			else
 				Comparador = (x, y) => x.Equals (y);
@@ -474,6 +474,13 @@ namespace ListasExtra
 		                  IDictionary<Tuple<T1, T2>, TVal> modelo = null)
 			: base (operSuma, objetoNulo, modelo)
 		{
+			if (typeof (T1).GetInterfaces ().Contains (typeof (IEquatable<T1>)) &&
+			    typeof (T2).GetInterfaces ().Contains (typeof (IEquatable<T2>)))
+				Comparador = (x, y) => 
+				(((IEquatable<T1>)x.Item1).Equals (y.Item1) &&
+				((IEquatable<T2>)x.Item2).Equals (y.Item2));
+			else
+				Comparador = (x, y) => x.Equals (y);
 		}
 
 		public TVal this [T1 x, T2 y]
