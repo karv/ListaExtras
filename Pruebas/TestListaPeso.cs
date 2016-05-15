@@ -66,22 +66,48 @@ namespace Pruebas
 			}
 		}
 
-		[Test]
-		public void TestDataContract ()
+		class WeirdInt : IEquatable<WeirdInt>
 		{
-			var lp = new ListaPeso<int> ();
-			for (int i = 0; i < 100; i++)
+			public int Valor;
+
+			public WeirdInt (int val)
 			{
-				lp [i] = i;
+				Valor = val;
 			}
 
-			Store.DataContractStore<ListaPeso<int>>.Serialize ("test.xml", lp);
-			var lpClone = Store.DataContractStore<ListaPeso<int>>.Deserialize ("test.xml");
-
-			for (int i = 0; i < 100; i++)
+			public bool Equals (WeirdInt obj)
 			{
-				Assert.AreEqual (lp [i], lpClone [i]);
+				if (obj == null)
+					return false;
+				if (ReferenceEquals (this, obj))
+					return true;
+				return Valor == obj.Valor;
 			}
+
+			public static implicit operator int (WeirdInt w)
+			{
+				return w.Valor;
+			}
+
+			public static implicit operator WeirdInt (int i)
+			{
+				return new WeirdInt (i);
+			}
+
+		}
+
+		[Test]
+		public void TestAccess ()
+		{
+			var cl = new ListaPeso<WeirdInt> ();
+			cl [0] = 3;
+			var tres = cl [0];
+			Assert.AreEqual (3, tres);
+
+			var cl2 = new ListaPesoFloat<WeirdInt, WeirdInt> ();
+			cl2 [0, 0] = 3;
+			tres = cl2 [0, 0];
+			Assert.AreEqual (3, tres);
 		}
 	}
 }
