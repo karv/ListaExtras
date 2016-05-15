@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ListaExtras</id>
-    <version>0.3.0.4</version>
+    <version>0.3.0.5</version>
     <title>Lista extras</title>
     <authors>Edgar Carballo</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -11,5 +11,6 @@
   </metadata>
   <files>
     <file src="bin/Release/ListaExtras.dll" target="lib" />
-  </files>
+    <file src="bin/Release/ListaExtras.xml" target="lib" />  
+</files>
 </package>
