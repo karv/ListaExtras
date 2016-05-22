@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ListasExtra.Set
 {
@@ -6,7 +7,7 @@ namespace ListasExtra.Set
 	/// Representa un conjunto de elementos sin un control sobre el orden.
 	/// </summary>
 	/// <typeparam name="T">Tipo de objetos</typeparam>
-	[System.Diagnostics.DebuggerDisplayAttribute ("Count = {Count}")]
+	[DebuggerDisplayAttribute ("Count = {Count}")]
 	public class Set<T> : HashSet<T>, ISet<T>
 	{
 		/// <summary>

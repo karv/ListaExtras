@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ListasExtra
 {
@@ -134,6 +135,15 @@ namespace ListasExtra
 			ret.Add (A);
 			ret.Add (B);
 			return ret;
+		}
+
+		/// <summary>
+		/// Enumera los elementos del par.
+		/// </summary>
+		public IEnumerable<T> Enumererar ()
+		{
+			yield return A;
+			yield return B;
 		}
 
 		public override string ToString ()
