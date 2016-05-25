@@ -31,10 +31,10 @@ namespace ListasExtra.Set
 		/// </summary>
 		public T Pick ()
 		{
-			T ret;
-			using (var en = _dat.GetEnumerator ())
-				ret = en.Current;
-			return ret;
+			using (var en = GetEnumerator ())
+				if (en.MoveNext ())
+					return en.Current;
+			throw new EmptySetException ("No se puede tomar un elemento de un conjunto vacío.");
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace ListasExtra.Set
 		public T PickRemove ()
 		{
 			var ret = Pick ();
-			_dat.Remove (ret);
+			Remove (ret);
 			return ret;
 		}
 	}
