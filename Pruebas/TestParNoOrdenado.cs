@@ -20,17 +20,20 @@ namespace Pruebas
 			Assert.AreEqual (1, p.Excepto (0));
 
 			Assert.AreEqual (p, new ParNoOrdenado<int> (1, 0));
-			Assert.Throws<Exception> (delegate {
+			Assert.Throws<Exception> (delegate
+			{
 				p.Excepto (2);
 			});
 
 			Assert.AreEqual (p [0], 0);
 			Assert.AreEqual (p [1], 1);
-			Assert.Throws<IndexOutOfRangeException> (delegate {
+			Assert.Throws<IndexOutOfRangeException> (delegate
+			{
 				p.Excepto (p [2]);
 			});
 
-			Assert.Throws<IndexOutOfRangeException> (delegate {
+			Assert.Throws<IndexOutOfRangeException> (delegate
+			{
 				p.Excepto (p [-1]);
 			});
 
@@ -44,7 +47,8 @@ namespace Pruebas
 			var B = new List<int> ();
 			var pp = new ParPosibilidad<int> (A, B);
 
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 100; i++)
+			{
 				B.Add (i);
 			}
 
@@ -76,6 +80,23 @@ namespace Pruebas
 			par2 = new ParNoOrdenado<string> ("1", "1");
 			Assert.AreNotEqual (par1, par2);
 		}
+
+		[Test]
+		public void Contiene ()
+		{
+			var nullpair = new ParNoOrdenado<int?> (null, null);
+			Assert.True (nullpair.Contiene (null));
+			Assert.False (nullpair.Contiene (0));
+
+			var nullpair2 = new ParNoOrdenado<int?> (null, 1);
+			Assert.True (nullpair2.Contiene (null));
+			Assert.True (nullpair2.Contiene (1));
+			Assert.False (nullpair2.Contiene (0));
+
+			var nullpair3 = new ParNoOrdenado<int?> (0, 1);
+			Assert.True (nullpair3.Contiene (0));
+			Assert.True (nullpair3.Contiene (1));
+			Assert.False (nullpair3.Contiene (null));
+		}
 	}
 }
-
