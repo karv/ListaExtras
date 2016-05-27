@@ -80,5 +80,23 @@ namespace Pruebas
 			par2 = new ParNoOrdenado<string> ("1", "1");
 			Assert.AreNotEqual (par1, par2);
 		}
+
+		[Test]
+		public void Contiene ()
+		{
+			var nullpair = new ParNoOrdenado<int?> (null, null);
+			Assert.True (nullpair.Contiene (null));
+			Assert.False (nullpair.Contiene (0));
+
+			var nullpair2 = new ParNoOrdenado<int?> (null, 1);
+			Assert.True (nullpair2.Contiene (null));
+			Assert.True (nullpair2.Contiene (1));
+			Assert.False (nullpair2.Contiene (0));
+
+			var nullpair3 = new ParNoOrdenado<int?> (0, 1);
+			Assert.True (nullpair3.Contiene (0));
+			Assert.True (nullpair3.Contiene (1));
+			Assert.False (nullpair3.Contiene (null));
+		}
 	}
 }
