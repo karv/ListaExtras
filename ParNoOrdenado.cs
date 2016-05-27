@@ -7,17 +7,19 @@ namespace ListasExtra
 	/// <summary>
 	/// Par no ordenado.
 	/// </summary>
-	public struct ParNoOrdenado<T> : IEquatable<ParNoOrdenado<T>> 
-		where T : IEquatable<T>
+	public struct ParNoOrdenado<T> : IEquatable<ParNoOrdenado<T>>
 	{
 		T A { get; }
 
 		T B { get; }
 
-		public ParNoOrdenado (T a, T b)
+		IEqualityComparer<T> comparador;
+
+		public ParNoOrdenado (T a, T b, IEqualityComparer<T> compara = null)
 		{
 			A = a;
 			B = b;
+			comparador = compara ?? EqualityComparer<T>.Default;
 		}
 
 		/// <summary>
@@ -25,7 +27,7 @@ namespace ListasExtra
 		/// </summary>
 		public bool Contiene (T x)
 		{
-			return A.Equals (x) || B.Equals (x);
+			return comparador.Equals (x, A) || comparador.Equals (x, B);
 		}
 
 		/// <summary>
@@ -33,9 +35,9 @@ namespace ListasExtra
 		/// </summary>
 		public T Excepto (T x)
 		{
-			if (A.Equals (x))
+			if (comparador.Equals (A, x))
 				return B;
-			if (B.Equals (x))
+			if (comparador.Equals (B, x))
 				return A;
 			throw new Exception ("No existe el ÚNICO punto distinto de el punto dado.");
 		}
