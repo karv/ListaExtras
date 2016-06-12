@@ -72,14 +72,14 @@ namespace ListasExtra
 		/// ParOrdenado; otherwise, <c>false</c>.</returns>
 		public bool Equals (ParNoOrdenado<T> other)
 		{
-			var numn = NumNulos;
+			var numn = numNoNulos;
 
-			if (numn != other.NumNulos)
+			if (numn != other.numNoNulos)
 				return false;
 			
 			switch (numn)
 			{
-				case 0:
+				case 0: // Aquí nunca debería entrar
 					return true;
 
 				case 1:
@@ -99,7 +99,7 @@ namespace ListasExtra
 		/// El número de nulos
 		/// </summary>
 		/// <value>The number nulos.</value>
-		int NumNulos
+		int numNoNulos
 		{
 			get
 			{ 
