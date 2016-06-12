@@ -471,7 +471,10 @@ namespace ListasExtra
 		                  TVal objetoNulo,
 		                  IDictionary<Tuple<T1, T2>, TVal> modelo = null,
 		                  IEqualityComparer<Tuple<T1, T2>> comparador = null)
-			: base (operSuma, objetoNulo, modelo, comparador)
+			: base (operSuma,
+			        objetoNulo,
+			        modelo,
+			        comparador ?? new TupleComparador<T1, T2> ())
 		{
 		}
 
