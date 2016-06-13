@@ -20,6 +20,8 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="a">Entrada cero</param>
 		/// <param name="b">Entrada uno</param>
+		/// <param name="compara">Comparador</param>
+		/// <remarks>Dejar el comparador nulo hace que tome el valor Default según EqualityComparer </remarks>
 		public ParNoOrdenado (T a, T b, IEqualityComparer<T> compara = null)
 		{
 			A = a;
@@ -88,9 +90,6 @@ namespace ListasExtra
 
 				case 2:
 					return (A.Equals (other.A) && B.Equals (other.B)) || A.Equals (other.B) && B.Equals (other.A);
-
-				default:
-					throw new Exception ("WTF?");
 			}
 		}
 
@@ -103,9 +102,9 @@ namespace ListasExtra
 			get
 			{ 
 				int ret = 0;
-				if (A != null)
+				if (!ReferenceEquals (A, null))
 					ret++;
-				if (B != null)
+				if (!ReferenceEquals (B, null))
 					ret++;
 				return ret;
 			}
@@ -119,9 +118,9 @@ namespace ListasExtra
 		{
 			get
 			{
-				if (A == null)
+				if (ReferenceEquals (A, null))
 					return B;
-				if (B == null)
+				if (ReferenceEquals (B, null))
 					return A;
 
 				throw new Exception ("No existe el único no nulo en el par " + this);
