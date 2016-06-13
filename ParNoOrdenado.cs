@@ -7,8 +7,7 @@ namespace ListasExtra
 	/// Par no ordenado.
 	/// </summary>
 	[Serializable]
-	public struct ParNoOrdenado<T> : IEquatable<ParNoOrdenado<T>> 
-		where T : IEquatable<T>
+	public struct ParNoOrdenado<T> : IEquatable<ParNoOrdenado<T>>
 	{
 		T A { get; }
 

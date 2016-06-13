@@ -67,6 +67,7 @@
     <Compile Include="Acotados\Float.cs" />
     <Compile Include="Árboles\IÁrbolEnraizado.cs" />
     <Compile Include="Set\EmptySetException.cs" />
+    <Compile Include="TupleComparador.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -27,7 +27,7 @@ namespace ListasExtra
 				// Encontrar la Key buscada.
 				foreach (var x in Keys.ToList())
 				{
-					if (Comparador (x, key))
+					if (Comparador.Equals (x, key))
 					{
 						TVal prev = Model [x];
 						Model [x] = value;
@@ -75,7 +75,7 @@ namespace ListasExtra
 		/// Por default es x.Equals(y).
 		/// </summary>
 		[DataMember]
-		public Func<T, T, bool> Comparador { get; set; }
+		public IEqualityComparer<T> Comparador { get; }
 
 		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
@@ -90,7 +90,7 @@ namespace ListasExtra
 		public ReadonlyPair<T, TVal> Entrada (T entrada)
 		{
 			foreach (var x in this)
-				if (Comparador (x.Key, entrada))
+				if (Comparador.Equals (x.Key, entrada))
 					return new ReadonlyPair<T, TVal> (x);
 			return null;
 		}
@@ -252,36 +252,34 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
-		protected ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
-			: this ()
+		protected ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                     TVal objetoNulo,
+		                     IEqualityComparer<T> comparador = null)
+			: this (comparador)
 		{
 			Suma = operSuma;
 			Nulo = objetoNulo;
 		}
 
 		/// <summary>
-		/// Inicializa una instancia de la clase a partir de un modelo de IDIccionary.
+		/// Inicializa una instancia de la clase a partir de un modelo de IDiccionary.
 		/// </summary>
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
 		/// <param name="modelo">Modelo</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo,
-		                  IDictionary<T, TVal> modelo = null)
-			: this (operSuma, objetoNulo)
+		                  IDictionary<T, TVal> modelo = null, 
+		                  IEqualityComparer<T> comparador = null)
+			: this (operSuma, objetoNulo, comparador)
 		{
-			Model = modelo ?? new Dictionary<T, TVal> ();
+			Model = modelo ?? new Dictionary<T, TVal> (Comparador);
 		}
 
-		protected ListaPeso ()
+		protected ListaPeso (IEqualityComparer<T> comparador = null)
 		{
-			Model = new Dictionary<T, TVal> ();
-			// Analysis disable ConvertIfStatementToConditionalTernaryExpression
-			if (typeof (T).GetInterfaces ().Contains (typeof (IEquatable<T>)))
-				Comparador = (x, y) => ((IEquatable<T>)x).Equals (y);
-			else
-				Comparador = (x, y) => x.Equals (y);
-			// Analysis restore ConvertIfStatementToConditionalTernaryExpression
+			Comparador = comparador ?? EqualityComparer<T>.Default;
+			Model = new Dictionary<T, TVal> (Comparador);
 		}
 
 		#endregion
@@ -292,7 +290,7 @@ namespace ListasExtra
 		{
 			foreach (var x in Keys)
 			{
-				if (Comparador (x, key))
+				if (Comparador.Equals (x, key))
 					return true;
 			}
 			return false;
@@ -371,7 +369,7 @@ namespace ListasExtra
 		{
 			if (Inv == null)
 				throw new NullReferenceException ("No está definito Inv");
-			var ret = new ListaPeso<T, TVal> (Suma, Nulo);
+			var ret = new ListaPeso<T, TVal> (Suma, Nulo, Comparador);
 			ret.Inv = Inv;
 			foreach (var x in Keys)
 			{
@@ -471,16 +469,13 @@ namespace ListasExtra
 		/// <param name="modelo">Modelo de diccionario</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo,
-		                  IDictionary<Tuple<T1, T2>, TVal> modelo = null)
-			: base (operSuma, objetoNulo, modelo)
+		                  IDictionary<Tuple<T1, T2>, TVal> modelo = null,
+		                  IEqualityComparer<Tuple<T1, T2>> comparador = null)
+			: base (operSuma,
+			        objetoNulo,
+			        modelo,
+			        comparador ?? new TupleComparador<T1, T2> ())
 		{
-			if (typeof (T1).GetInterfaces ().Contains (typeof (IEquatable<T1>)) &&
-			    typeof (T2).GetInterfaces ().Contains (typeof (IEquatable<T2>)))
-				Comparador = (x, y) => 
-				(((IEquatable<T1>)x.Item1).Equals (y.Item1) &&
-				((IEquatable<T2>)x.Item2).Equals (y.Item2));
-			else
-				Comparador = (x, y) => x.Equals (y);
 		}
 
 		public TVal this [T1 x, T2 y]
