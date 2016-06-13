@@ -91,6 +91,8 @@ namespace ListasExtra
 				case 2:
 					return (A.Equals (other.A) && B.Equals (other.B)) || A.Equals (other.B) && B.Equals (other.A);
 			}
+
+			throw new Exception ("Se supone que no es posible llegar aquí.");
 		}
 
 		/// <summary>
