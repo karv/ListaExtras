@@ -24,31 +24,29 @@ namespace ListasExtra
 			}
 			set
 			{
-				// Encontrar la Key buscada.
-				foreach (var x in Keys.ToList())
+				TVal val;
+				if (Model.TryGetValue (key, out val))
 				{
-					if (Comparador.Equals (x, key))
-					{
-						TVal prev = Model [x];
-						Model [x] = value;
-						AlCambiarValor?.Invoke (
-							this,
-							new CambioElementoEventArgs<T, TVal> (
-								key,
-								prev,
-								Model [x]));
-						return;
-					}
+					Model [key] = value;
+					AlCambiarValor?.Invoke (
+						this,
+						new CambioElementoEventArgs<T, TVal> (
+							key,
+							val,
+							value));
 				}
-
-				// Si es entrada nueva, se agrega.
-				Model.Add (key, value);
-				AlCambiarValor?.Invoke (
-					this,
-					new CambioElementoEventArgs<T, TVal> (
-						key,
-						Nulo,
-						Model [key]));
+				else
+				{
+					// Si es entrada nueva, se agrega.
+					Model.Add (key, value);
+					AgregandoEntrada (key, value);
+					AlCambiarValor?.Invoke (
+						this,
+						new CambioElementoEventArgs<T, TVal> (
+							key,
+							Nulo,
+							Model [key]));
+				}
 			}
 		}
 
@@ -71,13 +69,6 @@ namespace ListasExtra
 		public Func<TVal, TVal> Inv;
 
 		/// <summary>
-		/// Devuelve o establece qué función sirve para saber si dos T's son idénticos para esta lista.
-		/// Por default es x.Equals(y).
-		/// </summary>
-		[DataMember]
-		public IEqualityComparer<T> Comparador { get; }
-
-		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
 		/// </summary>
 		[DataMember]
@@ -89,15 +80,23 @@ namespace ListasExtra
 		/// <param name="entrada">Key de la entrada</param>
 		public ReadonlyPair<T, TVal> Entrada (T entrada)
 		{
-			foreach (var x in this)
-				if (Comparador.Equals (x.Key, entrada))
-					return new ReadonlyPair<T, TVal> (x);
-			return null;
+			TVal ret;
+			return TryGetValue (entrada, out ret) ? 
+				new ReadonlyPair<T, TVal> (entrada, ret) : 
+				null;
 		}
 
 		#endregion
 
 		#region IDictionary
+
+		public IEqualityComparer<T> Comparador
+		{
+			get
+			{
+				return (Model as Dictionary<T, TVal>)?.Comparer;
+			}
+		}
 
 		public void Add (T key, TVal value)
 		{
@@ -107,6 +106,11 @@ namespace ListasExtra
 		public bool Remove (T key)
 		{
 			return Model.Remove (key);
+		}
+
+		public bool ContainsKey (T key)
+		{
+			return Model.ContainsKey (key);
 		}
 
 		public bool TryGetValue (T key, out TVal value)
@@ -252,10 +256,18 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
-		protected ListaPeso (Func<TVal, TVal, TVal> operSuma,
-		                     TVal objetoNulo,
-		                     IEqualityComparer<T> comparador = null)
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo,
+		                  IEqualityComparer<T> comparador)
 			: this (comparador)
+		{
+			Suma = operSuma;
+			Nulo = objetoNulo;
+		}
+
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo)
+			: this (null)
 		{
 			Suma = operSuma;
 			Nulo = objetoNulo;
@@ -269,32 +281,32 @@ namespace ListasExtra
 		/// <param name="modelo">Modelo</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo,
-		                  IDictionary<T, TVal> modelo = null, 
-		                  IEqualityComparer<T> comparador = null)
-			: this (operSuma, objetoNulo, comparador)
+		                  IDictionary<T, TVal> modelo)
 		{
-			Model = modelo ?? new Dictionary<T, TVal> (Comparador);
+			Suma = operSuma;
+			Nulo = objetoNulo;
+			Model = modelo;
 		}
 
 		protected ListaPeso (IEqualityComparer<T> comparador = null)
 		{
-			Comparador = comparador ?? EqualityComparer<T>.Default;
+			var Comparador = comparador ?? EqualityComparer<T>.Default;
 			Model = new Dictionary<T, TVal> (Comparador);
+		}
+
+		/// <summary>
+		/// Cuando se agrega un nuevo key al diccionario, 
+		/// se ejecuta esta función.
+		/// </summary>
+		/// <param name="key">Key agregada</param>
+		/// <param name="value">Valor de esta key.</param>
+		protected virtual void AgregandoEntrada (T key, TVal value)
+		{
 		}
 
 		#endregion
 
 		#region Lista
-
-		public bool ContainsKey (T key)
-		{
-			foreach (var x in Keys)
-			{
-				if (Comparador.Equals (x, key))
-					return true;
-			}
-			return false;
-		}
 
 		/// <summary>
 		/// Revisa si existe un objeto con las con las condiciones dadas.
@@ -403,7 +415,7 @@ namespace ListasExtra
 		protected static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> left,
 		                                           IDictionary<T, TVal> right)
 		{
-			var ret = new ListaPeso<T, TVal> (left.Suma, left.Nulo, null);
+			var ret = new ListaPeso<T, TVal> (left.Suma, left.Nulo, left.Comparador);
 
 			foreach (var x in left)
 			{
@@ -469,12 +481,41 @@ namespace ListasExtra
 		/// <param name="modelo">Modelo de diccionario</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo,
-		                  IDictionary<Tuple<T1, T2>, TVal> modelo = null,
-		                  IEqualityComparer<Tuple<T1, T2>> comparador = null)
+		                  IDictionary<Tuple<T1, T2>, TVal> modelo)
 			: base (operSuma,
 			        objetoNulo,
-			        modelo,
-			        comparador ?? new TupleComparador<T1, T2> ())
+			        modelo)
+		{
+		}
+
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo)
+			: base (operSuma,
+			        objetoNulo, new TupleComparador<T1, T2> ())
+		{
+		}
+
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo,
+		                  IEqualityComparer<Tuple<T1, T2>> comparador)
+			: base (operSuma, objetoNulo, comparador)
+		{
+		}
+
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo,
+		                  IEqualityComparer<T1> comparador1,
+		                  IEqualityComparer<T2> comparador2)
+			: base (operSuma,
+			        objetoNulo,
+			        new TupleComparador<T1, T2> (
+				        comparador1,
+				        comparador2))
+		{
+		}
+
+		public ListaPeso (IEqualityComparer<Tuple<T1, T2>> comparador)
+			: base (comparador)
 		{
 		}
 
@@ -495,8 +536,20 @@ namespace ListasExtra
 	[Serializable]
 	public class ListaPeso<T> : ListaPeso<T, Single>, IComparable<IDictionary<T, Single>>
 	{
-		public ListaPeso (IDictionary<T, float> modelo = null)
+		public ListaPeso (IDictionary<T, float> modelo)
 			: base ((x, y) => x + y, 0, modelo)
+		{
+		}
+
+		public ListaPeso ()
+			: base ((x, y) => x + y, 0)
+		{
+		}
+
+		public ListaPeso (IEqualityComparer<T> comparador)
+			: base ((x, y) => x + y,
+			        0,
+			        comparador)
 		{
 		}
 
@@ -602,12 +655,26 @@ namespace ListasExtra
 		{
 		}
 
-		public ListaPesoFloat (Func<float, float, float> operSuma,
-		                       float objetoNulo,
-		                       IDictionary<Tuple<T1, T2>, float> modelo)
-			: base (operSuma,
-			        objetoNulo,
-			        modelo)
+		public ListaPesoFloat (IDictionary<Tuple<T1, T2>, float> modelo)
+			: base ((x, y) => x + y, 0, modelo)
+		{
+		}
+
+
+		public ListaPesoFloat (IEqualityComparer<Tuple<T1, T2>> comparador)
+			: base ((x, y) => x + y, 
+			        0,
+			        comparador)
+		{
+		}
+
+
+		public ListaPesoFloat (IEqualityComparer<T1> comparador1,
+		                       IEqualityComparer<T2> comparador2)
+			: base ((x, y) => x + y, 
+			        0,
+			        comparador1,
+			        comparador2)
 		{
 		}
 	}

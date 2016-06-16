@@ -30,7 +30,7 @@ namespace ListasExtra.Lock
 	public class ListaPesoBloqueable<TKey, TVal> : ListaPeso<TKey, TVal>, IListBloqueable<KeyValuePair<TKey, TVal>>
 	{
 		public ListaPesoBloqueable (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
-			: base (operSuma, objetoNulo, null)
+			: base (operSuma, objetoNulo)
 		{
 		}
 

@@ -32,6 +32,11 @@ namespace ListasExtra
 			_data = data;
 		}
 
+		public ReadonlyPair (T1 key, T2 val)
+		{
+			_data = new System.Collections.Generic.KeyValuePair<T1, T2> (key, val);
+		}
+
 		public T1 Key
 		{
 			get
