@@ -245,9 +245,12 @@ namespace ListasExtra
 		/// <summary>
 		/// Se llama cuando se cambia algún valor.
 		/// </summary>
-		public event EventHandler<CambioElementoEventArgs<T,TVal>> AlCambiarValor;
+		public event EventHandler<CambioElementoEventArgs<T, TVal>> AlCambiarValor;
+
+		public event EventHandler<CambioElementoEventArgs<T, TVal>> AlAgregarEntrada;
 
 		#endregion
+
 
 		#region ctor
 
@@ -297,11 +300,18 @@ namespace ListasExtra
 		/// <summary>
 		/// Cuando se agrega un nuevo key al diccionario, 
 		/// se ejecuta esta función.
+		/// Además éste método invoca a su respectivo evento.
 		/// </summary>
 		/// <param name="key">Key agregada</param>
 		/// <param name="value">Valor de esta key.</param>
 		protected virtual void AgregandoEntrada (T key, TVal value)
 		{
+			AlAgregarEntrada?.Invoke (
+				this,
+				new CambioElementoEventArgs<T, TVal> (
+					key,
+					Nulo,
+					value));
 		}
 
 		#endregion
