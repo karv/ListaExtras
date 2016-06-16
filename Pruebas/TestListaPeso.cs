@@ -68,7 +68,7 @@ namespace Pruebas
 
 		class WeirdInt : IEquatable<WeirdInt>
 		{
-			public int Valor;
+			public int Valor { get; }
 
 			public WeirdInt (int val)
 			{
@@ -79,9 +79,12 @@ namespace Pruebas
 			{
 				if (obj == null)
 					return false;
-				if (ReferenceEquals (this, obj))
-					return true;
 				return Valor == obj.Valor;
+			}
+
+			public override int GetHashCode ()
+			{
+				return Valor.GetHashCode ();
 			}
 
 			public static implicit operator int (WeirdInt w)
@@ -94,6 +97,10 @@ namespace Pruebas
 				return new WeirdInt (i);
 			}
 
+			public override string ToString ()
+			{
+				return string.Format ("{0}*", Valor);
+			}
 		}
 
 		[Test]
@@ -108,6 +115,21 @@ namespace Pruebas
 			cl2 [0, 0] = 3;
 			tres = cl2 [0, 0];
 			Assert.AreEqual (3, tres);
+		}
+
+		[Test]
+		public void AsignaNuevaKey ()
+		{
+			var cl = new ListaPeso<WeirdInt> ();
+			bool invoca = false;
+			cl.AlAgregarEntrada += delegate(object sender,
+			                                CambioElementoEventArgs<WeirdInt, float> e)
+			{
+				Assert.AreEqual (e.Key.Valor, 0);
+				invoca = true;
+			};
+			cl [0] = 1;
+			Assert.True (invoca);
 		}
 	}
 }

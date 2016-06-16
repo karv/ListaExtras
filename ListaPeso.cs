@@ -247,6 +247,9 @@ namespace ListasExtra
 		/// </summary>
 		public event EventHandler<CambioElementoEventArgs<T, TVal>> AlCambiarValor;
 
+		/// <summary>
+		/// Ocurre cuando se agrega una nueva entrada(key) al diccionario
+		/// </summary>
 		public event EventHandler<CambioElementoEventArgs<T, TVal>> AlAgregarEntrada;
 
 		#endregion
