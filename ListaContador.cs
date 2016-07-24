@@ -10,7 +10,7 @@ namespace ListasExtra
 	public class ListaContador<T> : ListaPeso<T, long>
 	{
 		public ListaContador ()
-			: base ((x, y) => x + y, 0, null)
+			: base ((x, y) => x + y, 0)
 		{
 		}
 
