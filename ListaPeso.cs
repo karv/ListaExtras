@@ -15,6 +15,10 @@ namespace ListasExtra
 	{
 		#region Accesor
 
+		/// <summary>
+		/// Devuelve el valor correspondiete a una entrada dada
+		/// </summary>
+		/// <param name="key">Key de la entrada</param>
 		public TVal this [T key]
 		{
 			get
@@ -57,6 +61,9 @@ namespace ListasExtra
 
 		#region Internos
 
+		/// <summary>
+		/// Devuelve el modelo que diccionario que se usa.
+		/// </summary>
 		[DataMember]
 		protected IDictionary<T, TVal> Model { get; }
 
@@ -93,6 +100,10 @@ namespace ListasExtra
 
 		#region IDictionary
 
+		/// <summary>
+		/// Devuelve el comparador que se usa para las keys
+		/// </summary>
+		/// <value>The comparador.</value>
 		public IEqualityComparer<T> Comparador
 		{
 			get
@@ -101,26 +112,51 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Agrega una entrada
+		/// </summary>
+		/// <param name="key">Key.</param>
+		/// <param name="value">Value.</param>
 		public void Add (T key, TVal value)
 		{
 			Model.Add (key, value);
 		}
 
+		/// <Docs>The item to remove from the current collection.</Docs>
+		/// <para>Removes the first occurrence of an item from the current collection.</para>
+		/// <summary>
+		/// Elimina una entrada del diccionario, dado su key
+		/// </summary>
 		public bool Remove (T key)
 		{
 			return Model.Remove (key);
 		}
 
+		/// <Docs>The key to locate in the current instance.</Docs>
+		/// <para>Determines whether the current instance contains an entry with the specified key.</para>
+		/// <summary>
+		/// Determina si contiene un key dado.
+		/// </summary>
 		public bool ContainsKey (T key)
 		{
 			return Model.ContainsKey (key);
 		}
 
+		/// <Docs>To be added.</Docs>
+		/// <summary>
+		/// Intenta devolver el valor de una key correspondiente
+		/// </summary>
+		/// <returns><c>true</c>, si la entrada existe y devuelve algo, <c>false</c> otherwise.</returns>
+		/// <param name="key">Key.</param>
+		/// <param name="value">Valor de regreso.</param>
 		public bool TryGetValue (T key, out TVal value)
 		{
 			return Model.TryGetValue (key, out value);
 		}
 
+		/// <summary>
+		/// Devuelve la colección de las keys
+		/// </summary>
 		public ICollection<T> Keys
 		{
 			get
@@ -129,6 +165,9 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Devuelve la colección de los valores
+		/// </summary>
 		public ICollection<TVal> Values
 		{
 			get
@@ -137,31 +176,59 @@ namespace ListasExtra
 			}
 		}
 
+		/// <Docs>The item to add to the current collection.</Docs>
+		/// <para>Adds an item to the current collection.</para>
+		/// <remarks>To be added.</remarks>
+		/// <exception cref="System.NotSupportedException">The current collection is read-only.</exception>
+		/// <summary>
+		/// Agrega una entrada
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public void Add (KeyValuePair<T, TVal> item)
 		{
 			Model.Add (item);
 		}
 
+		/// <summary>
+		/// Vacía el diccionario
+		/// </summary>
 		public void Clear ()
 		{
 			Model.Clear ();
 		}
 
+		/// <Docs>The object to locate in the current collection.</Docs>
+		/// <para>Determines whether the current collection contains a specific value.</para>
+		/// <summary>
+		/// Revisa si existe una entrada
+		/// </summary>
 		public bool Contains (KeyValuePair<T, TVal> item)
 		{
 			return Model.Contains (item);
 		}
 
+		/// <summary>
+		/// Copia este diccionario a un arreglo
+		/// </summary>
 		public void CopyTo (KeyValuePair<T, TVal> [] array, int arrayIndex)
 		{
 			Model.CopyTo (array, arrayIndex);
 		}
 
+		/// <Docs>The item to remove from the current collection.</Docs>
+		/// <para>Removes the first occurrence of an item from the current collection.</para>
+		/// <summary>
+		/// Elimina una entrada dada
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public bool Remove (KeyValuePair<T, TVal> item)
 		{
 			return Remove (item);
 		}
 
+		/// <summary>
+		/// Devuelve el número de entradas del dicionario.
+		/// </summary>
 		public int Count
 		{
 			get
@@ -170,6 +237,10 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is read only.
+		/// </summary>
+		/// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
 		public bool IsReadOnly
 		{
 			get
@@ -178,6 +249,10 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Gets the enumerator.
+		/// </summary>
+		/// <returns>The enumerator.</returns>
 		public IEnumerator<KeyValuePair<T, TVal>> GetEnumerator ()
 		{
 			return Model.GetEnumerator ();
@@ -264,6 +339,7 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
+		/// <param name="comparador">Comparador.</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo,
 		                  IEqualityComparer<T> comparador)
@@ -273,6 +349,11 @@ namespace ListasExtra
 			Nulo = objetoNulo;
 		}
 
+		/// <summary>
+		/// Inicializa una instancia de la clase.
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo)
 			: this (null)
@@ -296,10 +377,14 @@ namespace ListasExtra
 			Model = modelo;
 		}
 
+		/// <summary>
+		/// Inicializa una instancia de la clase.
+		/// </summary>
+		/// <param name="comparador">Comparador.</param>
 		protected ListaPeso (IEqualityComparer<T> comparador = null)
 		{
-			var Comparador = comparador ?? EqualityComparer<T>.Default;
-			Model = new Dictionary<T, TVal> (Comparador);
+			var cprd = comparador ?? EqualityComparer<T>.Default;
+			Model = new Dictionary<T, TVal> (cprd);
 		}
 
 		/// <summary>
@@ -351,6 +436,10 @@ namespace ListasExtra
 
 		#region IEquatable
 
+		/// <summary>
+		/// Determina si este diccionario coincide con otro del mismo tipo
+		/// </summary>
+		/// <param name="other">The other to compare with the current dictionary.</param>
 		public bool Equals (IDictionary<T, TVal> other)
 		{
 			var supp = Soporte ();
@@ -374,6 +463,9 @@ namespace ListasExtra
 
 		#region Generales
 
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current dictionary.
+		/// </summary>
 		public override string ToString ()
 		{
 			string ret = "";
@@ -386,6 +478,10 @@ namespace ListasExtra
 
 		bool _eliminarValoresNull;
 
+		/// <summary>
+		/// Determina si las entradas cuyas <c>value</c> es igual a <c>Nulo</c> deben de ser eliminadas del modelo.
+		/// </summary>
+		/// <value><c>true</c> if eliminar valores null; otherwise, <c>false</c>.</value>
 		public bool EliminarValoresNull // TEST
 		{
 			get
@@ -466,17 +562,22 @@ namespace ListasExtra
 			return ret;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> left,
 		                                             IDictionary<T, TVal> right)
 		{
 			return Sumar (left, right);
 		}
 
+		/// <param name="x">other</param>
 		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> x)
 		{
 			return x.Inverso ();
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> left,
 		                                             IDictionary<T, TVal> right)
 		{
@@ -492,6 +593,11 @@ namespace ListasExtra
 
 		#region Serializable
 
+		/// <summary>
+		/// Gets the object data.
+		/// </summary>
+		/// <param name="info">Info.</param>
+		/// <param name="context">Context.</param>
 		public void GetObjectData (SerializationInfo info, StreamingContext context)
 		{
 			var iser = Model as ISerializable;
