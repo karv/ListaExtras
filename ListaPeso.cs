@@ -25,29 +25,32 @@ namespace ListasExtra
 			set
 			{
 				TVal val;
+				CambioElementoEventArgs<T, TVal> ret;
 				if (Model.TryGetValue (key, out val))
 				{
 					Model [key] = value;
-					AlCambiarValor?.Invoke (
-						this,
-						new CambioElementoEventArgs<T, TVal> (
-							key,
-							val,
-							value));
+					ret = new CambioElementoEventArgs<T, TVal> (key, val, value);
 				}
 				else
 				{
 					// Si es entrada nueva, se agrega.
 					Model.Add (key, value);
 					AgregandoEntrada (key, value);
-					AlCambiarValor?.Invoke (
-						this,
-						new CambioElementoEventArgs<T, TVal> (
-							key,
-							Nulo,
-							Model [key]));
+					ret = new CambioElementoEventArgs<T, TVal> (
+						key,
+						Nulo,
+						value);
 				}
+				checkForRemoval (key);
+				AlCambiarValor?.Invoke (this, ret);
 			}
+		}
+
+		void checkForRemoval (T key)
+		{
+			var val = this [key];
+			if (val.Equals (Nulo))
+				Remove (key);
 		}
 
 		#endregion
@@ -254,7 +257,6 @@ namespace ListasExtra
 
 		#endregion
 
-
 		#region ctor
 
 		/// <summary>
@@ -380,6 +382,29 @@ namespace ListasExtra
 				ret += string.Format ("{0} -> {1}\n", item.Key, item.Value);
 			}
 			return ret;
+		}
+
+		bool _eliminarValoresNull;
+
+		public bool EliminarValoresNull // TEST
+		{
+			get
+			{
+				return _eliminarValoresNull;
+			}
+			set
+			{
+				_eliminarValoresNull = value;
+				if (value)
+					eliminarEntradasNulas ();
+			}
+		}
+
+		void eliminarEntradasNulas ()
+		{
+			var removing = this.Where (z => z.Value.Equals (Nulo));
+			foreach (var r in removing)
+				Remove (r);
 		}
 
 		#endregion
