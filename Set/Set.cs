@@ -15,16 +15,13 @@ namespace ListasExtra.Set
 		/// </summary>
 		public Set ()
 		{
-			_dat = new HashSet<T> ();
 		}
 
 		/// <param name="inicial">Inicial.</param>
 		public Set (IEnumerable<T> inicial)
+			: base (inicial)
 		{
-			_dat = new HashSet<T> (inicial);
 		}
-
-		readonly HashSet<T> _dat;
 
 		/// <summary>
 		/// Toma un elemento
