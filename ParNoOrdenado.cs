@@ -77,36 +77,6 @@ namespace ListasExtra
 		}
 
 		/// <summary>
-		/// Determines whether the specified ParOrdenado is equal to the current ParOrdenado"/>.
-		/// </summary>
-		/// <param name="other">The ParOrdenado  to compare with the current ParOrdenado .</param>
-		/// <returns><c>true</c> if the specified ParOrdenado is equal to the current
-		/// ParOrdenado; otherwise, <c>false</c>.</returns>
-		public bool Equals (ParNoOrdenado<T> other)
-		{
-			var numn = numNoNulos;
-
-			if (numn != other.numNoNulos)
-				return false;
-			
-			switch (numn)
-			{
-				case 0: // Aquí nunca debería entrar
-					return true;
-
-				case 1:
-					var nnulA = noNulo;
-					var nnulB = other.noNulo;
-					return nnulA.Equals (nnulB);
-
-				case 2:
-					return (A.Equals (other.A) && B.Equals (other.B)) || A.Equals (other.B) && B.Equals (other.A);
-			}
-
-			throw new Exception ("Se supone que no es posible llegar aquí.");
-		}
-
-		/// <summary>
 		/// El número de nulos
 		/// </summary>
 		/// <value>The number nulos.</value>
@@ -158,6 +128,11 @@ namespace ListasExtra
 		{
 			yield return A;
 			yield return B;
+		}
+
+		public override bool Equals (object obj)
+		{
+			return Equals (obj, EqualityComparer<T>.Default);
 		}
 
 		public bool Equals (object other, IEqualityComparer comparer)
