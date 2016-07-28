@@ -20,8 +20,8 @@ namespace ListasExtra
 		{
 			get
 			{
-				var ret = Entrada (key);
-				return ret == null ? Nulo : ret.Value;
+				ReadonlyPair<T, TVal> entry;
+				return  Entrada (key, out entry) ? entry.Value : Nulo;
 			}
 			set
 			{
@@ -87,13 +87,16 @@ namespace ListasExtra
 		/// <summary>
 		/// Devuelve la entrada correspondiente a un Key
 		/// </summary>
-		/// <param name="entrada">Key de la entrada</param>
-		public ReadonlyPair<T, TVal> Entrada (T entrada)
+		public bool Entrada (T entrada, out ReadonlyPair<T, TVal> ret)
 		{
 			foreach (var x in this)
 				if (Comparador.Equals (x.Key, entrada))
-					return new ReadonlyPair<T, TVal> (x);
-			return null;
+				{
+					ret = new ReadonlyPair<T, TVal> (x);
+					return true;
+				}
+			ret = new ReadonlyPair<T, TVal> ();
+			return false;
 		}
 
 		#endregion

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 
 namespace ListasExtra
 {
 	[Serializable]
-	public class ReadonlyPair<T1, T2>
+	public struct ReadonlyPair<T1, T2> : IStructuralEquatable
 	{
 		System.Collections.Generic.KeyValuePair<T1, T2> _data;
 
@@ -25,6 +26,28 @@ namespace ListasExtra
 			get
 			{
 				return _data.Value;
+			}
+		}
+
+		public bool Equals (object other, IEqualityComparer comparer)
+		{
+			if (other is ReadonlyPair<object, object>)
+			{
+				var otro = (ReadonlyPair<object, object>)other;
+				if (comparer.GetHashCode (this) == comparer.GetHashCode (otro))
+					return comparer.Equals (Key, otro.Key) && comparer.Equals (
+						Value,
+						otro.Value);
+				return false;
+			}
+			return false;
+		}
+
+		public int GetHashCode (IEqualityComparer comparer)
+		{
+			unchecked
+			{
+				return comparer.GetHashCode (Key) + 23 * comparer.GetHashCode (Value);
 			}
 		}
 	}
