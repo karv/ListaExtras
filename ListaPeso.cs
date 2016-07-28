@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Collections;
 
 namespace ListasExtra
 {
@@ -11,7 +12,7 @@ namespace ListasExtra
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="TVal">Rango(co-dominio) de la función.</typeparam>
 	[Serializable]
-	public class ListaPeso<T, TVal> : IDictionary<T, TVal>, IEquatable<IDictionary<T, TVal>>
+	public class ListaPeso<T, TVal> : IDictionary<T, TVal>, IEquatable<IDictionary<T, TVal>>, IStructuralEquatable, IStructuralComparable
 	{
 		#region Accesor
 
@@ -23,8 +24,8 @@ namespace ListasExtra
 		{
 			get
 			{
-				var ret = Entrada (key);
-				return ret == null ? Nulo : ret.Value;
+				ReadonlyPair<T, TVal> entry;
+				return  Entrada (key, out entry) ? entry.Value : Nulo;
 			}
 			set
 			{
@@ -87,13 +88,16 @@ namespace ListasExtra
 		/// <summary>
 		/// Devuelve la entrada correspondiente a un Key
 		/// </summary>
-		/// <param name="entrada">Key de la entrada</param>
-		public ReadonlyPair<T, TVal> Entrada (T entrada)
+		public bool Entrada (T entrada, out ReadonlyPair<T, TVal> ret)
 		{
-			TVal ret;
-			return TryGetValue (entrada, out ret) ? 
-				new ReadonlyPair<T, TVal> (entrada, ret) : 
-				null;
+			foreach (var x in this)
+				if (Comparador.Equals (x.Key, entrada))
+				{
+					ret = new ReadonlyPair<T, TVal> (x);
+					return true;
+				}
+			ret = new ReadonlyPair<T, TVal> ();
+			return false;
 		}
 
 		#endregion
@@ -587,6 +591,46 @@ namespace ListasExtra
 				ret [x.Key] = ret.Suma (ret.Inv (x.Value), ret [x.Key]);
 			}
 			return ret;
+		}
+
+		#endregion
+
+		#region Structural
+
+		// TEST: region
+		/// <summary>
+		/// Compares the current ListaPeso with some other dictionary using a IEqualityComparer for its elements
+		/// </summary>
+		/// <param name="other">Other.</param>
+		/// <param name="comparer">Comparer.</param>
+		public bool Equals (object other, IEqualityComparer comparer)
+		{
+			var otherDict = other as IDictionary<T, TVal>;
+			if (otherDict == null)
+				return false;
+			var keys = new HashSet<T> ();
+			keys.UnionWith (Keys);
+			keys.UnionWith (otherDict.Keys);
+			foreach (var x in keys)
+			{
+				TVal otherVal;
+				// Regresar false si falla en alguna entrada.
+				if (!otherDict.TryGetValue (x, out otherVal) && comparer.Equals (
+					    this [x],
+					    otherVal))
+					return false;
+			}
+			return true;
+		}
+
+		public int GetHashCode (IEqualityComparer comparer)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public int CompareTo (object other, IComparer comparer)
+		{
+			throw new NotImplementedException ();
 		}
 
 		#endregion
