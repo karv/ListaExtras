@@ -20,7 +20,6 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="a">Entrada cero</param>
 		/// <param name="b">Entrada uno</param>
-		/// <param name="compara">Comparador</param>
 		/// <remarks>Dejar el comparador nulo hace que tome el valor Default según EqualityComparer </remarks>
 		public ParNoOrdenado (T a, T b)
 		{
@@ -33,7 +32,8 @@ namespace ListasExtra
 		/// </summary>
 		public bool Contiene (T x)
 		{
-			// TODO: nullcheck x
+			if (ReferenceEquals (x, null))
+				throw new ArgumentNullException ();
 			return x.Equals (A) || x.Equals (B);
 		}
 
