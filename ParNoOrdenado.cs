@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.Diagnostics;
 
 namespace ListasExtra
 {
@@ -7,13 +9,11 @@ namespace ListasExtra
 	/// Par no ordenado.
 	/// </summary>
 	[Serializable]
-	public struct ParNoOrdenado<T> : IEquatable<ParNoOrdenado<T>>
+	public struct ParNoOrdenado<T> : IStructuralEquatable
 	{
 		T A { get; }
 
 		T B { get; }
-
-		IEqualityComparer<T> comparador;
 
 		/// <summary>
 		/// Initializes a new instance of this struct.
@@ -22,11 +22,10 @@ namespace ListasExtra
 		/// <param name="b">Entrada uno</param>
 		/// <param name="compara">Comparador</param>
 		/// <remarks>Dejar el comparador nulo hace que tome el valor Default según EqualityComparer </remarks>
-		public ParNoOrdenado (T a, T b, IEqualityComparer<T> compara = null)
+		public ParNoOrdenado (T a, T b)
 		{
 			A = a;
 			B = b;
-			comparador = compara ?? EqualityComparer<T>.Default;
 		}
 
 		/// <summary>
@@ -34,13 +33,19 @@ namespace ListasExtra
 		/// </summary>
 		public bool Contiene (T x)
 		{
+			// TODO: nullcheck x
+			return x.Equals (A) || x.Equals (B);
+		}
+
+		public bool Contiene (T x, IEqualityComparer<T> comparador)
+		{
 			return comparador.Equals (x, A) || comparador.Equals (x, B);
 		}
 
 		/// <summary>
 		/// Devuelve el único elemento que no es uno dado.
 		/// </summary>
-		public T Excepto (T x)
+		public T Excepto (T x, IEqualityComparer<T> comparador)
 		{
 			if (comparador.Equals (A, x))
 				return B;
@@ -147,6 +152,44 @@ namespace ListasExtra
 		{
 			yield return A;
 			yield return B;
+		}
+
+		public bool Equals (object other, IEqualityComparer comparer)
+		{
+			// Analysis disable CanBeReplacedWithTryCastAndCheckForNull
+			if (other is ParNoOrdenado<T>)
+			{
+				var otro = (ParNoOrdenado<T>)other;
+				var numn = numNoNulos;
+
+				if (numn != otro.numNoNulos)
+					return false;
+
+				switch (numn)
+				{
+					case 0: // Aquí nunca debería entrar
+						return true;
+
+					case 1:
+						var nnulA = noNulo;
+						var nnulB = otro.noNulo;
+						return comparer.Equals (nnulA, nnulB);
+
+					case 2:
+						return (comparer.Equals (A, otro.A) && comparer.Equals (B, otro.B)) ||
+						(comparer.Equals (A, otro.B) && comparer.Equals (B, otro.A));
+				}
+				Debug.Fail ("Valos inconsistente de ParNoOrdenado.numNoNulos", 
+					"numNoNulos = " + numNoNulos);
+
+			}
+			return false;
+			// Analysis restore CanBeReplacedWithTryCastAndCheckForNull
+		}
+
+		public int GetHashCode (IEqualityComparer comparer)
+		{
+			return comparer.GetHashCode (A) + comparer.GetHashCode (B);
 		}
 
 		public override string ToString ()
