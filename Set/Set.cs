@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ListasExtra.Set
 {
@@ -46,6 +47,23 @@ namespace ListasExtra.Set
 			var ret = Pick ();
 			Remove (ret);
 			return ret;
+		}
+
+		public bool Equals (object other,
+		                    System.Collections.IEqualityComparer comparer)
+		{
+			if (comparer.GetHashCode (other) != comparer.GetHashCode (this))
+				return false;
+
+			if (other is IEnumerable<T>)
+				return SetEquals ((IEnumerable<T>)other);
+
+			return false;
+		}
+
+		public int GetHashCode (System.Collections.IEqualityComparer comparer)
+		{
+			return this.Sum (z => comparer.GetHashCode (z));
 		}
 	}
 }
