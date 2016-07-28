@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace ListasExtra
 {
 	/// <summary>
-	/// Par no ordenado.
+	/// Par no ordenado inmutable.
 	/// </summary>
 	[Serializable]
 	public struct ParNoOrdenado<T> : IStructuralEquatable
@@ -32,9 +32,7 @@ namespace ListasExtra
 		/// </summary>
 		public bool Contiene (T x)
 		{
-			if (ReferenceEquals (x, null))
-				throw new ArgumentNullException ();
-			return x.Equals (A) || x.Equals (B);
+			return Contiene (x, EqualityComparer<T>.Default);
 		}
 
 		public bool Contiene (T x, IEqualityComparer<T> comparador)
@@ -52,6 +50,14 @@ namespace ListasExtra
 			if (comparador.Equals (B, x))
 				return A;
 			throw new Exception ("No existe el ÚNICO punto distinto de el punto dado.");
+		}
+
+		/// <summary>
+		/// Devuelve el único elemento que no es uno dado.
+		/// </summary>
+		public T Excepto (T x)
+		{
+			return Excepto (x, EqualityComparer<T>.Default);
 		}
 
 		/// <summary>
