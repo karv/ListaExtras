@@ -53,8 +53,6 @@ namespace Pruebas
 		public void TestEvents ()
 		{
 			var probs = new ListaProbabilidad<int> (z => z);
-			probs.OnAdd += (int obj) => Console.WriteLine ("Agregado {0}", obj);
-			probs.OnRemove += (int obj) => Console.WriteLine ("Eliminado {0}", obj);
 
 			probs.Add (3);
 			probs.Remove (3);
