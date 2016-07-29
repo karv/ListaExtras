@@ -8,3 +8,4 @@ test-results/
 Test/test-results/
 *.nupkg
 packages/
+doc/
