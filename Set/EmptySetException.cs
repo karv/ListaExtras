@@ -2,6 +2,9 @@
 
 namespace ListasExtra.Set
 {
+	/// <summary>
+	/// Ocurre cuando se intenta accesar a un objeto de una colección vacía.
+	/// </summary>
 	[Serializable]
 	public class EmptySetException : Exception
 	{

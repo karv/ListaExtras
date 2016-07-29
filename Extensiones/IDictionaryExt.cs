@@ -3,9 +3,18 @@ using System;
 
 namespace ListasExtra.Extensiones
 {
+	/// <summary>
+	/// Extensión de dicionarios
+	/// </summary>
 	public static class IDictionaryExt
 	{
-		public static IDictionary<TKey, TVal> Clonar<TKey, TVal> (this IDictionary<TKey, TVal> clonando)
+		/// <summary>
+		/// Clona un IDictionary a un Dictionary
+		/// </summary>
+		/// <param name="clonando">Clonando.</param>
+		/// <typeparam name="TKey">The 1st type parameter.</typeparam>
+		/// <typeparam name="TVal">The 2nd type parameter.</typeparam>
+		public static Dictionary<TKey, TVal> Clonar<TKey, TVal> (this IDictionary<TKey, TVal> clonando)
 		{
 			return new Dictionary<TKey, TVal> (clonando);
 		}
@@ -195,6 +204,14 @@ namespace ListasExtra.Extensiones
 			return Sumar (left, right.Inverso ());
 		}
 
+		/// <summary>
+		/// Revisa si un diccionario es menor en cada entrada que otro
+		/// </summary>
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
+		/// <param name="defEntry">Valor de las entradas que no aparezcan</param>
+		/// <typeparam name="TKey">Tipo de Key</typeparam>
+		/// <typeparam name="TVal">Tipo de Value, debe ser IComparable</typeparam>
 		public static bool MenorPorEntrada<TKey, TVal> (IDictionary<TKey, TVal> left,
 		                                                IDictionary<TKey, TVal> right, 
 		                                                TVal defEntry = default(TVal))
@@ -210,6 +227,14 @@ namespace ListasExtra.Extensiones
 			return true;
 		}
 
+		/// <summary>
+		/// Revisa si un diccionario es idéntico en cada entrada que otro
+		/// </summary>
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
+		/// <param name="defEntry">Valor de las entradas que no aparezcan</param>
+		/// <typeparam name="TKey">Tipo de Key</typeparam>
+		/// <typeparam name="TVal">Tipo de Value, debe ser IEquatable</typeparam>
 		public static bool IgualPorEntrada <TKey, TVal> (IDictionary<TKey, TVal> left,
 		                                                 IDictionary<TKey, TVal> right, 
 		                                                 TVal defEntry = default(TVal))

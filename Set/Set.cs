@@ -46,18 +46,29 @@ namespace ListasExtra.Set
 			return ret;
 		}
 
+		/// <summary>
+		/// Revisa si este Set es igual (conjuntista) a un IEnumerable del mismo tipo.
+		/// </summary>
+		/// <param name="other">Other.</param>
+		/// <param name="comparer">Comparer.</param>
 		public bool Equals (object other,
 		                    System.Collections.IEqualityComparer comparer)
 		{
 			if (comparer.GetHashCode (other) != comparer.GetHashCode (this))
 				return false;
 
+			// TODO: ¿Y lo comparer-oso?
 			if (other is IEnumerable<T>)
 				return SetEquals ((IEnumerable<T>)other);
 
 			return false;
 		}
 
+		/// <summary>
+		/// Gets the hash code.
+		/// </summary>
+		/// <returns>The hash code.</returns>
+		/// <param name="comparer">Comparer.</param>
 		public int GetHashCode (System.Collections.IEqualityComparer comparer)
 		{
 			return this.Sum (z => comparer.GetHashCode (z));

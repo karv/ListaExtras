@@ -623,11 +623,22 @@ namespace ListasExtra
 			return true;
 		}
 
+		/// <summary>
+		/// Gets the hash code.
+		/// </summary>
+		/// <returns>The hash code.</returns>
+		/// <param name="comparer">Comparer.</param>
 		public int GetHashCode (IEqualityComparer comparer)
 		{
 			throw new NotImplementedException ();
 		}
 
+		/// <summary>
+		/// Determina el orden que deben tener dos objetos bajo un comparador
+		/// </summary>
+		/// <returns>The to.</returns>
+		/// <param name="other">Other.</param>
+		/// <param name="comparer">Comparer.</param>
 		public int CompareTo (object other, IComparer comparer)
 		{
 			throw new NotImplementedException ();
@@ -676,6 +687,10 @@ namespace ListasExtra
 		{
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo)
 			: base (operSuma,
@@ -683,6 +698,11 @@ namespace ListasExtra
 		{
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
+		/// <param name="comparador">Comparador.</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo,
 		                  IEqualityComparer<Tuple<T1, T2>> comparador)
@@ -690,6 +710,12 @@ namespace ListasExtra
 		{
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
+		/// <param name="comparador1">Comparador del primer valor de Key.</param>
+		/// <param name="comparador2">Comparador del segundo valor de Key.</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo,
 		                  IEqualityComparer<T1> comparador1,
@@ -702,11 +728,18 @@ namespace ListasExtra
 		{
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="comparador">Comparador.</param>
 		public ListaPeso (IEqualityComparer<Tuple<T1, T2>> comparador)
 			: base (comparador)
 		{
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="x">Primer valor.</param>
+		/// <param name="y">Segundo valor.</param>
 		public TVal this [T1 x, T2 y]
 		{
 			get
@@ -721,19 +754,30 @@ namespace ListasExtra
 
 	}
 
+	/// <summary>
+	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
+	/// </summary>
 	[Serializable]
 	public class ListaPeso<T> : ListaPeso<T, Single>, IComparable<IDictionary<T, Single>>
 	{
+		/// <summary>
+		/// </summary>
+		/// <param name="modelo">Modelo.</param>
 		public ListaPeso (IDictionary<T, float> modelo)
 			: base ((x, y) => x + y, 0, modelo)
 		{
 		}
 
+		/// <summary>
+		/// </summary>
 		public ListaPeso ()
 			: base ((x, y) => x + y, 0)
 		{
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="comparador">Comparador.</param>
 		public ListaPeso (IEqualityComparer<T> comparador)
 			: base ((x, y) => x + y,
 			        0,
@@ -741,6 +785,8 @@ namespace ListasExtra
 		{
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static bool operator <= (ListaPeso<T> left,
 		                                IDictionary<T, float> right)
 		{
@@ -752,6 +798,8 @@ namespace ListasExtra
 			return true;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static bool operator >= (ListaPeso<T> left,
 		                                IDictionary<T, float> right)
 		{
@@ -768,6 +816,8 @@ namespace ListasExtra
 			return true;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T> operator + (ListaPeso<T> left,
 		                                       IDictionary<T, float> right)
 		{
@@ -785,6 +835,8 @@ namespace ListasExtra
 
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T> operator * (ListaPeso<T> left, float right)
 		{
 			var ret = new ListaPeso<T> ();
@@ -795,11 +847,15 @@ namespace ListasExtra
 			return ret;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T> operator * (float left, ListaPeso<T> right)
 		{
 			return right * left;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static float operator * (ListaPeso<T> left, ListaPeso<T> right)
 		{
 			ISet<T> soporte = left.Soporte ();
@@ -814,6 +870,11 @@ namespace ListasExtra
 			return ret;
 		}
 
+		/// <summary>
+		/// Suma, en una entrada dada, un valor dado.
+		/// </summary>
+		/// <param name="key">Entrada.</param>
+		/// <param name="value">Valor.</param>
 		public new void Add (T key, float value)
 		{
 			this [key] += value;
@@ -821,6 +882,11 @@ namespace ListasExtra
 
 		#region IComparable
 
+		/// <Docs>To be added.</Docs>
+		/// <para>Returns the sort order of the current instance compared to the specified object.</para>
+		/// <summary>
+		/// </summary>
+		/// <param name="other">Otro diccionario</param>
 		public int CompareTo (IDictionary<T, float> other)
 		{
 			return this <= other ? -1 : this >= other ? 1 : 0;
@@ -838,17 +904,24 @@ namespace ListasExtra
 	[Serializable]
 	public class ListaPesoFloat<T1, T2> : ListaPeso<T1, T2, float>
 	{
+		/// <summary>
+		/// </summary>
 		public ListaPesoFloat ()
 			: base ((x, y) => x + y, 0)
 		{
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="modelo">Modelo.</param>
 		public ListaPesoFloat (IDictionary<Tuple<T1, T2>, float> modelo)
 			: base ((x, y) => x + y, 0, modelo)
 		{
 		}
 
-
+		/// <summary>
+		/// </summary>
+		/// <param name="comparador">Comparador.</param>
 		public ListaPesoFloat (IEqualityComparer<Tuple<T1, T2>> comparador)
 			: base ((x, y) => x + y, 
 			        0,
@@ -857,6 +930,10 @@ namespace ListasExtra
 		}
 
 
+		/// <summary>
+		/// </summary>
+		/// <param name="comparador1">Comparador1.</param>
+		/// <param name="comparador2">Comparador2.</param>
 		public ListaPesoFloat (IEqualityComparer<T1> comparador1,
 		                       IEqualityComparer<T2> comparador2)
 			: base ((x, y) => x + y, 

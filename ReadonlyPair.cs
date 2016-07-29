@@ -3,21 +3,35 @@ using System.Collections;
 
 namespace ListasExtra
 {
+	/// <summary>
+	/// Pareja ordenada lectura
+	/// </summary>
 	[Serializable]
 	public struct ReadonlyPair<T1, T2> : IStructuralEquatable
 	{
 		System.Collections.Generic.KeyValuePair<T1, T2> _data;
 
+		/// <summary>
+		/// </summary>
+		/// <param name="data">Data.</param>
 		public ReadonlyPair (System.Collections.Generic.KeyValuePair<T1, T2> data)
 		{
 			_data = data;
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="key">Key.</param>
+		/// <param name="val">Value.</param>
 		public ReadonlyPair (T1 key, T2 val)
 		{
 			_data = new System.Collections.Generic.KeyValuePair<T1, T2> (key, val);
 		}
 
+		/// <summary>
+		/// Gets the key.
+		/// </summary>
+		/// <value>The key.</value>
 		public T1 Key
 		{
 			get
@@ -26,6 +40,10 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Gets the value.
+		/// </summary>
+		/// <value>The value.</value>
 		public T2 Value
 		{
 			get
@@ -34,6 +52,11 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Equals the specified other and comparer.
+		/// </summary>
+		/// <param name="other">Other.</param>
+		/// <param name="comparer">Comparer.</param>
 		public bool Equals (object other, IEqualityComparer comparer)
 		{
 			if (other is ReadonlyPair<object, object>)
@@ -48,6 +71,11 @@ namespace ListasExtra
 			return false;
 		}
 
+		/// <summary>
+		/// Gets the hash code.
+		/// </summary>
+		/// <returns>The hash code.</returns>
+		/// <param name="comparer">Comparer.</param>
 		public int GetHashCode (IEqualityComparer comparer)
 		{
 			unchecked

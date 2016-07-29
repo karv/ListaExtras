@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ListasExtra.Extensiones
 {
+	/// <summary>
+	/// Extensión de colecciones
+	/// </summary>
 	public static class CollecciónExt
 	{
 		static readonly Random random = new Random ();

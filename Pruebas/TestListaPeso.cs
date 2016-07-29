@@ -21,7 +21,7 @@ namespace Pruebas
 				"lp[{0}] cambió de {1} a {2}",
 				e.Key,
 				e.Previo,
-				e.Actual));
+				e.NuevoValor));
 			lp [1] = 98;
 		}
 

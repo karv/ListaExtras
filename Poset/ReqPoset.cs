@@ -2,6 +2,9 @@
 
 namespace ListasExtra.Poset
 {
+	/// <summary>
+	/// Un poset de requerimientos de tipo dado
+	/// </summary>
 	public class ReqPoset<T> : IReqPoset<T>
 	{
 		/// <param name="objeto">Objeto vinculado a este nodo</param>

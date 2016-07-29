@@ -29,6 +29,10 @@ namespace ListasExtra.Lock
 	/// </summary>
 	public class ListaPesoBloqueable<TKey, TVal> : ListaPeso<TKey, TVal>, IListBloqueable<KeyValuePair<TKey, TVal>>
 	{
+		/// <summary>
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
 		public ListaPesoBloqueable (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
 			: base (operSuma, objetoNulo)
 		{
@@ -46,22 +50,32 @@ namespace ListasExtra.Lock
 			Promesas.Clear ();
 		}
 
+		/// <summary>
+		/// Agrega un valor
+		/// </summary>
+		/// <param name="key">Key.</param>
+		/// <param name="val">Value.</param>
 		public new void Add (TKey key, TVal val)
 		{
 			if (Bloqueado)
 				Promesas.Add (new KeyValuePair<TKey, TVal> (key, val));
 			else
-			{
 				base [key] = Suma (base [key], val);
-			}
 		}
 
 		#region Locking
 
+		/// <summary>
+		/// Ocurre cuando se libera el seguro.
+		/// </summary>
 		public event EventHandler OnRelease;
 
 		bool _locked;
 
+		/// <summary>
+		/// Devuelve o establece el valor de bloqueo.
+		/// Si es true, la enumeración no se modificará y se actualizará hasta que se libere el seguro o se invoque Commit
+		/// </summary>
 		public bool Bloqueado
 		{
 			get
@@ -78,13 +92,17 @@ namespace ListasExtra.Lock
 					Commit ();
 
 					if (OnRelease != null)
-						OnRelease.Invoke (this, new EventArgs ());
+						OnRelease.Invoke (this, EventArgs.Empty);
 				}
 			}
 		}
 
 		IList<KeyValuePair<TKey, TVal>> Promesas = new List<KeyValuePair<TKey, TVal>> ();
 
+		/// <summary>
+		/// Devuelve o establece el valor en una entrada
+		/// </summary>
+		/// <param name="key">Key.</param>
 		public new TVal this [TKey key]
 		{
 			get
@@ -111,6 +129,10 @@ namespace ListasExtra.Lock
 
 		#region ILockable
 
+		/// <summary>
+		/// Gets the enumerator.
+		/// </summary>
+		/// <returns>The enumerator.</returns>
 		public new System.Collections.IEnumerator GetEnumerator ()
 		{
 			Bloqueado = true;
@@ -155,6 +177,8 @@ namespace ListasExtra.Lock
 	/// </summary>
 	public class ListaPesoBloqueable<T> : ListaPesoBloqueable<T, float>
 	{
+		/// <summary>
+		/// </summary>
 		public ListaPesoBloqueable ()
 			: base ((x, y) => x + y, 0)
 		{

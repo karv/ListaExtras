@@ -49,6 +49,7 @@ namespace ListasExtra.Acotados
 			_valor = v;
 		}
 
+		/// <param name="val">Value.</param>
 		public static implicit operator float (Float val)
 		{
 			return val.Valor;

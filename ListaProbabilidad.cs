@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace ListasExtra
 {
@@ -60,7 +61,6 @@ namespace ListasExtra
 		public void Add (T obj)
 		{
 			_data.Add (obj);
-			OnAdd?.Invoke (obj);
 		}
 
 		/// <summary>
@@ -68,13 +68,7 @@ namespace ListasExtra
 		/// </summary>
 		public bool Remove (T obj)
 		{
-			if (_data.Remove (obj))
-			{
-				OnRemove?.Invoke (obj);
-				return true;
-			}
-			return false;
-				
+			return _data.Remove (obj);
 		}
 
 		/// <summary>
@@ -161,22 +155,29 @@ namespace ListasExtra
 
 		#region ICollection
 
+		/// <summary>
+		/// Clear this instance.
+		/// </summary>
 		public void Clear ()
 		{
 			_data.Clear ();
 		}
 
+		/// <Docs>The object to locate in the current collection.</Docs>
+		/// <para>Determines whether the current collection contains a specific value.</para>
+		/// <remarks>FAT</remarks>
+		/// <param name="item">Item.</param>
 		public bool Contains (T item)
 		{
 			return _data.Contains (item);
 		}
 
-		public void CopyTo (T [] array, int arrayIndex)
+		void ICollection<T>.CopyTo (T [] array, int arrayIndex)
 		{
 			_data.CopyTo (array, arrayIndex);
 		}
 
-		public IEnumerator<T> GetEnumerator ()
+		IEnumerator<T> IEnumerable<T>.GetEnumerator ()
 		{
 			return _data.GetEnumerator ();
 		}
@@ -186,20 +187,13 @@ namespace ListasExtra
 			return _data.GetEnumerator ();
 		}
 
-		public bool IsReadOnly
+		bool ICollection<T>.IsReadOnly
 		{
 			get
 			{
 				return false;
 			}
 		}
-
-		#endregion
-
-		#region Eventos
-
-		public event Action<T> OnRemove;
-		public event Action<T> OnAdd;
 
 		#endregion
 

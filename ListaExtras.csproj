@@ -48,7 +48,6 @@
     <Compile Include="CambioElementoEventArgs.cs" />
     <Compile Include="ListaPeso.cs" />
     <Compile Include="ListaContador.cs" />
-    <Compile Include="ObjetoAcotado.cs" />
     <Compile Include="ParNoOrdenado.cs" />
     <Compile Include="ParPosibilidad.cs" />
     <Compile Include="ListaCíclica.cs" />

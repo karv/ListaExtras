@@ -35,9 +35,14 @@ namespace ListasExtra
 			return Contiene (x, EqualityComparer<T>.Default);
 		}
 
-		public bool Contiene (T x, IEqualityComparer<T> comparador)
+		/// <summary>
+		/// Verifica si un objeto es un elemento de este par.
+		/// </summary>
+		/// <param name="item">Objeto.</param>
+		/// <param name="comparador">Comparador.</param>
+		public bool Contiene (T item, IEqualityComparer<T> comparador)
 		{
-			return comparador.Equals (x, A) || comparador.Equals (x, B);
+			return comparador.Equals (item, A) || comparador.Equals (item, B);
 		}
 
 		/// <summary>
@@ -130,11 +135,18 @@ namespace ListasExtra
 			yield return B;
 		}
 
+		/// <summary>
+		/// </summary>
 		public override bool Equals (object obj)
 		{
 			return Equals (obj, EqualityComparer<T>.Default);
 		}
 
+		/// <summary>
+		/// Verifica que este par sea igual estructuralmente a otro
+		/// </summary>
+		/// <param name="other">Otro par del mismo tipo</param>
+		/// <param name="comparer">Comparer.</param>
 		public bool Equals (object other, IEqualityComparer comparer)
 		{
 			// Analysis disable CanBeReplacedWithTryCastAndCheckForNull
@@ -168,11 +180,21 @@ namespace ListasExtra
 			// Analysis restore CanBeReplacedWithTryCastAndCheckForNull
 		}
 
-		public int GetHashCode (IEqualityComparer comparer)
+		int IStructuralEquatable.GetHashCode (IEqualityComparer comparer)
 		{
 			return comparer.GetHashCode (A) + comparer.GetHashCode (B);
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
+		public override int GetHashCode ()
+		{
+			return EqualityComparer<ParNoOrdenado<T>>.Default.GetHashCode (this);
+		}
+
+		/// <summary>
+		/// </summary>
 		public override string ToString ()
 		{
 			return string.Format ("({0}, {1})", A, B);
