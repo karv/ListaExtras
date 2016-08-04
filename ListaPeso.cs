@@ -291,7 +291,12 @@ namespace ListasExtra
 		/// <returns>Un ISet que contiene a cada elemento del soporte.</returns>
 		public ISet<T> Soporte ()
 		{
-			return new HashSet<T> (Model.Keys);
+			var ret = new HashSet<T> ();
+			foreach (var x in this)
+				if (!Equals (x, Nulo))
+					ret.Add (x.Key);
+
+			return ret;
 		}
 
 		#endregion
@@ -751,7 +756,6 @@ namespace ListasExtra
 				base [new Tuple<T1, T2> (x, y)] = value;
 			}
 		}
-
 	}
 
 	/// <summary>
