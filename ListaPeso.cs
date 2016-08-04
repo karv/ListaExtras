@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Collections;
 
 namespace ListasExtra
 {
@@ -11,51 +12,59 @@ namespace ListasExtra
 	/// <typeparam name="T">Dominio de la función.</typeparam>
 	/// <typeparam name="TVal">Rango(co-dominio) de la función.</typeparam>
 	[Serializable]
-	public class ListaPeso<T, TVal> : IDictionary<T, TVal>, IEquatable<IDictionary<T, TVal>>
+	public class ListaPeso<T, TVal> : IDictionary<T, TVal>, IEquatable<IDictionary<T, TVal>>, IStructuralEquatable, IStructuralComparable
 	{
 		#region Accesor
 
+		/// <summary>
+		/// Devuelve el valor correspondiete a una entrada dada
+		/// </summary>
+		/// <param name="key">Key de la entrada</param>
 		public TVal this [T key]
 		{
 			get
 			{
-				var ret = Entrada (key);
-				return ret == null ? Nulo : ret.Value;
+				TVal ret;
+				return  Entrada (key, out ret) ? ret : Nulo;
 			}
 			set
 			{
-				// Encontrar la Key buscada.
-				foreach (var x in Keys.ToList())
+				TVal val;
+				CambioElementoEventArgs<T, TVal> ret;
+				if (Model.TryGetValue (key, out val))
 				{
-					if (Comparador (x, key))
-					{
-						TVal prev = Model [x];
-						Model [x] = value;
-						AlCambiarValor?.Invoke (
-							this,
-							new CambioElementoEventArgs<T, TVal> (
-								key,
-								prev,
-								Model [x]));
-						return;
-					}
+					Model [key] = value;
+					ret = new CambioElementoEventArgs<T, TVal> (key, val, value);
 				}
-
-				// Si es entrada nueva, se agrega.
-				Model.Add (key, value);
-				AlCambiarValor?.Invoke (
-					this,
-					new CambioElementoEventArgs<T, TVal> (
+				else
+				{
+					// Si es entrada nueva, se agrega.
+					Model.Add (key, value);
+					AgregandoEntrada (key, value);
+					ret = new CambioElementoEventArgs<T, TVal> (
 						key,
 						Nulo,
-						Model [key]));
+						value);
+				}
+				checkForRemoval (key);
+				AlCambiarValor?.Invoke (this, ret);
 			}
+		}
+
+		void checkForRemoval (T key)
+		{
+			var val = this [key];
+			if (val.Equals (Nulo))
+				Remove (key);
 		}
 
 		#endregion
 
 		#region Internos
 
+		/// <summary>
+		/// Devuelve el modelo que diccionario que se usa.
+		/// </summary>
 		[DataMember]
 		protected IDictionary<T, TVal> Model { get; }
 
@@ -71,13 +80,6 @@ namespace ListasExtra
 		public Func<TVal, TVal> Inv;
 
 		/// <summary>
-		/// Devuelve o establece qué función sirve para saber si dos T's son idénticos para esta lista.
-		/// Por default es x.Equals(y).
-		/// </summary>
-		[DataMember]
-		public Func<T, T, bool> Comparador { get; set; }
-
-		/// <summary>
 		/// Devuelve o establece cuál es el objeto nulo (cero) del grupoide; o bien, el velor prederminado de cada entrada T del dominio.
 		/// </summary>
 		[DataMember]
@@ -86,34 +88,79 @@ namespace ListasExtra
 		/// <summary>
 		/// Devuelve la entrada correspondiente a un Key
 		/// </summary>
-		/// <param name="entrada">Key de la entrada</param>
-		public ReadonlyPair<T, TVal> Entrada (T entrada)
+		public bool Entrada (T entrada, out TVal ret)
 		{
 			foreach (var x in this)
-				if (Comparador (x.Key, entrada))
-					return new ReadonlyPair<T, TVal> (x);
-			return null;
+				if (Comparador.Equals (x.Key, entrada))
+				{
+					ret = x.Value;
+					return true;
+				}
+			ret = default(TVal);
+			return false;
 		}
 
 		#endregion
 
 		#region IDictionary
 
+		/// <summary>
+		/// Devuelve el comparador que se usa para las keys
+		/// </summary>
+		/// <value>The comparador.</value>
+		public IEqualityComparer<T> Comparador
+		{
+			get
+			{
+				return (Model as Dictionary<T, TVal>)?.Comparer;
+			}
+		}
+
+		/// <summary>
+		/// Agrega una entrada
+		/// </summary>
+		/// <param name="key">Key.</param>
+		/// <param name="value">Value.</param>
 		public void Add (T key, TVal value)
 		{
 			Model.Add (key, value);
 		}
 
+		/// <Docs>The item to remove from the current collection.</Docs>
+		/// <para>Removes the first occurrence of an item from the current collection.</para>
+		/// <summary>
+		/// Elimina una entrada del diccionario, dado su key
+		/// </summary>
 		public bool Remove (T key)
 		{
 			return Model.Remove (key);
 		}
 
+		/// <Docs>The key to locate in the current instance.</Docs>
+		/// <para>Determines whether the current instance contains an entry with the specified key.</para>
+		/// <summary>
+		/// Determina si contiene un key dado.
+		/// </summary>
+		public bool ContainsKey (T key)
+		{
+			return Model.ContainsKey (key);
+		}
+
+		/// <Docs>To be added.</Docs>
+		/// <summary>
+		/// Intenta devolver el valor de una key correspondiente
+		/// </summary>
+		/// <returns><c>true</c>, si la entrada existe y devuelve algo, <c>false</c> otherwise.</returns>
+		/// <param name="key">Key.</param>
+		/// <param name="value">Valor de regreso.</param>
 		public bool TryGetValue (T key, out TVal value)
 		{
 			return Model.TryGetValue (key, out value);
 		}
 
+		/// <summary>
+		/// Devuelve la colección de las keys
+		/// </summary>
 		public ICollection<T> Keys
 		{
 			get
@@ -122,6 +169,9 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Devuelve la colección de los valores
+		/// </summary>
 		public ICollection<TVal> Values
 		{
 			get
@@ -130,31 +180,59 @@ namespace ListasExtra
 			}
 		}
 
+		/// <Docs>The item to add to the current collection.</Docs>
+		/// <para>Adds an item to the current collection.</para>
+		/// <remarks>To be added.</remarks>
+		/// <exception cref="System.NotSupportedException">The current collection is read-only.</exception>
+		/// <summary>
+		/// Agrega una entrada
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public void Add (KeyValuePair<T, TVal> item)
 		{
 			Model.Add (item);
 		}
 
+		/// <summary>
+		/// Vacía el diccionario
+		/// </summary>
 		public void Clear ()
 		{
 			Model.Clear ();
 		}
 
+		/// <Docs>The object to locate in the current collection.</Docs>
+		/// <para>Determines whether the current collection contains a specific value.</para>
+		/// <summary>
+		/// Revisa si existe una entrada
+		/// </summary>
 		public bool Contains (KeyValuePair<T, TVal> item)
 		{
 			return Model.Contains (item);
 		}
 
+		/// <summary>
+		/// Copia este diccionario a un arreglo
+		/// </summary>
 		public void CopyTo (KeyValuePair<T, TVal> [] array, int arrayIndex)
 		{
 			Model.CopyTo (array, arrayIndex);
 		}
 
+		/// <Docs>The item to remove from the current collection.</Docs>
+		/// <para>Removes the first occurrence of an item from the current collection.</para>
+		/// <summary>
+		/// Elimina una entrada dada
+		/// </summary>
+		/// <param name="item">Item.</param>
 		public bool Remove (KeyValuePair<T, TVal> item)
 		{
 			return Remove (item);
 		}
 
+		/// <summary>
+		/// Devuelve el número de entradas del dicionario.
+		/// </summary>
 		public int Count
 		{
 			get
@@ -163,6 +241,10 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is read only.
+		/// </summary>
+		/// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
 		public bool IsReadOnly
 		{
 			get
@@ -171,12 +253,16 @@ namespace ListasExtra
 			}
 		}
 
+		/// <summary>
+		/// Gets the enumerator.
+		/// </summary>
+		/// <returns>The enumerator.</returns>
 		public IEnumerator<KeyValuePair<T, TVal>> GetEnumerator ()
 		{
 			return Model.GetEnumerator ();
 		}
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return Model.GetEnumerator ();
 		}
@@ -205,7 +291,12 @@ namespace ListasExtra
 		/// <returns>Un ISet que contiene a cada elemento del soporte.</returns>
 		public ISet<T> Soporte ()
 		{
-			return new HashSet<T> (Model.Keys);
+			var ret = new HashSet<T> ();
+			foreach (var x in this)
+				if (!Equals (x, Nulo))
+					ret.Add (x.Key);
+
+			return ret;
 		}
 
 		#endregion
@@ -241,7 +332,12 @@ namespace ListasExtra
 		/// <summary>
 		/// Se llama cuando se cambia algún valor.
 		/// </summary>
-		public event EventHandler<CambioElementoEventArgs<T,TVal>> AlCambiarValor;
+		public event EventHandler<CambioElementoEventArgs<T, TVal>> AlCambiarValor;
+
+		/// <summary>
+		/// Ocurre cuando se agrega una nueva entrada(key) al diccionario
+		/// </summary>
+		public event EventHandler<CambioElementoEventArgs<T, TVal>> AlAgregarEntrada;
 
 		#endregion
 
@@ -252,51 +348,74 @@ namespace ListasExtra
 		/// </summary>
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
-		protected ListaPeso (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
-			: this ()
+		/// <param name="comparador">Comparador.</param>
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo,
+		                  IEqualityComparer<T> comparador)
+			: this (comparador)
 		{
 			Suma = operSuma;
 			Nulo = objetoNulo;
 		}
 
 		/// <summary>
-		/// Inicializa una instancia de la clase a partir de un modelo de IDIccionary.
+		/// Inicializa una instancia de la clase.
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo)
+			: this (null)
+		{
+			Suma = operSuma;
+			Nulo = objetoNulo;
+		}
+
+		/// <summary>
+		/// Inicializa una instancia de la clase a partir de un modelo de IDiccionary.
 		/// </summary>
 		/// <param name="operSuma">Operador suma inicial.</param>
 		/// <param name="objetoNulo">Objeto cero inicial.</param>
 		/// <param name="modelo">Modelo</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo,
-		                  IDictionary<T, TVal> modelo = null)
-			: this (operSuma, objetoNulo)
+		                  IDictionary<T, TVal> modelo)
 		{
-			Model = modelo ?? new Dictionary<T, TVal> ();
+			Suma = operSuma;
+			Nulo = objetoNulo;
+			Model = modelo;
 		}
 
-		protected ListaPeso ()
+		/// <summary>
+		/// Inicializa una instancia de la clase.
+		/// </summary>
+		/// <param name="comparador">Comparador.</param>
+		protected ListaPeso (IEqualityComparer<T> comparador = null)
 		{
-			Model = new Dictionary<T, TVal> ();
-			// Analysis disable ConvertIfStatementToConditionalTernaryExpression
-			if (typeof (T).GetInterfaces ().Contains (typeof (IEquatable<T>)))
-				Comparador = (x, y) => ((IEquatable<T>)x).Equals (y);
-			else
-				Comparador = (x, y) => x.Equals (y);
-			// Analysis restore ConvertIfStatementToConditionalTernaryExpression
+			var cprd = comparador ?? EqualityComparer<T>.Default;
+			Model = new Dictionary<T, TVal> (cprd);
+		}
+
+		/// <summary>
+		/// Cuando se agrega un nuevo key al diccionario, 
+		/// se ejecuta esta función.
+		/// Además éste método invoca a su respectivo evento.
+		/// </summary>
+		/// <param name="key">Key agregada</param>
+		/// <param name="value">Valor de esta key.</param>
+		protected virtual void AgregandoEntrada (T key, TVal value)
+		{
+			AlAgregarEntrada?.Invoke (
+				this,
+				new CambioElementoEventArgs<T, TVal> (
+					key,
+					Nulo,
+					value));
 		}
 
 		#endregion
 
 		#region Lista
-
-		public bool ContainsKey (T key)
-		{
-			foreach (var x in Keys)
-			{
-				if (Comparador (x, key))
-					return true;
-			}
-			return false;
-		}
 
 		/// <summary>
 		/// Revisa si existe un objeto con las con las condiciones dadas.
@@ -326,6 +445,10 @@ namespace ListasExtra
 
 		#region IEquatable
 
+		/// <summary>
+		/// Determina si este diccionario coincide con otro del mismo tipo
+		/// </summary>
+		/// <param name="other">The other to compare with the current dictionary.</param>
 		public bool Equals (IDictionary<T, TVal> other)
 		{
 			var supp = Soporte ();
@@ -349,6 +472,9 @@ namespace ListasExtra
 
 		#region Generales
 
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current dictionary.
+		/// </summary>
 		public override string ToString ()
 		{
 			string ret = "";
@@ -357,6 +483,33 @@ namespace ListasExtra
 				ret += string.Format ("{0} -> {1}\n", item.Key, item.Value);
 			}
 			return ret;
+		}
+
+		bool _eliminarValoresNull;
+
+		/// <summary>
+		/// Determina si las entradas cuyas <c>value</c> es igual a <c>Nulo</c> deben de ser eliminadas del modelo.
+		/// </summary>
+		/// <value><c>true</c> if eliminar valores null; otherwise, <c>false</c>.</value>
+		public bool EliminarValoresNull // TEST
+		{
+			get
+			{
+				return _eliminarValoresNull;
+			}
+			set
+			{
+				_eliminarValoresNull = value;
+				if (value)
+					eliminarEntradasNulas ();
+			}
+		}
+
+		void eliminarEntradasNulas ()
+		{
+			var removing = this.Where (z => z.Value.Equals (Nulo));
+			foreach (var r in removing)
+				Remove (r);
 		}
 
 		#endregion
@@ -371,7 +524,7 @@ namespace ListasExtra
 		{
 			if (Inv == null)
 				throw new NullReferenceException ("No está definito Inv");
-			var ret = new ListaPeso<T, TVal> (Suma, Nulo);
+			var ret = new ListaPeso<T, TVal> (Suma, Nulo, Comparador);
 			ret.Inv = Inv;
 			foreach (var x in Keys)
 			{
@@ -405,7 +558,7 @@ namespace ListasExtra
 		protected static ListaPeso<T, TVal> Sumar (ListaPeso<T, TVal> left,
 		                                           IDictionary<T, TVal> right)
 		{
-			var ret = new ListaPeso<T, TVal> (left.Suma, left.Nulo, null);
+			var ret = new ListaPeso<T, TVal> (left.Suma, left.Nulo, left.Comparador);
 
 			foreach (var x in left)
 			{
@@ -418,17 +571,22 @@ namespace ListasExtra
 			return ret;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T, TVal> operator + (ListaPeso<T, TVal> left,
 		                                             IDictionary<T, TVal> right)
 		{
 			return Sumar (left, right);
 		}
 
+		/// <param name="x">other</param>
 		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> x)
 		{
 			return x.Inverso ();
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T, TVal> operator - (ListaPeso<T, TVal> left,
 		                                             IDictionary<T, TVal> right)
 		{
@@ -442,8 +600,64 @@ namespace ListasExtra
 
 		#endregion
 
+		#region Structural
+
+		// TEST: region
+		/// <summary>
+		/// Compares the current ListaPeso with some other dictionary using a IEqualityComparer for its elements
+		/// </summary>
+		/// <param name="other">Other.</param>
+		/// <param name="comparer">Comparer.</param>
+		public bool Equals (object other, IEqualityComparer comparer)
+		{
+			var otherDict = other as IDictionary<T, TVal>;
+			if (otherDict == null)
+				return false;
+			var keys = new HashSet<T> ();
+			keys.UnionWith (Keys);
+			keys.UnionWith (otherDict.Keys);
+			foreach (var x in keys)
+			{
+				TVal otherVal;
+				// Regresar false si falla en alguna entrada.
+				if (!otherDict.TryGetValue (x, out otherVal) && comparer.Equals (
+					    this [x],
+					    otherVal))
+					return false;
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Gets the hash code.
+		/// </summary>
+		/// <returns>The hash code.</returns>
+		/// <param name="comparer">Comparer.</param>
+		public int GetHashCode (IEqualityComparer comparer)
+		{
+			throw new NotImplementedException ();
+		}
+
+		/// <summary>
+		/// Determina el orden que deben tener dos objetos bajo un comparador
+		/// </summary>
+		/// <returns>The to.</returns>
+		/// <param name="other">Other.</param>
+		/// <param name="comparer">Comparer.</param>
+		public int CompareTo (object other, IComparer comparer)
+		{
+			throw new NotImplementedException ();
+		}
+
+		#endregion
+
 		#region Serializable
 
+		/// <summary>
+		/// Gets the object data.
+		/// </summary>
+		/// <param name="info">Info.</param>
+		/// <param name="context">Context.</param>
 		public void GetObjectData (SerializationInfo info, StreamingContext context)
 		{
 			var iser = Model as ISerializable;
@@ -471,18 +685,66 @@ namespace ListasExtra
 		/// <param name="modelo">Modelo de diccionario</param>
 		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
 		                  TVal objetoNulo,
-		                  IDictionary<Tuple<T1, T2>, TVal> modelo = null)
-			: base (operSuma, objetoNulo, modelo)
+		                  IDictionary<Tuple<T1, T2>, TVal> modelo)
+			: base (operSuma,
+			        objetoNulo,
+			        modelo)
 		{
-			if (typeof (T1).GetInterfaces ().Contains (typeof (IEquatable<T1>)) &&
-			    typeof (T2).GetInterfaces ().Contains (typeof (IEquatable<T2>)))
-				Comparador = (x, y) => 
-				(((IEquatable<T1>)x.Item1).Equals (y.Item1) &&
-				((IEquatable<T2>)x.Item2).Equals (y.Item2));
-			else
-				Comparador = (x, y) => x.Equals (y);
 		}
 
+		/// <summary>
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo)
+			: base (operSuma,
+			        objetoNulo, new TupleComparador<T1, T2> ())
+		{
+		}
+
+		/// <summary>
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
+		/// <param name="comparador">Comparador.</param>
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo,
+		                  IEqualityComparer<Tuple<T1, T2>> comparador)
+			: base (operSuma, objetoNulo, comparador)
+		{
+		}
+
+		/// <summary>
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
+		/// <param name="comparador1">Comparador del primer valor de Key.</param>
+		/// <param name="comparador2">Comparador del segundo valor de Key.</param>
+		public ListaPeso (Func<TVal, TVal, TVal> operSuma,
+		                  TVal objetoNulo,
+		                  IEqualityComparer<T1> comparador1,
+		                  IEqualityComparer<T2> comparador2)
+			: base (operSuma,
+			        objetoNulo,
+			        new TupleComparador<T1, T2> (
+				        comparador1,
+				        comparador2))
+		{
+		}
+
+		/// <summary>
+		/// </summary>
+		/// <param name="comparador">Comparador.</param>
+		public ListaPeso (IEqualityComparer<Tuple<T1, T2>> comparador)
+			: base (comparador)
+		{
+		}
+
+		/// <summary>
+		/// </summary>
+		/// <param name="x">Primer valor.</param>
+		/// <param name="y">Segundo valor.</param>
 		public TVal this [T1 x, T2 y]
 		{
 			get
@@ -494,17 +756,41 @@ namespace ListasExtra
 				base [new Tuple<T1, T2> (x, y)] = value;
 			}
 		}
-
 	}
 
+	/// <summary>
+	/// Representa una lista tipo Dictionary (o mejor aún una función de soporte finito) con operaciones de grupoide.
+	/// </summary>
 	[Serializable]
 	public class ListaPeso<T> : ListaPeso<T, Single>, IComparable<IDictionary<T, Single>>
 	{
-		public ListaPeso (IDictionary<T, float> modelo = null)
+		/// <summary>
+		/// </summary>
+		/// <param name="modelo">Modelo.</param>
+		public ListaPeso (IDictionary<T, float> modelo)
 			: base ((x, y) => x + y, 0, modelo)
 		{
 		}
 
+		/// <summary>
+		/// </summary>
+		public ListaPeso ()
+			: base ((x, y) => x + y, 0)
+		{
+		}
+
+		/// <summary>
+		/// </summary>
+		/// <param name="comparador">Comparador.</param>
+		public ListaPeso (IEqualityComparer<T> comparador)
+			: base ((x, y) => x + y,
+			        0,
+			        comparador)
+		{
+		}
+
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static bool operator <= (ListaPeso<T> left,
 		                                IDictionary<T, float> right)
 		{
@@ -516,6 +802,8 @@ namespace ListasExtra
 			return true;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static bool operator >= (ListaPeso<T> left,
 		                                IDictionary<T, float> right)
 		{
@@ -532,6 +820,8 @@ namespace ListasExtra
 			return true;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T> operator + (ListaPeso<T> left,
 		                                       IDictionary<T, float> right)
 		{
@@ -549,6 +839,8 @@ namespace ListasExtra
 
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T> operator * (ListaPeso<T> left, float right)
 		{
 			var ret = new ListaPeso<T> ();
@@ -559,11 +851,15 @@ namespace ListasExtra
 			return ret;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static ListaPeso<T> operator * (float left, ListaPeso<T> right)
 		{
 			return right * left;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
 		public static float operator * (ListaPeso<T> left, ListaPeso<T> right)
 		{
 			ISet<T> soporte = left.Soporte ();
@@ -578,6 +874,27 @@ namespace ListasExtra
 			return ret;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
+		public static double operator / (ListaPeso<T> left,
+		                                 IDictionary<T, float> right)
+		{
+			return left.VecesConteniendoA (right);
+		}
+
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
+		public static double operator / (IDictionary<T, float> left, 
+		                                 ListaPeso<T> right)
+		{
+			return right.VecesContenidoEn (left);
+		}
+
+		/// <summary>
+		/// Suma, en una entrada dada, un valor dado.
+		/// </summary>
+		/// <param name="key">Entrada.</param>
+		/// <param name="value">Valor.</param>
 		public new void Add (T key, float value)
 		{
 			this [key] += value;
@@ -585,6 +902,11 @@ namespace ListasExtra
 
 		#region IComparable
 
+		/// <Docs>To be added.</Docs>
+		/// <para>Returns the sort order of the current instance compared to the specified object.</para>
+		/// <summary>
+		/// </summary>
+		/// <param name="other">Otro diccionario</param>
 		public int CompareTo (IDictionary<T, float> other)
 		{
 			return this <= other ? -1 : this >= other ? 1 : 0;
@@ -592,6 +914,48 @@ namespace ListasExtra
 
 		#endregion
 
+		/// <summary>
+		/// Devuelve el número de veces que esta clase está contenido en un diccionario.
+		/// </summary>
+		/// <returns>El mayor número r tal que this * r &gt; otro </returns>
+		/// <param name="otro">Un diccionario al cual comparar</param>
+		public double VecesContenidoEn (IDictionary<T, float> otro)
+		{
+			float ret = float.PositiveInfinity;
+			foreach (var x in Keys.Union (otro.Keys))
+			{
+				float otroVal;
+				if (otro.TryGetValue (x, out otroVal))
+					ret = Math.Min (ret, otroVal / this [x]);
+			}
+			return ret;
+		}
+
+		/// <summary>
+		/// Devuelve el número de veces que esta clase contiene a un diccionario.
+		/// </summary>
+		/// <returns>El número de veces contenido.</returns>
+		/// <param name="otro">Un diccionario al cual comparar.</param>
+		public double VecesConteniendoA (IDictionary<T, float> otro)
+		{
+			float ret = float.PositiveInfinity;
+			foreach (var x in Keys.Union (otro.Keys))
+			{
+				float otroVal;
+				if (otro.TryGetValue (x, out otroVal))
+					ret = Math.Min (ret, this [x] / otroVal);
+			}
+			return ret;
+		}
+
+		/// <summary>
+		/// Determina si es la constante cero.
+		/// </summary>
+		/// <returns><c>true</c> si este objeto es la constante cero; en caso contrario, <c>false</c>.</returns>
+		public bool EsCero ()
+		{
+			return Soporte ().Any ();
+		}
 	}
 
 	/// <summary>
@@ -602,17 +966,42 @@ namespace ListasExtra
 	[Serializable]
 	public class ListaPesoFloat<T1, T2> : ListaPeso<T1, T2, float>
 	{
+		/// <summary>
+		/// </summary>
 		public ListaPesoFloat ()
 			: base ((x, y) => x + y, 0)
 		{
 		}
 
-		public ListaPesoFloat (Func<float, float, float> operSuma,
-		                       float objetoNulo,
-		                       IDictionary<Tuple<T1, T2>, float> modelo)
-			: base (operSuma,
-			        objetoNulo,
-			        modelo)
+		/// <summary>
+		/// </summary>
+		/// <param name="modelo">Modelo.</param>
+		public ListaPesoFloat (IDictionary<Tuple<T1, T2>, float> modelo)
+			: base ((x, y) => x + y, 0, modelo)
+		{
+		}
+
+		/// <summary>
+		/// </summary>
+		/// <param name="comparador">Comparador.</param>
+		public ListaPesoFloat (IEqualityComparer<Tuple<T1, T2>> comparador)
+			: base ((x, y) => x + y, 
+			        0,
+			        comparador)
+		{
+		}
+
+
+		/// <summary>
+		/// </summary>
+		/// <param name="comparador1">Comparador1.</param>
+		/// <param name="comparador2">Comparador2.</param>
+		public ListaPesoFloat (IEqualityComparer<T1> comparador1,
+		                       IEqualityComparer<T2> comparador2)
+			: base ((x, y) => x + y, 
+			        0,
+			        comparador1,
+			        comparador2)
 		{
 		}
 	}

@@ -21,7 +21,7 @@ namespace Pruebas
 				"lp[{0}] cambió de {1} a {2}",
 				e.Key,
 				e.Previo,
-				e.Actual));
+				e.NuevoValor));
 			lp [1] = 98;
 		}
 
@@ -68,7 +68,7 @@ namespace Pruebas
 
 		class WeirdInt : IEquatable<WeirdInt>
 		{
-			public int Valor;
+			public int Valor { get; }
 
 			public WeirdInt (int val)
 			{
@@ -79,9 +79,12 @@ namespace Pruebas
 			{
 				if (obj == null)
 					return false;
-				if (ReferenceEquals (this, obj))
-					return true;
 				return Valor == obj.Valor;
+			}
+
+			public override int GetHashCode ()
+			{
+				return Valor.GetHashCode ();
 			}
 
 			public static implicit operator int (WeirdInt w)
@@ -94,6 +97,10 @@ namespace Pruebas
 				return new WeirdInt (i);
 			}
 
+			public override string ToString ()
+			{
+				return string.Format ("{0}*", Valor);
+			}
 		}
 
 		[Test]
@@ -108,6 +115,42 @@ namespace Pruebas
 			cl2 [0, 0] = 3;
 			tres = cl2 [0, 0];
 			Assert.AreEqual (3, tres);
+		}
+
+		[Test]
+		public void AsignaNuevaKey ()
+		{
+			var cl = new ListaPeso<WeirdInt> ();
+			bool invoca = false;
+			cl.AlAgregarEntrada += delegate(object sender,
+			                                CambioElementoEventArgs<WeirdInt, float> e)
+			{
+				Assert.AreEqual (e.Key.Valor, 0);
+				invoca = true;
+			};
+			cl [0] = 1;
+			Assert.True (invoca);
+		}
+
+		[Test]
+		public void VecesContención ()
+		{
+			var lp = new ListaPeso<int> ();
+			lp [0] = 12;
+			lp [1] = 10;
+
+			Assert.AreEqual (1, lp.VecesContenidoEn (lp));
+			Assert.AreEqual (1, lp.VecesConteniendoA (lp));
+
+			var otro = new ListaPeso<int> ();
+			otro [0] = 6;
+			Assert.AreEqual (2, otro.VecesContenidoEn (lp));
+			Assert.AreEqual (2, lp.VecesConteniendoA (otro));
+			otro [0] = 18;
+			otro [1] = 10;
+			otro [2] = 3;
+			Assert.AreEqual (0.666666666f, otro.VecesContenidoEn (lp), 0.01f);
+			Assert.AreEqual (1, otro.VecesConteniendoA (lp));
 		}
 	}
 }

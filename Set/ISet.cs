@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 
 namespace ListasExtra.Set
 {
 	/// <summary>
 	/// Representa un conjunto
 	/// </summary>
-	public interface ISet<T> : ICollection<T>
+	public interface ISet<T> : ICollection<T>, IStructuralEquatable
 	{
 		/// <summary>
 		/// Toma un elemento

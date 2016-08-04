@@ -9,8 +9,14 @@ namespace ListasExtra.Lock
 	/// </summary>
 	public class LockEnumerator<T> : IEnumerator<T>
 	{
+		/// <summary>
+		/// Enumerador base
+		/// </summary>
 		public readonly IEnumerator<T> BaseEnumerator;
 
+		/// <summary>
+		/// </summary>
+		/// <param name="baseEnum">Base enum.</param>
 		public LockEnumerator (IEnumerator<T> baseEnum)
 		{
 			BaseEnumerator = baseEnum;
@@ -19,18 +25,28 @@ namespace ListasExtra.Lock
 		/// <summary>
 		/// Ocurre al terminar de enumerar
 		/// </summary>
-		public event Action<object> OnTerminate;
+		public event EventHandler OnTerminate;
 
 		#region IEnumerator implementation
 
+		/// <summary>
+		/// Se mueve a la próxima iteración
+		/// </summary>
 		public bool MoveNext ()
 		{
 			bool ret = BaseEnumerator.MoveNext ();
 			if (!ret)
-				OnTerminate?.Invoke (this);
+				OnTerminate?.Invoke (this, EventArgs.Empty);
 			return ret;
 		}
 
+		/// <Docs>The collection was modified after the enumerator was instantiated.</Docs>
+		/// <see cref="M:System.Collections.IEnumerator.MoveNext"></see>
+		/// <see cref="M:System.Collections.IEnumerator.Reset"></see>
+		/// <see cref="T:System.InvalidOperationException"></see>
+		/// <summary>
+		/// Reset this instance.
+		/// </summary>
 		public void Reset ()
 		{
 			BaseEnumerator.Reset ();
@@ -48,6 +64,8 @@ namespace ListasExtra.Lock
 
 		#region IDisposable implementation
 
+		/// <summary>
+		/// </summary>
 		public void Dispose ()
 		{
 			BaseEnumerator.Dispose ();
@@ -58,6 +76,9 @@ namespace ListasExtra.Lock
 
 		#region IEnumerator implementation
 
+		/// <summary>
+		/// Devuelve el objeto actual de iteración.
+		/// </summary>
 		public T Current
 		{
 			get

@@ -9,6 +9,8 @@ namespace ListasExtra.Cola
 	/// </summary>
 	public class Cola<T> : ICola<T>
 	{
+		/// <summary>
+		/// </summary>
 		public Cola ()
 		{
 			Lista = new List<T> ();

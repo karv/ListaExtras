@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,8 +11,8 @@
     <RootNamespace>ListasExtra</RootNamespace>
     <AssemblyName>ListaExtras</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <ReleaseVersion>0.3.0.7</ReleaseVersion>
-    <SynchReleaseVersion>false</SynchReleaseVersion>
+    <ReleaseVersion>0.3.1</ReleaseVersion>
+    <ReleaseVersion>0.3.1</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ListaExtras.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -43,11 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadonlyPair.cs" />
     <Compile Include="CambioElementoEventArgs.cs" />
     <Compile Include="ListaPeso.cs" />
     <Compile Include="ListaContador.cs" />
-    <Compile Include="ObjetoAcotado.cs" />
     <Compile Include="ParNoOrdenado.cs" />
     <Compile Include="ParPosibilidad.cs" />
     <Compile Include="ListaCíclica.cs" />
@@ -66,6 +65,8 @@
     <Compile Include="ListaProbabilidad.cs" />
     <Compile Include="Acotados\Float.cs" />
     <Compile Include="Árboles\IÁrbolEnraizado.cs" />
+    <Compile Include="Set\EmptySetException.cs" />
+    <Compile Include="TupleComparador.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

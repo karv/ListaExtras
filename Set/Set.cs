@@ -1,36 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace ListasExtra.Set
 {
-	[System.Diagnostics.DebuggerDisplayAttribute ("Count = {Count}")]
 	/// <summary>
 	/// Representa un conjunto de elementos sin un control sobre el orden.
 	/// </summary>
 	/// <typeparam name="T">Tipo de objetos</typeparam>
+	[DebuggerDisplayAttribute ("Count = {Count}")]
 	public class Set<T> : HashSet<T>, ISet<T>
 	{
+		/// <summary>
+		/// Initializes a new instance of this class.
+		/// </summary>
 		public Set ()
 		{
-			_dat = new HashSet<T> ();
 		}
 
 		/// <param name="inicial">Inicial.</param>
 		public Set (IEnumerable<T> inicial)
+			: base (inicial)
 		{
-			_dat = new HashSet<T> (inicial);
 		}
-
-		readonly HashSet<T> _dat;
 
 		/// <summary>
 		/// Toma un elemento
 		/// </summary>
 		public T Pick ()
 		{
-			T ret;
-			using (var en = _dat.GetEnumerator ())
-				ret = en.Current;
-			return ret;
+			using (var en = GetEnumerator ())
+				if (en.MoveNext ())
+					return en.Current;
+			throw new EmptySetException ("No se puede tomar un elemento de un conjunto vacío.");
 		}
 
 		/// <summary>
@@ -40,9 +42,36 @@ namespace ListasExtra.Set
 		public T PickRemove ()
 		{
 			var ret = Pick ();
-			_dat.Remove (ret);
+			Remove (ret);
 			return ret;
 		}
-			
+
+		/// <summary>
+		/// Revisa si este Set es igual (conjuntista) a un IEnumerable del mismo tipo.
+		/// </summary>
+		/// <param name="other">Other.</param>
+		/// <param name="comparer">Comparer.</param>
+		public bool Equals (object other,
+		                    System.Collections.IEqualityComparer comparer)
+		{
+			if (comparer.GetHashCode (other) != comparer.GetHashCode (this))
+				return false;
+
+			// TODO: ¿Y lo comparer-oso?
+			if (other is IEnumerable<T>)
+				return SetEquals ((IEnumerable<T>)other);
+
+			return false;
+		}
+
+		/// <summary>
+		/// Gets the hash code.
+		/// </summary>
+		/// <returns>The hash code.</returns>
+		/// <param name="comparer">Comparer.</param>
+		public int GetHashCode (System.Collections.IEqualityComparer comparer)
+		{
+			return this.Sum (z => comparer.GetHashCode (z));
+		}
 	}
 }

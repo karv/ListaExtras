@@ -26,7 +26,6 @@ namespace Pruebas
 			}
 
 			Assert.AreEqual (10, prob.Count);
-			Assert.AreEqual (45, prob.Suma ());
 
 			const double expFactor = numPruebas / 45.0;
 
@@ -45,7 +44,7 @@ namespace Pruebas
 		[Test]
 		public void TestCtor ()
 		{
-			var lista = new int[] { 1, 5, 2, 3, 3 };
+			var lista = new [] { 1, 5, 2, 3, 3 };
 			var pesos = new ListaProbabilidad<int> (lista, z => z);
 			Assert.AreEqual (lista.Length, pesos.Count);
 		}
@@ -54,8 +53,6 @@ namespace Pruebas
 		public void TestEvents ()
 		{
 			var probs = new ListaProbabilidad<int> (z => z);
-			probs.OnAdd += (int obj) => Console.WriteLine ("Agregado {0}", obj);
-			probs.OnRemove += (int obj) => Console.WriteLine ("Eliminado {0}", obj);
 
 			probs.Add (3);
 			probs.Remove (3);

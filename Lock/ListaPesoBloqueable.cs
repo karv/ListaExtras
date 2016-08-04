@@ -1,24 +1,4 @@
-﻿//
-//  ListaPesoLock.cs
-//
-//  Author:
-//       Edgar Carballo <karvayoEdgar@gmail.com>
-//
-//  Copyright (c) 2015 edgar
-//
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ListasExtra;
 
@@ -29,6 +9,10 @@ namespace ListasExtra.Lock
 	/// </summary>
 	public class ListaPesoBloqueable<TKey, TVal> : ListaPeso<TKey, TVal>, IListBloqueable<KeyValuePair<TKey, TVal>>
 	{
+		/// <summary>
+		/// </summary>
+		/// <param name="operSuma">Oper suma.</param>
+		/// <param name="objetoNulo">Objeto nulo.</param>
 		public ListaPesoBloqueable (Func<TVal, TVal, TVal> operSuma, TVal objetoNulo)
 			: base (operSuma, objetoNulo)
 		{
@@ -46,22 +30,32 @@ namespace ListasExtra.Lock
 			Promesas.Clear ();
 		}
 
+		/// <summary>
+		/// Agrega un valor
+		/// </summary>
+		/// <param name="key">Key.</param>
+		/// <param name="val">Value.</param>
 		public new void Add (TKey key, TVal val)
 		{
 			if (Bloqueado)
 				Promesas.Add (new KeyValuePair<TKey, TVal> (key, val));
 			else
-			{
 				base [key] = Suma (base [key], val);
-			}
 		}
 
 		#region Locking
 
+		/// <summary>
+		/// Ocurre cuando se libera el seguro.
+		/// </summary>
 		public event EventHandler OnRelease;
 
 		bool _locked;
 
+		/// <summary>
+		/// Devuelve o establece el valor de bloqueo.
+		/// Si es true, la enumeración no se modificará y se actualizará hasta que se libere el seguro o se invoque Commit
+		/// </summary>
 		public bool Bloqueado
 		{
 			get
@@ -78,13 +72,17 @@ namespace ListasExtra.Lock
 					Commit ();
 
 					if (OnRelease != null)
-						OnRelease.Invoke (this, new EventArgs ());
+						OnRelease.Invoke (this, EventArgs.Empty);
 				}
 			}
 		}
 
 		IList<KeyValuePair<TKey, TVal>> Promesas = new List<KeyValuePair<TKey, TVal>> ();
 
+		/// <summary>
+		/// Devuelve o establece el valor en una entrada
+		/// </summary>
+		/// <param name="key">Key.</param>
 		public new TVal this [TKey key]
 		{
 			get
@@ -111,6 +109,10 @@ namespace ListasExtra.Lock
 
 		#region ILockable
 
+		/// <summary>
+		/// Gets the enumerator.
+		/// </summary>
+		/// <returns>The enumerator.</returns>
 		public new System.Collections.IEnumerator GetEnumerator ()
 		{
 			Bloqueado = true;
@@ -141,9 +143,9 @@ namespace ListasExtra.Lock
 
 		readonly List< object> _enumInstances = new List<object> ();
 
-		void unblock (object en)
+		void unblock (object s, EventArgs args)
 		{
-			_enumInstances.Remove (en);
+			_enumInstances.Remove (s);
 			Bloqueado &= _enumInstances.Count != 0;
 		}
 
@@ -155,6 +157,8 @@ namespace ListasExtra.Lock
 	/// </summary>
 	public class ListaPesoBloqueable<T> : ListaPesoBloqueable<T, float>
 	{
+		/// <summary>
+		/// </summary>
 		public ListaPesoBloqueable ()
 			: base ((x, y) => x + y, 0)
 		{
