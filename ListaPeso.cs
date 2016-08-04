@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections;
+using System.Windows.Forms;
+using System.Runtime.Remoting.Messaging;
 
 namespace ListasExtra
 {
@@ -872,6 +874,22 @@ namespace ListasExtra
 			}
 
 			return ret;
+		}
+
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
+		public static double operator / (ListaPeso<T> left,
+		                                 IDictionary<T, float> right)
+		{
+			return left.VecesConteniendoA (right);
+		}
+
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
+		public static double operator / (IDictionary<T, float> left, 
+		                                 ListaPeso<T> right)
+		{
+			return right.VecesContenidoEn (left);
 		}
 
 		/// <summary>
