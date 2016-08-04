@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections;
-using System.Windows.Forms;
-using System.Runtime.Remoting.Messaging;
 
 namespace ListasExtra
 {

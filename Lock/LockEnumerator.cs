@@ -25,7 +25,7 @@ namespace ListasExtra.Lock
 		/// <summary>
 		/// Ocurre al terminar de enumerar
 		/// </summary>
-		public event Action<object> OnTerminate;
+		public event EventHandler OnTerminate;
 
 		#region IEnumerator implementation
 
@@ -36,7 +36,7 @@ namespace ListasExtra.Lock
 		{
 			bool ret = BaseEnumerator.MoveNext ();
 			if (!ret)
-				OnTerminate?.Invoke (this);
+				OnTerminate?.Invoke (this, EventArgs.Empty);
 			return ret;
 		}
 
