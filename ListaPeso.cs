@@ -262,7 +262,7 @@ namespace ListasExtra
 			return Model.GetEnumerator ();
 		}
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return Model.GetEnumerator ();
 		}
@@ -898,6 +898,48 @@ namespace ListasExtra
 
 		#endregion
 
+		/// <summary>
+		/// Devuelve el número de veces que esta clase está contenido en un diccionario.
+		/// </summary>
+		/// <returns>El mayor número r tal que this * r &gt; otro </returns>
+		/// <param name="otro">Un diccionario al cual comparar</param>
+		public double VecesContenidoEn (IDictionary<T, float> otro)
+		{
+			float ret = float.PositiveInfinity;
+			foreach (var x in Keys.Union (otro.Keys))
+			{
+				float otroVal;
+				if (otro.TryGetValue (x, out otroVal))
+					ret = Math.Min (ret, otroVal / this [x]);
+			}
+			return ret;
+		}
+
+		/// <summary>
+		/// Devuelve el número de veces que esta clase contiene a un diccionario.
+		/// </summary>
+		/// <returns>El número de veces contenido.</returns>
+		/// <param name="otro">Un diccionario al cual comparar.</param>
+		public double VecesConteniendoA (IDictionary<T, float> otro)
+		{
+			float ret = float.PositiveInfinity;
+			foreach (var x in Keys.Union (otro.Keys))
+			{
+				float otroVal;
+				if (otro.TryGetValue (x, out otroVal))
+					ret = Math.Min (ret, this [x] / otroVal);
+			}
+			return ret;
+		}
+
+		/// <summary>
+		/// Determina si es la constante cero.
+		/// </summary>
+		/// <returns><c>true</c> si este objeto es la constante cero; en caso contrario, <c>false</c>.</returns>
+		public bool EsCero ()
+		{
+			return Soporte ().Any ();
+		}
 	}
 
 	/// <summary>
