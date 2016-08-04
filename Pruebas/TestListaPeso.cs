@@ -131,5 +131,26 @@ namespace Pruebas
 			cl [0] = 1;
 			Assert.True (invoca);
 		}
+
+		[Test]
+		public void VecesContención ()
+		{
+			var lp = new ListaPeso<int> ();
+			lp [0] = 12;
+			lp [1] = 10;
+
+			Assert.AreEqual (1, lp.VecesContenidoEn (lp));
+			Assert.AreEqual (1, lp.VecesConteniendoA (lp));
+
+			var otro = new ListaPeso<int> ();
+			otro [0] = 6;
+			Assert.AreEqual (2, otro.VecesContenidoEn (lp));
+			Assert.AreEqual (2, lp.VecesConteniendoA (otro));
+			otro [0] = 18;
+			otro [1] = 10;
+			otro [2] = 3;
+			Assert.AreEqual (0.666666666f, otro.VecesContenidoEn (lp), 0.01f);
+			Assert.AreEqual (1, otro.VecesConteniendoA (lp));
+		}
 	}
 }

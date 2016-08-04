@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections;
+using System.Windows.Forms;
+using System.Runtime.Remoting.Messaging;
 
 namespace ListasExtra
 {
@@ -262,7 +264,7 @@ namespace ListasExtra
 			return Model.GetEnumerator ();
 		}
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return Model.GetEnumerator ();
 		}
@@ -291,7 +293,12 @@ namespace ListasExtra
 		/// <returns>Un ISet que contiene a cada elemento del soporte.</returns>
 		public ISet<T> Soporte ()
 		{
-			return new HashSet<T> (Model.Keys);
+			var ret = new HashSet<T> ();
+			foreach (var x in this)
+				if (!Equals (x, Nulo))
+					ret.Add (x.Key);
+
+			return ret;
 		}
 
 		#endregion
@@ -751,7 +758,6 @@ namespace ListasExtra
 				base [new Tuple<T1, T2> (x, y)] = value;
 			}
 		}
-
 	}
 
 	/// <summary>
@@ -870,6 +876,22 @@ namespace ListasExtra
 			return ret;
 		}
 
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
+		public static double operator / (ListaPeso<T> left,
+		                                 IDictionary<T, float> right)
+		{
+			return left.VecesConteniendoA (right);
+		}
+
+		/// <param name="left">Left.</param>
+		/// <param name="right">Right.</param>
+		public static double operator / (IDictionary<T, float> left, 
+		                                 ListaPeso<T> right)
+		{
+			return right.VecesContenidoEn (left);
+		}
+
 		/// <summary>
 		/// Suma, en una entrada dada, un valor dado.
 		/// </summary>
@@ -894,6 +916,48 @@ namespace ListasExtra
 
 		#endregion
 
+		/// <summary>
+		/// Devuelve el número de veces que esta clase está contenido en un diccionario.
+		/// </summary>
+		/// <returns>El mayor número r tal que this * r &gt; otro </returns>
+		/// <param name="otro">Un diccionario al cual comparar</param>
+		public double VecesContenidoEn (IDictionary<T, float> otro)
+		{
+			float ret = float.PositiveInfinity;
+			foreach (var x in Keys.Union (otro.Keys))
+			{
+				float otroVal;
+				if (otro.TryGetValue (x, out otroVal))
+					ret = Math.Min (ret, otroVal / this [x]);
+			}
+			return ret;
+		}
+
+		/// <summary>
+		/// Devuelve el número de veces que esta clase contiene a un diccionario.
+		/// </summary>
+		/// <returns>El número de veces contenido.</returns>
+		/// <param name="otro">Un diccionario al cual comparar.</param>
+		public double VecesConteniendoA (IDictionary<T, float> otro)
+		{
+			float ret = float.PositiveInfinity;
+			foreach (var x in Keys.Union (otro.Keys))
+			{
+				float otroVal;
+				if (otro.TryGetValue (x, out otroVal))
+					ret = Math.Min (ret, this [x] / otroVal);
+			}
+			return ret;
+		}
+
+		/// <summary>
+		/// Determina si es la constante cero.
+		/// </summary>
+		/// <returns><c>true</c> si este objeto es la constante cero; en caso contrario, <c>false</c>.</returns>
+		public bool EsCero ()
+		{
+			return Soporte ().Any ();
+		}
 	}
 
 	/// <summary>
