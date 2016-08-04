@@ -44,7 +44,7 @@ namespace Pruebas
 		[Test]
 		public void TestCtor ()
 		{
-			var lista = new int[] { 1, 5, 2, 3, 3 };
+			var lista = new [] { 1, 5, 2, 3, 3 };
 			var pesos = new ListaProbabilidad<int> (lista, z => z);
 			Assert.AreEqual (lista.Length, pesos.Count);
 		}
